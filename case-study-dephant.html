@@ -162,36 +162,30 @@
   .toc-link.active { color:var(--ink); }
   .toc-link.active::before { opacity:1; }
   /* Sub-items nested under a parent section (currently: everything The
-     Approach expands into for Controlguide). The parent keeps the full
-     accent bar lit for as long as you're anywhere inside its group — see
-     the "group-active" class, set in the scroll-spy script — rather than
-     losing it the moment you scroll past its own heading into a child
-     section. Repeating that same bar next to whichever child you're
-     actually in would read as two disconnected marks; a small dot in the
-     same gutter says "here, specifically" without competing with it. */
+     Approach expands into for Controlguide). Same accent-bar position as a
+     top-level item, so the active indicator stays on one consistent edge —
+     only the text indents and shrinks to read as a level down. */
   .toc-link.sub { padding-left:28px; font-size:13px; }
-  .toc-link.sub::before { display:none; }
-  .toc-link.sub::after {
-    content:""; position:absolute; left:4px; top:50%; width:5px; height:5px;
-    margin-top:-2.5px; border-radius:50%; background:var(--accent);
-    opacity:0; transition:opacity .2s ease;
-  }
-  .toc-link.sub.active::after { opacity:1; }
-  .toc-link.group-active::before { opacity:1; }
-  .toc-link.group-active { color:var(--ink); }
 
-  /* The contents list as it appears inside the mobile hamburger menu,
-     replacing the old inline "On this page" accordion — that sat awkwardly
-     mid-article and duplicated a second navigation pattern. Same list, same
-     active/group-active/sub logic, just living in the one menu a mobile
-     reader already opens for everything else. */
-  .mobile-toc-group { }
-  .mobile-toc-group .toc-title { font-size: 12px; letter-spacing: 1.6px; }
-  .mobile-toc-group .toc-link {
-    font-size: 17px; padding: 9px 0 9px 16px; line-height: 1.4;
+  .toc-compact {
+    margin-top:34px; border:1px solid var(--rule); border-radius:14px;
+    background:var(--surface); overflow:hidden;
   }
-  .mobile-toc-group .toc-link.sub { font-size: 15px; padding-left: 32px; }
-  .mobile-menu-divider { height: 1px; background: var(--rule); }
+  .toc-compact summary {
+    list-style:none; cursor:pointer; padding:15px 20px; font-size:12px; font-weight:500;
+    letter-spacing:1.6px; text-transform:uppercase; color:var(--ink-2);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .toc-compact summary::-webkit-details-marker { display:none; }
+  .toc-compact summary::after {
+    content:""; width:8px; height:8px; border-right:1.5px solid var(--ink-3);
+    border-bottom:1.5px solid var(--ink-3); transform:rotate(45deg) translateY(-2px); transition:transform .2s ease;
+  }
+  .toc-compact[open] summary::after { transform:rotate(-135deg) translateY(-2px); }
+  .toc-compact .toc-list { padding:0 20px 16px; }
+  .toc-compact .toc-link { padding-left:0; font-size:15px; }
+  .toc-compact .toc-link.sub { padding-left:16px; font-size:13.5px; }
+  .toc-compact .toc-link::before { display:none; }
 
   /* ARTICLE */
   .article { padding-top:76px; max-width:720px; }
@@ -306,12 +300,15 @@
   }
 
   /* ROLE-BASED PERSONAS
-     Shown one at a time via the same flow-tabs/flow-panel component User
-     Flows uses below, rather than all five as a grid — five full cards on
-     screen together was exactly the clutter being complained about. Capped
-     width keeps a single card from stretching to the full article width. */
+     A CSS grid with auto-fit/minmax reflows on its own at every width, so
+     unlike the task-flow and role-flow diagrams, this needs no breakout and
+     no scroll fallback at all — it's simply never wider than its column. */
+  .personas {
+    margin-top: 28px; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;
+  }
   .persona-card {
-    max-width: 460px; background: var(--surface); border: 1px solid var(--rule);
+    background: var(--surface); border: 1px solid var(--rule);
     border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
   }
   .persona-header {
@@ -514,6 +511,78 @@
     .flow-diagram { padding: 24px 16px; }
   }
 
+
+  /* DEPHANT INFORMATION ARCHITECTURE + BOM FLOW RECREATIONS */
+
+  .ia-tabs {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:26px 0 8px;
+  }
+  .ia-tab {
+    flex-shrink:0;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:-.1px;
+    color:var(--ink-2);
+    background:var(--surface);
+    border:1px solid var(--rule);
+    border-radius:999px;
+    padding:9px 17px;
+    cursor:pointer;
+    transition:color .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .ia-tab:hover {
+    color:var(--ink);
+    background:var(--surface-2);
+  }
+  .ia-tab.active {
+    color:var(--btn-ink);
+    background:var(--btn-bg);
+    border-color:var(--btn-bg);
+  }
+  .ia-panel { display:none; }
+  .ia-panel.active { display:block; }
+
+  .ia-compare { margin-top:28px; display:grid; grid-template-columns:1fr; gap:24px; }
+  .ia-card { margin:0; padding:14px; border:1px solid var(--rule); border-radius:16px; background:var(--surface); }
+  .ia-card img { display:block; width:100%; border-radius:10px; background:#fff; }
+  .ia-card figcaption { margin-top:12px; font-size:14px; line-height:1.55; color:var(--ink-3); }
+
+  .bom-overview { margin-top:28px; padding:24px; border:1px solid var(--rule); border-radius:16px; background:var(--surface); }
+  .bom-overview-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; align-items:stretch; }
+  .bom-role { padding:18px; border:1px solid var(--rule); border-radius:14px; background:var(--surface-2); }
+  .bom-role-kicker { display:block; margin-bottom:8px; font-size:10.5px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--ink-3); }
+  .bom-role h4 { font-size:16px; font-weight:600; line-height:1.3; margin-bottom:12px; }
+  .bom-role ol { list-style:none; counter-reset:bomstep; margin:0; padding:0; }
+  .bom-role li { counter-increment:bomstep; padding:9px 0 9px 30px; margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); border-top:1px solid var(--rule); }
+  .bom-role li:first-child { border-top:none; }
+  .bom-role li::before { content:counter(bomstep); top:10px; left:0; width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--accent); color:#fff; font-size:10px; font-weight:600; }
+
+  .flow-stage { width:100%; max-width:620px; display:flex; flex-direction:column; align-items:center; }
+  .flow-row { width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:stretch; }
+  .flow-row.single { grid-template-columns:1fr; max-width:300px; }
+  .flow-split-label { margin:6px 0; font-size:11px; color:var(--ink-3); letter-spacing:.2px; }
+  .flow-node.role-requester { border-color:var(--accent); }
+  .flow-node.role-reviewer { border-color:var(--ink-3); }
+  .flow-node.role-engineer { border-style:dashed; }
+  .flow-node.flow-decision { border-style:dashed; background:var(--bg); }
+  .flow-node.flow-state { background:var(--surface-2); }
+  .flow-node.flow-emphasis { background:var(--btn-bg); color:var(--btn-ink); border-color:var(--btn-bg); font-weight:600; }
+  .flow-loop-note { width:100%; margin-top:14px; padding:12px 14px; border:1px dashed var(--rule); border-radius:10px; color:var(--ink-3); font-size:12.5px; line-height:1.5; text-align:center; }
+  .flow-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .flow-legend span { font-size:11.5px; padding:5px 10px; border:1px solid var(--rule); border-radius:999px; color:var(--ink-2); }
+  .flow-legend .requester { border-color:var(--accent); }
+  .flow-legend .engineer { border-style:dashed; }
+
+  @media (max-width:720px) {
+    .bom-overview { padding:16px; }
+    .bom-overview-grid { grid-template-columns:1fr; }
+    .flow-row { grid-template-columns:1fr; }
+  }
+
   /* PAGER */
   .pager { margin-top:104px; border-top:1px solid var(--rule); padding-top:44px; }
   .pager-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
@@ -559,6 +628,7 @@
       position:sticky; top:92px; margin-top:76px;
     }
     .page-main { flex:1; min-width:0; }
+    .toc-compact { display:none; }
   }
   @media (min-width:721px) and (max-width:999px) {
     .toc-link { font-size:13.5px; padding-left:12px; }
@@ -615,21 +685,6 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-toc-group">
-    <div class="toc-title">On this page</div>
-    <nav class="toc-list">
-      <button class="toc-link" type="button" data-target="overview">Overview</button>
-      <button class="toc-link" type="button" data-target="role">My Role</button>
-      <button class="toc-link" type="button" data-target="restricted">Restricted Access</button>
-      <button class="toc-link" type="button" data-target="problem">The Problem</button>
-      <button class="toc-link" type="button" data-target="approach">The Approach</button>
-      <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
-      <button class="toc-link" type="button" data-target="scaling">Scaling</button>
-      <button class="toc-link" type="button" data-target="impact">Impact</button>
-      <button class="toc-link" type="button" data-target="reflection">Reflection</button>
-    </nav>
-  </div>
-  <div class="mobile-menu-divider"></div>
   <a class="nav-link-btn mobile" href="index.html#work">Work</a>
   <a class="nav-link-btn mobile" href="index.html#about">About</a>
   <a class="nav-link-btn mobile" href="index.html#experience">Experience</a>
@@ -650,15 +705,19 @@
     <aside class="toc" aria-label="On this page">
       <div class="toc-title">On this page</div>
       <nav class="toc-list">
-      <button class="toc-link" type="button" data-target="overview">Overview</button>
-      <button class="toc-link" type="button" data-target="role">My Role</button>
-      <button class="toc-link" type="button" data-target="restricted">Restricted Access</button>
-      <button class="toc-link" type="button" data-target="problem">The Problem</button>
-      <button class="toc-link" type="button" data-target="approach">The Approach</button>
-      <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
-      <button class="toc-link" type="button" data-target="scaling">Scaling</button>
-      <button class="toc-link" type="button" data-target="impact">Impact</button>
-      <button class="toc-link" type="button" data-target="reflection">Reflection</button>
+        <button class="toc-link" type="button" data-target="overview">Overview</button>
+        <button class="toc-link" type="button" data-target="role">My Role</button>
+        <button class="toc-link" type="button" data-target="problem">The Problem</button>
+        <button class="toc-link" type="button" data-target="approach">The Approach</button>
+        <button class="toc-link sub" type="button" data-target="exploration">Exploration</button>
+        <button class="toc-link sub" type="button" data-target="personas">Early Personas</button>
+        <button class="toc-link sub" type="button" data-target="ia">Information Architecture</button>
+        <button class="toc-link sub" type="button" data-target="taskflow">Complete Task Flow</button>
+        <button class="toc-link sub" type="button" data-target="flows">User Flows</button>
+        <button class="toc-link sub" type="button" data-target="lofi">Low-Fidelity Wireframes</button>
+        <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
+        <button class="toc-link" type="button" data-target="impact">Impact</button>
+        <button class="toc-link" type="button" data-target="reflection">Reflection</button>
       </nav>
     </aside>
 
@@ -668,73 +727,322 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
           Back to homepage
         </a>
+
         <div class="badge-row">
-          <span class="tag">Enterprise · Design Leadership · 0→1</span>
+          <span class="tag">Enterprise · Product Ecosystem · Continuous Delivery</span>
           <span class="badge">Siemens · Ongoing · 2025–Present</span>
         </div>
         <h1 class="title">dephant</h1>
-        <div class="subtitle">Redesigning how a global engineering organization manages product lifecycle information</div>
-        
-        <img class="case-cover" src="assets/project-dephant.jpg" alt="dephant CMT hub and Last Time Buy request screens" style="view-transition-name:vt-dephant">
+        <div class="subtitle">Turning fragmented product-lifecycle processes into one connected enterprise platform</div>
+        <img class="case-cover" src="assets/project-dephant.jpg" alt="dephant product lifecycle management screens" style="view-transition-name:vt-dephant">
 
-<h2 id="overview">Overview</h2>
-    <p>dephant is an internal enterprise product lifecycle management (PLM) platform. It's not really one feature or one dashboard, it's the workspace where a lot of different people end up needing to collaborate over the life of a product, from sourcing a component all the way through to deciding when to buy the last batch before it's discontinued.</p>
+        <details class="toc-compact">
+          <summary>On this page</summary>
+          <nav class="toc-list">
+            <button class="toc-link" type="button" data-target="overview">Overview</button>
+            <button class="toc-link" type="button" data-target="role">My Role</button>
+            <button class="toc-link" type="button" data-target="problem">The Problem</button>
+            <button class="toc-link" type="button" data-target="approach">The Approach</button>
+            <button class="toc-link sub" type="button" data-target="exploration">Exploration</button>
+            <button class="toc-link sub" type="button" data-target="personas">Early Personas</button>
+            <button class="toc-link sub" type="button" data-target="ia">Information Architecture</button>
+        <button class="toc-link sub" type="button" data-target="taskflow">Complete Task Flow</button>
+            <button class="toc-link sub" type="button" data-target="flows">User Flows</button>
+            <button class="toc-link sub" type="button" data-target="lofi">Low-Fidelity Wireframes</button>
+            <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
+            <button class="toc-link" type="button" data-target="impact">Impact</button>
+            <button class="toc-link" type="button" data-target="reflection">Reflection</button>
+          </nav>
+        </details>
 
-    <h2 id="role">My Role</h2>
-    <p>dephant started narrow: <strong>a single use case around Bill of Materials (BOM)</strong>. I was the UX designer on that first scope. As it proved out, the project expanded, use case by use case, until it reached the five it covers today, with more planned. dephant is still active and ongoing; I've been on it for <strong>roughly a year and a half</strong>.</p>
-    <p><strong>Primary Users:</strong> Component Engineers · Procurement Engineers · Product Managers · Financial Controllers, across a growing set of use cases with their own specific stakeholders</p>
-    <ul>
-      <li><strong>Took dephant from a single use case to five</strong>, designing the information architecture that let each new use case join the platform without breaking what already existed.</li>
-      <li><strong>Ran a persona workshop for each use case</strong>, five in total so far, plus one ecosystem-wide prioritization workshop to align priorities across all of them together.</li>
-      <li><strong>Pushed for differentiated data visibility by role</strong>, and made the deliberate call to ship without it when technical constraints made it infeasible in time, a real trade-off, not a quiet compromise.</li>
-      <li><strong>Defined what features should exist and how the dev team should prioritize them</strong>, operating closer to a Product Owner than a traditional UX role at points, deciding not just how something should work, but what should get built next.</li>
-    </ul>
+        <h2 id="overview">Overview</h2>
+        <p>dephant is an internal product-lifecycle management platform that brings component, material, procurement, risk, compliance, and supply-chain workflows into one web application. It gives teams a shared source of truth while reducing the need to move between disconnected tools, spreadsheets, and email threads.</p>
+        <p>The platform began around <strong>Bill of Materials (BOM)</strong> and gradually expanded to support Risk Assessment, the Cyber Resilience Act, Last Time Buy, and the Procurement Engineering Workbook.</p>
 
-    <h2 id="restricted">Restricted Access</h2>
-    <div class="restricted">Details here are shared in a form that protects confidential Siemens material. Real data, internal documentation, and specific process artifacts aren't included. What follows describes the actual thinking and decisions, without exposing anything proprietary.</div>
-    <div class="vault">
-      <div class="vault-lock">
-        <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <h3>Screens and process artifacts</h3>
-        <p>The written case study above is complete and needs no password. Interface work and system diagrams are held back separately. Enter the password provided alongside this link to view them.</p>
-        <div class="gate-row">
-          <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
-          <button class="btn btn-primary gate-submit" type="button">Unlock</button>
-          <span class="gate-error">That password isn't quite right, try again.</span>
+        <h2 id="role">My Role</h2>
+        <p>I joined an existing BOM application with significant usability issues. I began by conducting a heuristic evaluation and improving the existing experience. As more use cases were added, my role expanded from redesigning one module to shaping how multiple workflows, users, and stakeholders could work together as one product ecosystem.</p>
+        <p><strong>Primary users:</strong> Component Engineers, Electrical Engineers, Procurement Engineers, Product Owners, Project Managers, Cost Value Engineers, and other role-specific stakeholders across the five use cases.</p>
+        <ul>
+          <li><strong>Improved the existing BOM experience</strong> through heuristic evaluation, interaction redesign, and continuous feedback after release.</li>
+          <li><strong>Mapped overlapping users and workflows</strong> so that related use cases could share information without becoming five disconnected applications.</li>
+          <li><strong>Translated spreadsheet-heavy processes</strong> into structured product workflows while preserving the flexibility users relied on.</li>
+          <li><strong>Defined information architecture and reusable patterns</strong> that could scale as Risk Assessment, CRA, LTB, and PE Workbook were added.</li>
+          <li><strong>Aligned PMs, domain experts, users, and developers</strong> throughout design, delivery, feedback, and enhancement cycles.</li>
+        </ul>
+
+        <h2 id="problem">The Problem</h2>
+        <p>Before dephant, teams relied on a mixture of internal systems, Excel files, and email. Users compared multiple spreadsheets, maintained their own versions, re-entered information, communicated pricing through email, and tracked approvals across separate conversations.</p>
+        <p>The result was duplicated data, unclear ownership, limited transparency, and frequent version conflicts. For workflows such as Last Time Buy, these gaps also affected supply-chain decisions around components and materials approaching discontinuation.</p>
+        <p>The challenge was not simply to digitise an Excel sheet. It was to create enough structure for consistency and traceability without removing the flexibility that made spreadsheets useful in the first place.</p>
+
+        <h2 id="approach">The Approach</h2>
+        <p>I worked use case by use case rather than attempting to redesign the entire ecosystem at once. BOM was improved and released first, followed by Risk Assessment and CRA. Each release generated feedback and enhancement requests that informed the next iteration. LTB is currently being developed, with PE Workbook following next.</p>
+        <p>This incremental approach allowed the platform to evolve through real usage while the shared architecture, navigation, data relationships, and reusable patterns were refined alongside it.</p>
+
+        <h2 id="exploration">Exploration</h2>
+        <p>Early work focused on understanding the existing product, the tools and spreadsheets surrounding it, and where each stakeholder entered or depended on the process. These working artifacts capture the alignment and synthesis behind the final workflows rather than polished interface outcomes.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Working process boards</h3>
+            <p>The written case study needs no password. Internal workshop and process artifacts are held back separately. Enter the password provided alongside this link to view them.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            <div class="exploration-grid">
+              <figure class="exploration-board">
+                <img src="assets/dephant-user-groups-workshop.png" alt="Workshop board used to identify and prioritise user groups for the BOM application">
+                <figcaption>Identifying possible user groups and collaboratively prioritising the most important and frequent users of the BOM workflow.</figcaption>
+              </figure>
+              <figure class="exploration-board">
+                <img src="assets/dephant-jtbd-requestor.png" alt="Jobs-to-be-done and pain-point analysis for the procurement engineer requestor role">
+                <figcaption>Synthesising jobs-to-be-done, workflow stages, dependencies, and pain points before translating them into product requirements.</figcaption>
+              </figure>
+            </div>
+          </div>
         </div>
-        <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
-      </div>
-      <div class="vault-body">
-        <!-- Replace with your Figma recreations and system diagrams. Add as many figures as you need. -->
-        <figure>
-          <img src="assets/dephant-detail-01.jpg" alt="">
-          <figcaption>Caption describing what the reader is looking at.</figcaption>
-        </figure>
-      </div>
-    </div>
+
+        <h2 id="personas">Early Personas</h2>
+        <p>I facilitated a persona workshop to move the team from assumptions to a shared understanding of the people behind the workflow. We first listed the possible user groups, prioritised the primary roles together, and then organised their responsibilities, environments, technology proficiency, jobs-to-be-done, and pain points.</p>
+        <p>The research highlighted recurring needs such as visible request status, clearer explanations, reduced dependency on individual colleagues, and better links between BOM review results and design information.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Persona workshop outputs</h3>
+            <p>The written summary is public. Final persona artifacts contain internal workflow detail and are available through the protected section.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            <div class="exploration-grid">
+              <figure class="exploration-board">
+                <img src="assets/dephant-personas-summary.png" alt="Final procurement engineer personas created after workshop synthesis">
+                <figcaption>Final personas created after clustering workshop input into recurring goals, environments, behaviours, and pain points.</figcaption>
+              </figure>
+              <figure class="exploration-board">
+                <img src="assets/dephant-persona-mike.png" alt="Detailed procurement engineer persona showing goals and pain points">
+                <figcaption>One of the final procurement engineer personas, used to keep status visibility, review context, and links to design information visible in later workflow decisions.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="ia">Information Architecture</h2>
+        <p>The original structure grew around BOM as a separate destination, while profile, membership, documentation, and review functions were distributed across different branches. As Risk Assessment was introduced, I reorganised the architecture around a shared home and reusable platform-level areas.</p>
+        <p>The revised structure made BOM Review and Risk Assessment visible as parallel use cases while keeping profile and membership functions consistent across the wider ecosystem.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Information architecture</h3>
+            <p>The comparison contains internal product structure and is included behind the protected-access pattern used across this case study.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            
+            <div class="ia-tabs" role="tablist" aria-label="Information architecture comparison">
+              <button class="ia-tab active" type="button" data-ia="before" aria-selected="true">Old architecture</button>
+              <button class="ia-tab" type="button" data-ia="after" aria-selected="false">New architecture</button>
+            </div>
+
+            <div class="ia-panels">
+              <div class="ia-panel active" data-ia="before">
+                <figure class="ia-card">
+                  <img src="assets/dephant-ia-before.png" alt="Original dephant information architecture centred on BOM">
+                  <figcaption><strong>Before:</strong> BOM, profile, memberships, documentation, and review functions were distributed across separate branches.</figcaption>
+                </figure>
+              </div>
+
+              <div class="ia-panel" data-ia="after">
+                <figure class="ia-card">
+                  <img src="assets/dephant-ia-after.png" alt="Revised dephant information architecture with BOM Review and Risk Assessment">
+                  <figcaption><strong>After:</strong> A shared home supports parallel use cases, while common profile and membership functions remain platform-level.</figcaption>
+                </figure>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <h2 id="taskflow">Complete Task Flow</h2>
+        <p>The BOM review is not a single-user task. A procurement engineer initiates and maintains the request, a component engineer reviews it, and an engineering role uses the outcome in product decisions. The complete flow below condenses the cross-role handoffs before each role is shown separately.</p>
+        <div class="bom-overview">
+          <div class="bom-overview-grid">
+            <section class="bom-role">
+              <span class="bom-role-kicker">Requestor</span>
+              <h4>Procurement Engineer</h4>
+              <ol>
+                <li>Gather project information for the BOM review.</li>
+                <li>Create or re-request a BOM review.</li>
+                <li>Update the request when project information changes.</li>
+                <li>Reopen a previous request when required.</li>
+                <li>View status and share the review outcome.</li>
+              </ol>
+            </section>
+            <section class="bom-role">
+              <span class="bom-role-kicker">Reviewer</span>
+              <h4>Component Engineer</h4>
+              <ol>
+                <li>Receive and check the BOM review request.</li>
+                <li>Request missing information or resolve timeline concerns.</li>
+                <li>Perform the BOM review.</li>
+                <li>Update the review if the request changes.</li>
+                <li>Upload the review and reopen it when required.</li>
+              </ol>
+            </section>
+            <section class="bom-role">
+              <span class="bom-role-kicker">Consumer of outcome</span>
+              <h4>Engineering Role</h4>
+              <ol>
+                <li>Gather product and project context.</li>
+                <li>Create or update the BOM request.</li>
+                <li>Clarify questions with component engineering.</li>
+                <li>Review the final outcome.</li>
+                <li>Incorporate the result into the design.</li>
+              </ol>
+            </section>
+          </div>
+        </div>
+
+        <h2 id="flows">User Flows</h2>
+        <p>Recreated from the working BOM diagrams using the same visual system as Controlguide DPM. Switch between the requestor, reviewer, and combined views to see where responsibilities change and where the workflow loops back.</p>
+        <div class="flow-tabs" role="tablist" aria-label="BOM user flow by role">
+          <button class="flow-tab active" type="button" data-flow="requester">Requestor</button>
+          <button class="flow-tab" type="button" data-flow="reviewer">Reviewer</button>
+          <button class="flow-tab" type="button" data-flow="combined">Combined flow</button>
+        </div>
+        <div class="flow-panels">
+          <div class="flow-panel active" data-flow="requester">
+            <p class="flow-desc">The procurement engineer gathers project information, creates or updates a request, and follows its status through completion.</p>
+            <div class="flow-diagram"><div class="flow-stage">
+              <div class="flow-node flow-start">Gather project information</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-node flow-state">Landing page</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-node flow-decision"><span class="flow-eyebrow">Decision</span>Existing BOM review request?</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-row">
+                <div class="flow-node role-requester"><span class="flow-eyebrow">Existing request</span>View status and follow up</div>
+                <div class="flow-node role-requester"><span class="flow-eyebrow">Existing request</span>Update details or reopen a previous request</div>
+              </div>
+              <div class="flow-split-label">or</div>
+              <div class="flow-row single">
+                <div class="flow-node role-requester"><span class="flow-eyebrow">New request</span>Create request and fill request details</div>
+              </div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-node flow-emphasis">Submit request</div>
+            </div></div>
+          </div>
+
+          <div class="flow-panel" data-flow="reviewer">
+            <p class="flow-desc">The component engineer checks whether the request is complete and achievable before performing and uploading the BOM review.</p>
+            <div class="flow-diagram"><div class="flow-stage">
+              <div class="flow-node flow-start">Landing page</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-node flow-decision"><span class="flow-eyebrow">Decision</span>New BOM review request?</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-row">
+                <div class="flow-node role-reviewer">Review request for completion</div>
+                <div class="flow-node role-reviewer">Review existing BOM review</div>
+              </div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-node flow-decision"><span class="flow-eyebrow">Decision</span>Due date achievable?</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-row">
+                <div class="flow-node role-reviewer">Perform BOM review</div>
+                <div class="flow-node role-reviewer">Send back to requestor to resolve missing information or timeline concerns</div>
+              </div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-node flow-decision"><span class="flow-eyebrow">Decision</span>BOM data complete?</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-row">
+                <div class="flow-node flow-emphasis">Review BOM request and upload review</div>
+                <div class="flow-node role-reviewer">Send back to requestor</div>
+              </div>
+              <div class="flow-loop-note">Rejected or incomplete requests return to the requestor; changed requests may reopen the review cycle.</div>
+            </div></div>
+          </div>
+
+          <div class="flow-panel" data-flow="combined">
+            <p class="flow-desc">The combined view shows the complete handoff between procurement, component engineering, and the engineering role that uses the review outcome.</p>
+            <div class="flow-diagram"><div class="flow-stage">
+              <div class="flow-node flow-start">Gather project information</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-row">
+                <div class="flow-node role-requester"><span class="flow-eyebrow">Procurement Engineer</span>Create or re-request BOM review</div>
+                <div class="flow-node role-engineer"><span class="flow-eyebrow">Engineering role</span>Create or update BOM request</div>
+              </div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-node role-reviewer"><span class="flow-eyebrow">Component Engineer</span>Receive request and check completeness</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-row">
+                <div class="flow-node role-requester">Add missing information</div>
+                <div class="flow-node role-reviewer">Check timeline and perform BOM review</div>
+              </div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-node role-reviewer">Upload review</div>
+              <div class="flow-arrow">&darr;</div>
+              <div class="flow-row">
+                <div class="flow-node role-requester">View status, reopen, or update request</div>
+                <div class="flow-node role-engineer">Clarify questions and incorporate BOM review into design</div>
+              </div>
+              <div class="flow-loop-note">Whenever project or request information changes, the request can loop back through component engineering for an updated review.</div>
+              <div class="flow-legend" aria-label="Role legend">
+                <span class="requester">Procurement Engineer</span>
+                <span>Component Engineer</span>
+                <span class="engineer">Engineering role</span>
+              </div>
+            </div></div>
+          </div>
+        </div>
 
 
-    <h2 id="problem">The Problem</h2>
-    <p>Before dephant, this information lived across <strong>more than 10 different systems</strong>. People kept their own spreadsheets as a workaround, which meant multiple versions of the same information floating around, and near-constant version conflicts. Procurement, engineering, and finance all needed to work off the same information, but none of them were actually looking at the same thing.</p>
-    <p>This wasn't just annoying internally, these are the components that determine how products actually get built, so any delay or mistake in managing them eventually shows up in manufacturing timelines and, further down the line, customer delivery.</p>
 
-    <h2 id="approach">The Approach</h2>
-    <p>The genuinely hard part wasn't designing screens, it was <strong>translating how people actually worked in Excel into something that could exist as a real application</strong>. Spreadsheets are forgiving in ways applications aren't: people improvise structure, bend columns to new purposes, and route around problems informally. None of that translates cleanly. I went through a lot of brainstorming and false starts before landing on the structure the application uses today, and honestly, some of that was just difficult in a way that doesn't compress into a single clean turning point. It took repeated passes to get right.</p>
 
-    <h2 id="hardcall">The Hard Call</h2>
-    <p>One decision I pushed on: different roles should see different data. A procurement engineer doesn't need the same view as a financial controller, and showing everyone everything felt like the wrong default.</p>
-    <p>We ran into real technical constraints that made granular, role-based visibility infeasible within the timeline. The call we made was to <strong>ship with all users seeing all data</strong>, rather than delay for a permissions system that wasn't ready. I still think the instinct was right. <strong>The cost was real too</strong>: some information ended up visible to people who, ideally, wouldn't need to see all of it.</p>
+        <h2 id="lofi">Low-Fidelity Wireframes</h2>
+        <p>Low-fidelity design was used to test how spreadsheet-heavy tasks could become structured workflows before visual design was applied. Particular attention went to tables, status visibility, request changes, review context, and the handoffs between engineering and procurement roles.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Wireframes and interface iterations</h3>
+            <p>Internal wireframes and product screens will sit here behind the same protected-access pattern used across the portfolio.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            <div class="restricted">Add selected low-fidelity wireframes and final screen recreations here once they are ready for portfolio use.</div>
+          </div>
+        </div>
 
-    <h2 id="scaling">Scaling</h2>
-    <p>dephant now covers five use cases, up from the single BOM workflow it started as, with more planned. Each new use case got its own persona workshop, five so far, and all five were brought together under one ecosystem-wide prioritization workshop so the platform's priorities reflected the whole system, not just whichever use case was loudest at the time. There's a main product manager for dephant overall, and a separate PM for each individual use case, which made the prioritization workshop genuinely necessary, not just a formality.</p>
+        <h2 id="hardcall">The Hard Call</h2>
+        <p>The central trade-off was between <strong>spreadsheet flexibility and product consistency</strong>. Excel allowed users to add columns, duplicate information, type free-form notes, and create personal workarounds. A structured application could improve traceability and reduce errors, but it could not preserve every informal behaviour.</p>
+        <p>The design therefore had to decide which flexibility supported real work and which flexibility created ambiguity. The aim was not to reproduce Excel inside a browser, but to keep the actions users genuinely depended on while introducing clearer ownership, statuses, validations, and shared information.</p>
 
-    <h2 id="impact">Impact</h2>
-    <p>dephant established a shared source of truth for information that used to live across more than 10 disconnected systems. It's <strong>grown from a single use case to five</strong> without needing a redesign each time, which is the clearest evidence that the underlying information architecture was built to actually hold up under growth, not just handle what existed on day one.</p>
+        <h2 id="impact">Impact</h2>
+        <p>dephant is deployed and actively used. It has reduced dependence on disconnected tools and spreadsheets, improved transparency between stakeholders, and created a more reliable source of truth with fewer duplicate records and version conflicts.</p>
+        <p>The platform has grown from one BOM use case to five connected areas without requiring a separate product for each one. Feedback and enhancement requests have continued after every release, and those improvements have been incorporated into subsequent iterations.</p>
 
-    <h2 id="reflection">Reflection</h2>
-    <p><strong>Some problems don't resolve into one clean pivot.</strong> I went looking for a single "and then we changed direction" moment on the Excel-to-application translation, and honestly, it wasn't like that. It took many passes. Not every hard problem has a tidy turning point, and I've stopped expecting one.</p>
-    <p><strong>A trade-off you'd make again is still a trade-off.</strong> Shipping with uniform visibility instead of role-based permissions was the right call given the constraints, but I don't pretend it was free. Naming the actual cost is more honest than describing it as a clean win.</p>
-    <p><strong>Growth needs its own alignment mechanism.</strong> Once dephant had five use cases and five separate PMs, informal alignment stopped being enough. The ecosystem-wide prioritization workshop wasn't in the original plan, it became necessary because the project outgrew what one-on-one conversations could hold together.</p>
+        <h2 id="reflection">Reflection</h2>
+        <p><strong>Improving an existing product can grow into ecosystem design.</strong> I joined to address usability issues in one BOM application. The work eventually required thinking across users, data, workflows, PMs, and releases rather than treating each screen or use case independently.</p>
+        <p><strong>Replacing spreadsheets means replacing both their problems and their freedom.</strong> Structure improves consistency, transparency, and traceability, but it also removes some user-created flexibility. Good enterprise design requires understanding which parts of that freedom are essential before standardising the process.</p>
+        <p><strong>Release is part of the research process.</strong> Shipping use cases sequentially, listening to users, and incorporating enhancement requests made the product stronger than attempting to define the entire ecosystem upfront.</p>
 
         <div class="pager">
           <div class="pager-grid">
@@ -751,23 +1059,21 @@
           </div>
         </div>
 
-  <footer class="footer">
-    <div class="footer-socials">
-      <a href="https://www.linkedin.com/in/kunwarjyot-singh-8273681b0/" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95C21.4 8.75 22 11.1 22 14.2V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.17V21h-4z"/></svg>
-      </a>
-      <a href="mailto:kunwarjyot2510@gmail.com" aria-label="Email">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-      </a>
-    </div>
-    <div class="footer-note">&copy; 2026 Kunwarjyot Singh Narula</div>
-  </footer>
-
+        <footer class="footer">
+          <div class="footer-socials">
+            <a href="https://www.linkedin.com/in/kunwarjyot-singh-8273681b0/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95C21.4 8.75 22 11.1 22 14.2V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.17V21h-4z"/></svg>
+            </a>
+            <a href="mailto:kunwarjyot2510@gmail.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            </a>
+          </div>
+          <div class="footer-note">&copy; 2026 Kunwarjyot Singh Narula</div>
+        </footer>
       </article>
     </main>
   </div>
 </div>
-
 
 <script>
   const STORAGE_KEY = 'unlocked_dephant';
@@ -834,19 +1140,6 @@
   const tocLinks = Array.from(document.querySelectorAll('.toc-link'));
   const watched = tocLinks.map(b => document.getElementById(b.dataset.target)).filter(Boolean);
 
-  // Sub-items nested under a parent (only "approach" has children right
-  // now, but this reads off the actual .sub markup rather than a hardcoded
-  // list, so it keeps working if that ever changes). A sub-item's parent is
-  // whichever non-sub button sits directly above it in the rail.
-  const PARENT_OF = {};
-  (function mapParents() {
-    let lastParent = null;
-    tocLinks.forEach(b => {
-      if (!b.classList.contains('sub')) { lastParent = b.dataset.target; }
-      else if (lastParent) { PARENT_OF[b.dataset.target] = lastParent; }
-    });
-  })();
-
   if (watched.length && 'IntersectionObserver' in window) {
     const visible = new Set();
     function paint() {
@@ -857,14 +1150,7 @@
         for (const el of watched) { if (el.getBoundingClientRect().top <= 130) last = el; }
         current = last.id;
       }
-      tocLinks.forEach(b => {
-        const t = b.dataset.target;
-        b.classList.toggle('active', t === current);
-        // The parent stays lit for as long as "current" is itself or any
-        // child of it, instead of losing its accent bar the moment you
-        // scroll past its own heading into the first child section.
-        b.classList.toggle('group-active', !b.classList.contains('sub') && PARENT_OF[current] === t);
-      });
+      tocLinks.forEach(b => b.classList.toggle('active', b.dataset.target === current));
     }
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) visible.add(e.target.id); else visible.delete(e.target.id); });
@@ -902,11 +1188,8 @@
     b.addEventListener('click', () => {
       const target = document.getElementById(b.dataset.target);
       if (!target) return;
-      if (b.closest('#mobileMenu')) {
-        mobileMenu.classList.remove('open');
-        menuBtn.classList.remove('open');
-        menuBtn.setAttribute('aria-expanded', 'false');
-      }
+      const d = b.closest('details');
+      if (d) d.open = false;
       scrollToY(target.getBoundingClientRect().top + window.pageYOffset - 92);
     });
   });
@@ -915,7 +1198,7 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduce && 'IntersectionObserver' in window) {
     const all = document.querySelectorAll(
-      '.article > h2, .article > p, .article > ul, .article .restricted, .vault, .case-cover, .pager, .case-figure, .taskflow, .flow-tabs, .flow-panels');
+      '.article > h2, .article > p, .article > ul, .article .restricted, .vault, .case-cover, .pager, .case-figure, .personas, .taskflow, .flow-tabs, .flow-panels');
     const vh = window.innerHeight;
     const targets = [];
     all.forEach(el => {
@@ -935,15 +1218,12 @@
     targets.forEach(el => revealObserver.observe(el));
   }
 
-  // Tab-switched content (User Flows, Personas): fade the switch, then
-  // cascade the new panel's pieces in top-to-bottom, reusing the same
-  // .reveal/.reveal.in timing as every other entrance on the site rather
-  // than a separate animation. Works for either flow diagrams or persona
-  // cards, whichever this particular panel happens to contain.
+  // User flow tabs: fade the switch, then cascade the new panel's nodes in
+  // top-to-bottom (branch by branch), reusing the same .reveal/.reveal.in
+  // timing as every other entrance on the site, not a separate animation.
   function cascadeFlow(panel) {
     if (!panel) return;
-    const items = panel.querySelectorAll(
-      '.flow-node, .flow-outcomes, .persona-header, .persona-body, .persona-attrs, .persona-wants, .persona-note');
+    const items = panel.querySelectorAll('.flow-node, .flow-outcomes');
     if (reduce) { items.forEach(el => el.classList.add('reveal', 'in')); return; }
     items.forEach((el, i) => {
       el.classList.remove('in');
@@ -955,12 +1235,7 @@
     const total = items.length * 55 + 900;
     setTimeout(() => items.forEach(el => { el.style.transitionDelay = ''; }), total);
   }
-  // A page can carry more than one independent tab group (Personas and
-  // User Flows both exist on the same page) — cascade each group's own
-  // initially-active panel, not just the first one found in the document.
-  document.querySelectorAll('.flow-panels').forEach(panels => {
-    cascadeFlow(panels.querySelector('.flow-panel.active'));
-  });
+  cascadeFlow(document.querySelector('.flow-panel.active'));
 
   document.querySelectorAll('.flow-tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -985,6 +1260,25 @@
       el.addEventListener('mouseleave', () => dot.classList.remove('active'));
     });
   }
+
+  // Information architecture tabs
+  document.querySelectorAll('.ia-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const key = tab.dataset.ia;
+      const scope = tab.closest('.vault-body') || document;
+
+      scope.querySelectorAll('.ia-tab').forEach(btn => {
+        const active = btn === tab;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+
+      scope.querySelectorAll('.ia-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.dataset.ia === key);
+      });
+    });
+  });
+
 </script>
 
 </body>
