@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Controlguide DPM — Kunwarjyot Singh Narula</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,300..700&display=swap" rel="stylesheet">
+<style>
+  :root, [data-theme="dark"] {
+    color-scheme: dark;
+    --gutter:32px; --bg:#0C0C0E; --surface:#151518; --surface-2:#1C1C20;
+    --rule:#26262B; --ink:#EEEBE5; --ink-2:#8C8C93; --ink-3:#63636A;
+    --accent:#E15A46; --btn-bg:#EEEBE5; --btn-ink:#0C0C0E;
+    --nav-bg:rgba(12,12,14,0.72); --grid:#141417; --sun:#D89A2E; --moon:#5B7FBF;
+  }
+  [data-theme="light"] {
+    color-scheme: light;
+    --bg:#F5F3EE; --surface:#FFFFFF; --surface-2:#FBFAF7;
+    --rule:#E2DED4; --ink:#16171A; --ink-2:#63656B; --ink-3:#8A8C92;
+    --accent:#C4392A; --btn-bg:#16171A; --btn-ink:#F5F3EE;
+    --nav-bg:rgba(245,243,238,0.78); --grid:#E8E4DA;
+  }
+  body.gridded {
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:44px 44px; background-attachment:fixed;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { background-color:var(--bg); }
+  body {
+    background-color:var(--bg); color:var(--ink);
+    font-family:'Google Sans Flex','Google Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    font-size:16px; line-height:1.6; font-optical-sizing:auto;
+    -webkit-font-smoothing:antialiased; min-height:100vh;
+    transition:background-color .3s ease, color .3s ease;
+  }
+  ::selection { background:var(--ink); color:var(--bg); }
+  a { color:inherit; }
+  [id] { scroll-margin-top:92px; }
+
+  /* NAV */
+  .nav {
+    position:sticky; top:0; z-index:40; background:var(--nav-bg);
+    -webkit-backdrop-filter:saturate(180%) blur(14px); backdrop-filter:saturate(180%) blur(14px);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-inner {
+    max-width:1152px; margin:0 auto; padding:14px var(--gutter);
+    display:flex; align-items:center; justify-content:space-between; gap:24px;
+  }
+  .nav-left { display:flex; align-items:center; gap:11px; min-width:0; text-decoration:none; }
+  .logo-mark { width:26px; height:auto; color:var(--accent); flex-shrink:0; }
+  .nav-name { font-size:15px; font-weight:500; letter-spacing:-.1px; white-space:nowrap; }
+  .nav-right { display:flex; align-items:center; gap:30px; }
+  .nav-links { display:flex; gap:30px; }
+  .nav-link-btn {
+    font-family:inherit; font-size:15px; font-weight:400; color:var(--ink-2);
+    background:none; border:none; padding:0; cursor:pointer; text-decoration:none;
+    letter-spacing:-.1px; transition:color .18s ease;
+  }
+  .nav-link-btn:hover { color:var(--ink); }
+  .theme-switch {
+    position:relative; width:48px; height:26px; border-radius:999px;
+    background:var(--surface-2); border:1px solid var(--rule); cursor:pointer; padding:0; flex-shrink:0;
+  }
+  .switch-icon { position:absolute; top:50%; transform:translateY(-50%); width:12px; height:12px; }
+  .switch-icon.sun { left:6px; color:var(--sun); }
+  .switch-icon.moon { right:6px; color:var(--moon); }
+  .switch-knob {
+    position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%;
+    background:var(--ink); transition:transform .25s cubic-bezier(.4,0,.2,1);
+  }
+  .theme-switch.on .switch-knob { transform:translateX(22px); }
+  .menu-btn {
+    display:none; width:34px; height:34px; border:none; background:none; cursor:pointer;
+    flex-direction:column; justify-content:center; align-items:center; gap:5px;
+  }
+  .menu-btn span { display:block; width:20px; height:1.5px; background:var(--ink); transition:transform .2s ease,opacity .2s ease; }
+  .menu-btn.open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+  .menu-btn.open span:nth-child(2) { opacity:0; }
+  .menu-btn.open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu {
+    display:none; position:fixed; top:57px; left:0; right:0; bottom:0; background:var(--bg);
+    z-index:39; padding:40px 32px; flex-direction:column; gap:26px; overflow-y:auto;
+  }
+  .mobile-menu.open { display:flex; }
+  .nav-link-btn.mobile { font-size:30px; font-weight:500; color:var(--ink); text-align:left; letter-spacing:-.8px; }
+  .mobile-menu-toggle-row { display:flex; align-items:center; gap:12px; margin-top:8px; font-size:14px; color:var(--ink-2); }
+
+  /* VISUALS GATE (inline, not a page takeover) */
+  .vault { margin-top:26px; }
+  .vault-lock {
+    border:1px dashed var(--rule); border-radius:16px;
+    padding:32px 30px; background:var(--surface-2);
+  }
+  .vault-icon { width:22px; height:22px; color:var(--ink-3); margin-bottom:14px; display:block; }
+  .vault-lock h3 { font-size:19px; font-weight:500; letter-spacing:-.5px; margin-bottom:10px; }
+  .vault-lock p {
+    font-size:16px; line-height:1.6; color:var(--ink-2);
+    margin:0 0 20px; max-width:56ch; letter-spacing:-.1px;
+  }
+  .gate-row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .gate-row input {
+    font-family:inherit; font-size:15px; padding:10px 16px; background:var(--bg);
+    color:var(--ink); border:1px solid var(--rule); border-radius:999px; min-width:210px;
+  }
+  .gate-row input::placeholder { color:var(--ink-3); }
+  .gate-error { font-size:14px; color:var(--accent); width:100%; margin-top:4px; display:none; }
+  .gate-error.show { display:block; }
+  .vault-help { font-size:14.5px; color:var(--ink-3); margin-top:16px; }
+  .vault-help a { color:var(--ink-2); }
+
+  .vault-body { display:none; }
+  .vault.unlocked .vault-body { display:block; }
+  .vault.unlocked .vault-lock { display:none; }
+  .vault-body figure { margin-top:26px; }
+  .vault-body figure img {
+    display:block; width:100%; border-radius:14px;
+    border:1px solid var(--rule); background:var(--surface);
+  }
+  .vault-body figcaption { font-size:14px; color:var(--ink-3); margin-top:12px; letter-spacing:-.1px; }
+
+  .layout { display:block; }
+
+  .btn {
+    display:inline-flex; align-items:center; gap:8px; font-family:inherit;
+    font-size:15px; font-weight:500; letter-spacing:-.1px; padding:11px 20px;
+    border-radius:999px; text-decoration:none; border:1px solid transparent; cursor:pointer;
+    transition:transform .18s ease,opacity .18s ease,background .18s ease;
+  }
+  .btn svg { width:15px; height:15px; }
+  .btn-primary { background:var(--btn-bg); color:var(--btn-ink); }
+  .btn-primary:hover { opacity:.86; transform:translateY(-1px); }
+  .btn-ghost { background:transparent; color:var(--ink); border-color:var(--rule); }
+  .btn-ghost:hover { background:var(--surface-2); transform:translateY(-1px); }
+
+  /* PAGE + TOC */
+  .page { max-width:1152px; margin:0 auto; padding:0 var(--gutter); }
+  .page-main { min-width:0; }
+  .toc { display:none; }
+  .toc-title {
+    font-size:11px; font-weight:500; letter-spacing:1.8px; text-transform:uppercase;
+    color:var(--ink-3); padding-bottom:14px; margin-bottom:6px; border-bottom:1px solid var(--rule);
+  }
+  .toc-list { display:flex; flex-direction:column; }
+  .toc-link {
+    position:relative; display:block; width:100%; text-align:left;
+    padding:7px 0 7px 14px; margin:0; font-family:inherit; font-size:14px; line-height:1.35;
+    color:var(--ink-3); background:none; border:none; cursor:pointer;
+    letter-spacing:-.1px; transition:color .18s ease;
+  }
+  .toc-link::before {
+    content:""; position:absolute; left:0; top:6px; bottom:6px; width:2px;
+    background:var(--accent); border-radius:2px; opacity:0; transition:opacity .2s ease;
+  }
+  .toc-link:hover { color:var(--ink-2); }
+  .toc-link.active { color:var(--ink); }
+  .toc-link.active::before { opacity:1; }
+  /* Sub-items nested under a parent section (currently: everything The
+     Approach expands into for Controlguide). The parent keeps the full
+     accent bar lit for as long as you're anywhere inside its group — see
+     the "group-active" class, set in the scroll-spy script — rather than
+     losing it the moment you scroll past its own heading into a child
+     section. Repeating that same bar next to whichever child you're
+     actually in would read as two disconnected marks; a small dot in the
+     same gutter says "here, specifically" without competing with it. */
+  .toc-link.sub { padding-left:28px; font-size:13px; }
+  .toc-link.sub::before { display:none; }
+  .toc-link.sub::after {
+    content:""; position:absolute; left:4px; top:50%; width:5px; height:5px;
+    margin-top:-2.5px; border-radius:50%; background:var(--accent);
+    opacity:0; transition:opacity .2s ease;
+  }
+  .toc-link.sub.active::after { opacity:1; }
+  .toc-link.group-active::before { opacity:1; }
+  .toc-link.group-active { color:var(--ink); }
+
+  /* The contents list as it appears inside the mobile hamburger menu,
+     replacing the old inline "On this page" accordion — that sat awkwardly
+     mid-article and duplicated a second navigation pattern. Same list, same
+     active/group-active/sub logic, just living in the one menu a mobile
+     reader already opens for everything else. */
+  .mobile-toc-group { }
+  .mobile-toc-group .toc-title { font-size: 12px; letter-spacing: 1.6px; }
+  .mobile-toc-group .toc-link {
+    font-size: 17px; padding: 9px 0 9px 16px; line-height: 1.4;
+  }
+  .mobile-toc-group .toc-link.sub { font-size: 15px; padding-left: 32px; }
+  .mobile-menu-divider { height: 1px; background: var(--rule); }
+
+  /* ARTICLE */
+  .article { padding-top:76px; max-width:720px; }
+  .back-link {
+    display:inline-flex; align-items:center; gap:7px; font-size:15px; color:var(--ink-2);
+    text-decoration:none; margin-bottom:40px; transition:color .18s ease;
+  }
+  .back-link:hover { color:var(--ink); }
+  .back-link svg { width:15px; height:15px; transition:transform .22s ease; }
+  .back-link:hover svg { transform:translateX(-3px); }
+
+  .badge-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .tag, .badge {
+    font-size:13px; letter-spacing:-.1px; border-radius:999px; padding:5px 13px;
+    border:1px solid var(--rule); color:var(--ink-2);
+  }
+  .badge { background:var(--surface); color:var(--ink); }
+
+  .title { font-size:clamp(34px,5vw,52px); font-weight:500; line-height:1.08; letter-spacing:-2px; }
+  .subtitle {
+    font-size:20px; line-height:1.5; color:var(--ink-2);
+    margin-top:20px; letter-spacing:-.2px;
+  }
+  .hero-extra { display:flex; gap:10px; flex-wrap:wrap; margin-top:28px; }
+
+  .article h2 {
+    font-size:clamp(26px,3.6vw,34px); font-weight:500; letter-spacing:-1.3px;
+    line-height:1.15; margin:78px 0 0;
+  }
+  .article h2:first-of-type { margin-top:66px; }
+  .article p {
+    font-size:17.5px; line-height:1.72; color:var(--ink-2);
+    margin-top:22px; letter-spacing:-.1px;
+  }
+  .article p strong { color:var(--ink); font-weight:500; }
+  .article ul { margin-top:22px; padding-left:0; list-style:none; }
+  .article li {
+    position:relative; font-size:17.5px; line-height:1.68; color:var(--ink-2);
+    padding-left:22px; margin-bottom:16px; letter-spacing:-.1px;
+  }
+  .article li::before {
+    content:""; position:absolute; left:2px; top:12px; width:6px; height:6px;
+    border-radius:50%; background:var(--ink-3);
+  }
+  .article li strong { color:var(--ink); font-weight:500; }
+  .article li:last-child { margin-bottom:0; }
+
+  .case-figure { margin-top:32px; }
+  .case-figure img {
+    display:block; width:100%; border-radius:14px;
+    border:1px solid var(--rule); background:var(--surface);
+  }
+  .case-figure figcaption {
+    font-size:14px; line-height:1.55; color:var(--ink-3);
+    margin-top:12px; letter-spacing:-.1px;
+  }
+
+  .restricted {
+    margin-top:22px; padding:24px 26px; background:var(--surface-2);
+    border:1px dashed var(--rule); border-radius:14px;
+    font-size:16.5px; line-height:1.65; color:var(--ink-2); letter-spacing:-.1px;
+  }
+
+  /* Reflection: each paragraph opens with a bolded lesson */
+  #reflection ~ p { }
+
+  .case-cover {
+    display:block; width:100%; aspect-ratio:16/9; object-fit:cover;
+    margin-top:44px; border-radius:16px;
+    border:1px solid var(--rule); background:var(--surface);
+  }
+
+  /* Cross-page shared-element transition */
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration:.78s;
+    animation-timing-function:cubic-bezier(.32,.08,.24,1);
+  }
+  .nav { view-transition-name: site-nav; }
+
+  /* Scroll reveal (class applied by script, so no-JS still shows everything) */
+  .reveal { opacity:0; transform:translateY(16px); }
+  .reveal.in {
+    opacity:1; transform:none;
+    transition:opacity .88s cubic-bezier(.22,.61,.36,1), transform .88s cubic-bezier(.22,.61,.36,1);
+  }
+  @media (prefers-reduced-motion:reduce) {
+    @view-transition { navigation: none; }
+    .reveal, .reveal.in { opacity:1; transform:none; transition:none; }
+  }
+
+  /* EXPLORATION BOARDS
+     Real screenshots, not recreated — these are genuinely unfinished
+     thinking (dead ends, notes-to-self, unresolved branches), and redrawing
+     them cleanly would make them look as settled as the flows that follow,
+     which defeats the point of showing them at all. The frame is where
+     visual consistency lives; the image inside stays exactly what it is. */
+  .exploration-grid { display: flex; flex-direction: column; gap: 28px; }
+  .exploration-board {
+    background: var(--bg); border: 1px solid var(--rule); border-radius: 14px;
+    padding: 14px; margin: 0;
+  }
+  .exploration-board img {
+    display: block; width: 100%; border-radius: 8px;
+    border: 1px solid var(--rule);
+  }
+  .exploration-board figcaption {
+    font-size: 14px; line-height: 1.55; color: var(--ink-3);
+    margin-top: 12px; letter-spacing: -.1px;
+  }
+
+  /* ROLE-BASED PERSONAS
+     Shown one at a time via the same flow-tabs/flow-panel component User
+     Flows uses below, rather than all five as a grid — five full cards on
+     screen together was exactly the clutter being complained about. Capped
+     width keeps a single card from stretching to the full article width. */
+  .persona-card {
+    max-width: 460px; background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .persona-header {
+    background: var(--surface-2); color: var(--ink); border-bottom: 1px solid var(--rule);
+    padding: 13px 20px; font-size: 15.5px; font-weight: 600; letter-spacing: -.2px;
+  }
+  .persona-body { padding: 18px 20px 4px; display: flex; gap: 14px; align-items: flex-start; }
+  .persona-avatar {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); flex-shrink: 0;
+  }
+  .persona-avatar svg { width: 22px; height: 22px; }
+  .persona-desc {
+    font-size: 13.5px !important; line-height: 1.55; color: var(--ink-2) !important;
+    margin: 0 !important;
+  }
+  .persona-attrs {
+    display: grid; grid-template-columns: auto 1fr; gap: 5px 14px;
+    padding: 16px 20px; margin: 14px 0 0; border-top: 1px solid var(--rule);
+    font-size: 12.5px;
+  }
+  .persona-attr-label { color: var(--ink-3); }
+  .persona-attr-value { color: var(--ink); font-weight: 500; }
+  .persona-wants {
+    padding: 16px 20px; border-top: 1px solid var(--rule);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1;
+  }
+  .persona-wants h5 {
+    font-size: 11px; font-weight: 600; letter-spacing: 1.1px;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px;
+  }
+  .persona-wants ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 7px; }
+  .persona-wants li {
+    font-size: 13px; line-height: 1.5; color: var(--ink-2);
+    position: relative; padding-left: 13px;
+  }
+  .persona-wants li::before {
+    content: ""; position: absolute; left: 0; top: 8px;
+    width: 4px; height: 4px; border-radius: 50%; background: var(--ink-3);
+  }
+  .persona-note {
+    font-size: 11.5px !important; font-style: italic; color: var(--ink-3) !important;
+    padding: 0 20px 16px; margin: 0 !important;
+  }
+  @media (max-width: 720px) {
+    .persona-wants { grid-template-columns: 1fr; }
+  }
+
+  /* COMPLETE TASK FLOW
+     Default (up to a real laptop width): wraps to as many rows as needed.
+     Connectors stay between every step, including across the row break, so
+     the sequence keeps reading left-to-right, top-to-bottom without a gap
+     in the arrows. No horizontal scroll at any width here.
+
+     From 1240px up, there's reliably enough room beside the contents rail
+     to show it as one line. At that point the section "breaks out" of the
+     article's normal 720px reading width — using negative margins rather
+     than a scrolling container — and the cards shrink slightly to fit. */
+  .taskflow { margin-top: 28px; }
+  .taskflow-track {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    align-items: stretch; row-gap: 16px; column-gap: 0;
+  }
+  .taskflow-step {
+    width: 184px; flex-shrink: 0; background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 14px;
+    padding: 20px 18px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .taskflow-num {
+    width: 25px; height: 25px; border-radius: 50%; background: var(--accent);
+    color: #fff; font-size: 12.5px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .taskflow-text {
+    font-size: 14px !important; line-height: 1.5; color: var(--ink) !important;
+    margin: 0 !important;
+  }
+  .taskflow-connector {
+    width: 72px; flex-shrink: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px; padding: 0 4px;
+  }
+  .taskflow-arrow { font-size: 18px; color: var(--ink-3); line-height: 1; }
+  .taskflow-caption {
+    font-size: 10.5px; line-height: 1.35; color: var(--ink-3);
+    text-align: center;
+  }
+  @media (max-width: 720px) {
+    .taskflow-step { width: 164px; }
+    .taskflow-connector { width: 56px; }
+  }
+  @media (max-width: 600px) {
+    /* True phone width: one column, top to bottom, matching the original
+       vertical diagram. The connector rotates from a rightward arrow into
+       a downward one rather than needing a second glyph or extra markup. */
+    .taskflow-track { flex-direction: column; align-items: center; row-gap: 0; }
+    .taskflow-step { width: 100%; max-width: 320px; }
+    .taskflow-connector { width: 100%; padding: 6px 0; }
+    .taskflow-arrow { display: inline-block; transform: rotate(90deg); }
+  }
+  @media (min-width: 1240px) {
+    /* Break out of the 720px article column. The extra 40px on each side is
+       comfortably inside the space the page layout already guarantees at
+       this width — verified against the rail (168px) and gap (44px) the
+       layout reserves, so this never re-introduces horizontal scroll on the
+       page itself. */
+    .taskflow { width: calc(100% + 80px); margin-left: -40px; }
+    .taskflow-track { flex-wrap: nowrap; justify-content: flex-start; }
+    .taskflow-step { width: 128px; padding: 16px 14px; }
+    .taskflow-num { width: 22px; height: 22px; font-size: 11px; }
+    .taskflow-text { font-size: 12.5px !important; }
+    .taskflow-connector { width: 36px; }
+  }
+
+  /* USER FLOWS */
+  .flow-tabs {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 6px;
+  }
+  .flow-tab {
+    flex-shrink: 0; font-family: inherit; font-size: 14px; font-weight: 500;
+    letter-spacing: -.1px; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 999px; padding: 9px 17px;
+    cursor: pointer; transition: color .18s ease, background .18s ease, border-color .18s ease;
+    white-space: nowrap;
+  }
+  .flow-tab:hover { color: var(--ink); background: var(--surface-2); }
+  .flow-tab.active {
+    color: var(--btn-ink); background: var(--btn-bg); border-color: var(--btn-bg);
+  }
+
+  .flow-panel { display: none; }
+  .flow-panel.active { display: block; }
+
+  .flow-desc { font-size: 16px !important; color: var(--ink-2); margin-top: 14px !important; }
+
+  .flow-diagram {
+    margin-top: 28px; padding: 32px 20px; background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 16px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .flow-arrow { color: var(--ink-3); font-size: 15px; line-height: 1; margin: 2px 0; text-align: center; }
+
+  /* Branches as a reflowing row rather than a fixed-width line fed by a
+     horizontal bar. The bar-and-stub version could only ever be fixed by
+     scrolling — five branches are simply wider than a laptop's reading
+     column allows in one line.
+
+     flex-wrap here, not CSS Grid: Grid's auto-fit found the same column
+     count, but when the last row has an odd item left over (State
+     Administrator's fifth branch, on its own), Grid doesn't center an
+     incomplete row — it just left-aligns it, since justify-content only
+     centers the full set of tracks, not the leftover space in one partial
+     row. Flexbox's justify-content applies per wrapped line, so an orphaned
+     branch centers under the row above it instead of drifting left. */
+  .flow-branches {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    width: 100%; margin-top: 16px; gap: 20px;
+  }
+  .flow-branch {
+    display: flex; flex-direction: column; align-items: center;
+    flex: 1 1 170px; min-width: 140px; max-width: 210px;
+  }
+
+  .flow-node {
+    width: 100%; text-align: center; border-radius: 10px; padding: 10px 12px;
+    font-size: 13.5px; line-height: 1.4; letter-spacing: -.1px;
+    background: var(--surface-2); color: var(--ink); border: 1px solid var(--rule);
+  }
+  .flow-eyebrow {
+    display: block; font-size: 9.5px; font-weight: 500; letter-spacing: 1.3px;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px;
+  }
+  .flow-start {
+    width: auto; padding: 11px 26px; background: var(--accent); color: #fff;
+    border-color: var(--accent); border-radius: 999px; font-weight: 500; font-size: 14px;
+  }
+  .flow-section {
+    background: var(--bg); font-weight: 500; color: var(--ink);
+    border-color: var(--rule);
+  }
+  .flow-decision { border-style: dashed; border-color: var(--ink-3); }
+  .flow-outcomes { display: flex; gap: 10px; width: 100%; margin-top: 2px; }
+  /* Same rounded-rect shape as every other node in the diagram (10px radius,
+     1px border, same padding and type size). Only the fill marks these as
+     outcomes rather than steps: solid means the path this branch resolves
+     to, outlined means the path it doesn't. A pill shape here would read as
+     a second, unrelated visual language sitting inside the same diagram. */
+  .flow-out-pos, .flow-out-neg {
+    flex: 1; border-radius: 10px; padding: 10px 12px;
+    font-size: 13.5px; line-height: 1.4; letter-spacing: -.1px;
+    text-align: center; font-weight: 500; border: 1px solid var(--rule);
+  }
+  .flow-out-pos { background: var(--btn-bg); color: var(--btn-ink); border-color: var(--btn-bg); }
+  .flow-out-neg { background: transparent; color: var(--ink-2); border-color: var(--rule); }
+  .flow-empty {
+    font-size: 13px; color: var(--ink-3); font-style: italic; margin-top: 8px; text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .flow-diagram { padding: 24px 16px; }
+  }
+
+  /* PAGER */
+  .pager { margin-top:104px; border-top:1px solid var(--rule); padding-top:44px; }
+  .pager-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .pager-card {
+    display:block; text-decoration:none; color:inherit; background:var(--surface);
+    border:1px solid var(--rule); border-radius:16px; padding:24px;
+    transition:background .18s ease, transform .18s ease;
+  }
+  .pager-card:hover { background:var(--surface-2); transform:translateY(-2px); }
+  .pager-card.next { text-align:right; }
+  .pager-dir {
+    font-size:12px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--ink-3); margin-bottom:12px;
+  }
+  .pager-title { font-size:22px; font-weight:500; letter-spacing:-.8px; line-height:1.2; }
+  .pager-sub { font-size:14.5px; color:var(--ink-2); margin-top:7px; letter-spacing:-.1px; }
+
+  /* FOOTER */
+  .footer {
+    margin-top:80px; border-top:1px solid var(--rule); padding:30px 0 46px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+  }
+  .footer-socials { display:flex; gap:18px; }
+  .footer-socials a { color:var(--ink-2); display:inline-flex; transition:color .18s ease; }
+  .footer-socials a:hover { color:var(--ink); }
+  .footer-socials svg { width:18px; height:18px; }
+  .footer-note { font-size:14px; color:var(--ink-3); letter-spacing:-.1px; }
+
+  /* CURSOR */
+  .cursor-dot {
+    position:fixed; top:0; left:0; width:14px; height:14px; border-radius:50%;
+    background:#fff; mix-blend-mode:difference; pointer-events:none; z-index:9999;
+    transform:translate(-50%,-50%); transition:width .15s ease,height .15s ease; display:none;
+  }
+  .cursor-dot.active { width:44px; height:44px; }
+  @media (pointer:fine) { body.cursor-on * { cursor:none !important; } }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+
+  @media (min-width:721px) {
+    .page { display:flex; align-items:flex-start; gap:30px; }
+    .toc {
+      display:block; width:146px; flex-shrink:0;
+      position:sticky; top:92px; margin-top:76px;
+    }
+    .page-main { flex:1; min-width:0; }
+  }
+  @media (min-width:721px) and (max-width:999px) {
+    .toc-link { font-size:13.5px; padding-left:12px; }
+    .toc-title { font-size:10.5px; letter-spacing:1.5px; }
+  }
+  @media (min-width:1000px) {
+    .page { gap:44px; }
+    .toc { width:168px; }
+  }
+  @media (max-width:720px) {
+    :root, [data-theme="dark"], [data-theme="light"] { --gutter:24px; }
+    .nav-links { display:none; }
+    .nav-right .theme-switch { display:none; }
+    .menu-btn { display:flex; }
+    .nav-name { display:none; }
+    .article { padding-top:50px; }
+    .article h2 { margin-top:56px; }
+    .subtitle { font-size:18px; }
+    .pager-grid { grid-template-columns:1fr; }
+    .pager-card.next { text-align:left; }
+    .footer { flex-direction:column; align-items:flex-start; gap:16px; }
+    .gate { padding-top:76px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    * { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body data-theme="dark" id="body">
+
+<div class="cursor-dot" id="cursorDot"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-left" href="index.html">
+      <svg class="logo-mark" viewBox="0 0 447 493" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M335.0,446.5 L334.0,446.5 L333.0,446.5 L332.0,446.5 L331.0,446.5 L330.0,446.5 L329.0,446.5 L328.0,446.5 L327.0,446.5 L326.0,446.5 L325.0,446.5 L324.5,446.0 L324.0,445.5 L323.0,445.5 L322.0,445.5 L321.0,445.5 L320.0,445.5 L319.0,445.5 L318.0,445.5 L317.5,445.0 L317.0,444.5 L316.0,444.5 L315.0,444.5 L314.0,444.5 L313.5,444.0 L313.0,443.5 L312.0,443.5 L311.0,443.5 L310.5,443.0 L310.0,442.5 L309.0,442.5 L308.0,442.5 L307.5,442.0 L307.0,441.5 L306.0,441.5 L305.5,441.0 L305.0,440.5 L304.0,440.5 L303.5,440.0 L303.0,439.5 L302.0,439.5 L301.5,439.0 L301.0,438.5 L300.5,438.0 L300.0,437.5 L299.0,437.5 L298.5,437.0 L298.0,436.5 L297.5,436.0 L297.0,435.5 L296.0,435.5 L295.5,435.0 L295.0,434.5 L294.5,434.0 L294.0,433.5 L293.5,433.0 L293.0,432.5 L292.5,432.0 L292.0,431.5 L291.5,431.0 L291.0,430.5 L290.5,430.0 L290.0,429.5 L289.5,429.0 L289.0,428.5 L288.5,428.0 L288.0,427.5 L287.5,427.0 L287.0,426.5 L286.5,426.0 L286.0,425.5 L285.5,425.0 L285.0,424.5 L284.5,424.0 L284.0,423.5 L283.5,423.0 L283.0,422.5 L282.5,422.0 L282.0,421.5 L281.5,421.0 L281.0,420.5 L280.5,420.0 L280.0,419.5 L279.5,419.0 L279.0,418.5 L278.5,418.0 L278.0,417.5 L277.5,417.0 L277.0,416.5 L276.5,416.0 L276.0,415.5 L275.5,415.0 L275.0,414.5 L274.5,414.0 L274.0,413.5 L273.5,413.0 L273.0,412.5 L272.5,412.0 L272.0,411.5 L271.5,411.0 L271.0,410.5 L270.5,410.0 L270.0,409.5 L269.5,409.0 L269.0,408.5 L268.5,408.0 L268.0,407.5 L267.5,407.0 L267.0,406.5 L266.5,406.0 L266.0,405.5 L265.5,405.0 L265.0,404.5 L264.5,404.0 L264.0,403.5 L263.5,403.0 L263.0,402.5 L262.5,402.0 L262.0,401.5 L261.5,401.0 L261.0,400.5 L260.5,400.0 L260.0,399.5 L259.5,399.0 L259.0,398.5 L258.5,398.0 L258.0,397.5 L257.5,397.0 L257.0,396.5 L256.5,396.0 L256.0,395.5 L255.5,395.0 L255.0,394.5 L254.5,394.0 L254.0,393.5 L253.5,393.0 L253.0,392.5 L252.5,392.0 L252.0,391.5 L251.5,391.0 L251.0,390.5 L250.5,390.0 L250.0,389.5 L249.5,389.0 L249.0,388.5 L248.5,388.0 L248.0,387.5 L247.5,387.0 L247.0,386.5 L246.5,386.0 L246.0,385.5 L245.5,385.0 L245.0,384.5 L244.5,384.0 L244.0,383.5 L243.5,383.0 L243.0,382.5 L242.5,382.0 L242.0,381.5 L241.5,381.0 L241.0,380.5 L240.5,380.0 L240.0,379.5 L239.5,379.0 L239.0,378.5 L238.5,378.0 L238.0,377.5 L237.5,377.0 L237.0,376.5 L236.5,376.0 L236.0,375.5 L235.5,375.0 L235.0,374.5 L234.5,374.0 L234.0,373.5 L233.5,373.0 L233.0,372.5 L232.5,372.0 L232.0,371.5 L231.5,371.0 L231.0,370.5 L230.5,370.0 L230.0,369.5 L229.5,369.0 L229.0,368.5 L228.5,368.0 L228.0,367.5 L227.5,367.0 L227.0,366.5 L226.5,366.0 L226.0,365.5 L225.5,365.0 L225.0,364.5 L224.5,364.0 L224.0,363.5 L223.5,363.0 L223.0,362.5 L222.5,362.0 L222.0,361.5 L221.5,361.0 L221.0,360.5 L220.5,360.0 L220.0,359.5 L219.5,359.0 L219.0,358.5 L218.5,358.0 L218.0,357.5 L217.5,357.0 L217.0,356.5 L216.5,356.0 L216.0,355.5 L215.5,355.0 L215.0,354.5 L214.5,354.0 L214.0,353.5 L213.5,353.0 L213.0,352.5 L212.5,352.0 L212.0,351.5 L211.5,351.0 L211.0,350.5 L210.5,350.0 L210.0,349.5 L209.5,349.0 L209.0,348.5 L208.5,348.0 L208.0,347.5 L207.5,347.0 L207.0,346.5 L206.5,346.0 L206.0,345.5 L205.5,345.0 L205.0,344.5 L204.5,344.0 L204.0,343.5 L203.5,343.0 L203.0,342.5 L202.5,342.0 L202.0,341.5 L201.5,341.0 L201.0,340.5 L200.5,340.0 L200.0,339.5 L199.5,339.0 L199.5,338.0 L199.5,337.0 L200.0,336.5 L200.5,336.0 L201.0,335.5 L201.5,335.0 L202.0,334.5 L202.5,334.0 L203.0,333.5 L203.5,333.0 L204.0,332.5 L204.5,332.0 L205.0,331.5 L205.5,331.0 L206.0,330.5 L206.5,330.0 L207.0,329.5 L207.5,329.0 L208.0,328.5 L208.5,328.0 L209.0,327.5 L209.5,327.0 L210.0,326.5 L210.5,326.0 L211.0,325.5 L211.5,325.0 L212.0,324.5 L212.5,324.0 L213.0,323.5 L213.5,323.0 L214.0,322.5 L214.5,322.0 L215.0,321.5 L215.5,321.0 L216.0,320.5 L216.5,320.0 L217.0,319.5 L217.5,319.0 L218.0,318.5 L218.5,318.0 L219.0,317.5 L219.5,317.0 L220.0,316.5 L220.5,316.0 L221.0,315.5 L221.5,315.0 L222.0,314.5 L222.5,314.0 L223.0,313.5 L223.5,313.0 L224.0,312.5 L224.5,312.0 L225.0,311.5 L225.5,311.0 L226.0,310.5 L226.5,310.0 L227.0,309.5 L227.5,309.0 L228.0,308.5 L228.5,308.0 L229.0,307.5 L229.5,307.0 L230.0,306.5 L230.5,306.0 L231.0,305.5 L231.5,305.0 L232.0,304.5 L232.5,304.0 L233.0,303.5 L233.5,303.0 L234.0,302.5 L234.5,302.0 L235.0,301.5 L235.5,301.0 L236.0,300.5 L236.5,300.0 L237.0,299.5 L237.5,299.0 L238.0,298.5 L238.5,299.0 L239.0,299.5 L239.5,300.0 L240.0,300.5 L240.5,301.0 L241.0,301.5 L241.5,302.0 L242.0,302.5 L242.5,303.0 L243.0,303.5 L243.5,304.0 L244.0,304.5 L244.5,305.0 L245.0,305.5 L245.5,306.0 L246.0,306.5 L246.5,307.0 L247.0,307.5 L247.5,308.0 L248.0,308.5 L248.5,309.0 L249.0,309.5 L249.5,310.0 L250.0,310.5 L250.5,311.0 L251.0,311.5 L251.5,312.0 L252.0,312.5 L252.5,313.0 L253.0,313.5 L253.5,314.0 L254.0,314.5 L254.5,315.0 L255.0,315.5 L255.5,316.0 L256.0,316.5 L256.5,317.0 L257.0,317.5 L257.5,318.0 L258.0,318.5 L258.5,319.0 L259.0,319.5 L259.5,320.0 L260.0,320.5 L260.5,321.0 L261.0,321.5 L261.5,322.0 L262.0,322.5 L262.5,323.0 L263.0,323.5 L263.5,324.0 L264.0,324.5 L264.5,325.0 L265.0,325.5 L265.5,326.0 L266.0,326.5 L266.5,327.0 L267.0,327.5 L267.5,328.0 L268.0,328.5 L268.5,329.0 L269.0,329.5 L269.5,330.0 L270.0,330.5 L270.5,331.0 L271.0,331.5 L271.5,332.0 L272.0,332.5 L272.5,333.0 L273.0,333.5 L273.5,334.0 L274.0,334.5 L274.5,335.0 L275.0,335.5 L275.5,336.0 L276.0,336.5 L276.5,337.0 L277.0,337.5 L277.5,338.0 L278.0,338.5 L278.5,339.0 L279.0,339.5 L279.5,340.0 L280.0,340.5 L280.5,341.0 L281.0,341.5 L281.5,342.0 L282.0,342.5 L282.5,343.0 L283.0,343.5 L283.5,344.0 L284.0,344.5 L284.5,345.0 L285.0,345.5 L285.5,346.0 L286.0,346.5 L286.5,347.0 L287.0,347.5 L287.5,348.0 L288.0,348.5 L288.5,349.0 L289.0,349.5 L289.5,350.0 L290.0,350.5 L290.5,351.0 L291.0,351.5 L291.5,352.0 L292.0,352.5 L292.5,353.0 L293.0,353.5 L293.5,354.0 L294.0,354.5 L294.5,355.0 L295.0,355.5 L295.5,356.0 L296.0,356.5 L296.5,357.0 L297.0,357.5 L297.5,358.0 L298.0,358.5 L298.5,359.0 L299.0,359.5 L299.5,360.0 L300.0,360.5 L300.5,361.0 L301.0,361.5 L301.5,362.0 L302.0,362.5 L302.5,363.0 L303.0,363.5 L303.5,364.0 L304.0,364.5 L304.5,365.0 L305.0,365.5 L305.5,366.0 L306.0,366.5 L306.5,367.0 L307.0,367.5 L307.5,368.0 L308.0,368.5 L308.5,369.0 L309.0,369.5 L309.5,370.0 L310.0,370.5 L310.5,371.0 L311.0,371.5 L311.5,372.0 L312.0,372.5 L312.5,373.0 L313.0,373.5 L313.5,374.0 L314.0,374.5 L314.5,375.0 L315.0,375.5 L315.5,376.0 L316.0,376.5 L316.5,377.0 L317.0,377.5 L317.5,378.0 L318.0,378.5 L318.5,379.0 L319.0,379.5 L319.5,380.0 L320.0,380.5 L320.5,381.0 L321.0,381.5 L321.5,382.0 L322.0,382.5 L322.5,383.0 L323.0,383.5 L323.5,384.0 L324.0,384.5 L324.5,385.0 L325.0,385.5 L325.5,386.0 L326.0,386.5 L326.5,387.0 L327.0,387.5 L327.5,388.0 L328.0,388.5 L328.5,389.0 L329.0,389.5 L329.5,390.0 L330.0,390.5 L330.5,391.0 L331.0,391.5 L331.5,392.0 L332.0,392.5 L333.0,392.5 L333.5,393.0 L334.0,393.5 L335.0,393.5 L336.0,393.5 L336.5,394.0 L337.0,394.5 L338.0,394.5 L339.0,394.5 L340.0,394.5 L341.0,394.5 L342.0,394.5 L343.0,394.5 L344.0,394.5 L344.5,394.0 L345.0,393.5 L346.0,393.5 L346.5,393.0 L347.0,392.5 L348.0,392.5 L348.5,392.0 L349.0,391.5 L349.5,391.0 L350.0,390.5 L351.0,390.5 L351.5,390.0 L352.0,389.5 L352.5,389.0 L352.5,388.0 L353.0,387.5 L353.5,387.0 L353.5,386.0 L354.0,385.5 L354.5,385.0 L354.5,384.0 L354.5,383.0 L355.0,382.5 L355.5,382.0 L355.5,381.0 L355.5,380.0 L355.5,379.0 L355.5,378.0 L355.5,377.0 L355.5,376.0 L355.0,375.5 L354.5,375.0 L354.5,374.0 L354.5,373.0 L354.0,372.5 L353.5,372.0 L353.5,371.0 L353.0,370.5 L352.5,370.0 L352.0,369.5 L351.5,369.0 L351.0,368.5 L350.5,368.0 L350.0,367.5 L349.5,367.0 L349.0,366.5 L348.5,366.0 L348.0,365.5 L347.5,365.0 L347.0,364.5 L346.5,364.0 L346.0,363.5 L345.5,363.0 L345.0,362.5 L344.5,362.0 L344.0,361.5 L343.5,361.0 L343.0,360.5 L342.5,360.0 L342.0,359.5 L341.5,359.0 L341.0,358.5 L340.5,358.0 L340.0,357.5 L339.5,357.0 L339.0,356.5 L338.5,356.0 L338.0,355.5 L337.5,355.0 L337.0,354.5 L336.5,354.0 L336.0,353.5 L335.5,353.0 L335.0,352.5 L334.5,352.0 L334.0,351.5 L333.5,351.0 L333.0,350.5 L332.5,350.0 L332.0,349.5 L331.5,349.0 L331.0,348.5 L330.5,348.0 L330.0,347.5 L329.5,347.0 L329.0,346.5 L328.5,346.0 L328.0,345.5 L327.5,345.0 L327.0,344.5 L326.5,344.0 L326.0,343.5 L325.5,343.0 L325.0,342.5 L324.5,342.0 L324.0,341.5 L323.5,341.0 L323.0,340.5 L322.5,340.0 L322.0,339.5 L321.5,339.0 L321.0,338.5 L320.5,338.0 L320.0,337.5 L319.5,337.0 L319.0,336.5 L318.5,336.0 L318.0,335.5 L317.5,335.0 L317.0,334.5 L316.5,334.0 L316.0,333.5 L315.5,333.0 L315.0,332.5 L314.5,332.0 L314.0,331.5 L313.5,331.0 L313.0,330.5 L312.5,330.0 L312.0,329.5 L311.5,329.0 L311.0,328.5 L310.5,328.0 L310.0,327.5 L309.5,327.0 L309.0,326.5 L308.5,326.0 L308.0,325.5 L307.5,325.0 L307.0,324.5 L306.5,324.0 L306.0,323.5 L305.5,323.0 L305.0,322.5 L304.5,322.0 L304.0,321.5 L303.5,321.0 L303.0,320.5 L302.5,320.0 L302.0,319.5 L301.5,319.0 L301.0,318.5 L300.5,318.0 L300.0,317.5 L299.5,317.0 L299.0,316.5 L298.5,316.0 L298.0,315.5 L297.5,315.0 L297.0,314.5 L296.5,314.0 L296.0,313.5 L295.5,313.0 L295.0,312.5 L294.5,312.0 L294.0,311.5 L293.5,311.0 L293.0,310.5 L292.5,310.0 L292.0,309.5 L291.5,309.0 L291.0,308.5 L290.5,308.0 L290.0,307.5 L289.5,307.0 L289.0,306.5 L288.5,306.0 L288.0,305.5 L287.5,305.0 L287.0,304.5 L286.5,304.0 L286.0,303.5 L285.5,303.0 L285.0,302.5 L284.5,302.0 L284.0,301.5 L283.5,301.0 L283.0,300.5 L282.5,300.0 L282.0,299.5 L281.5,299.0 L281.0,298.5 L280.5,298.0 L280.0,297.5 L279.5,297.0 L279.0,296.5 L278.5,296.0 L278.0,295.5 L277.5,295.0 L277.0,294.5 L276.5,294.0 L276.0,293.5 L275.5,293.0 L275.0,292.5 L274.5,292.0 L274.0,291.5 L273.5,291.0 L273.0,290.5 L272.5,290.0 L272.0,289.5 L271.5,289.0 L271.0,288.5 L270.5,288.0 L270.0,287.5 L269.5,287.0 L269.0,286.5 L268.5,286.0 L268.0,285.5 L267.5,285.0 L267.0,284.5 L266.5,284.0 L266.0,283.5 L265.5,283.0 L265.0,282.5 L264.5,282.0 L264.0,281.5 L263.5,281.0 L263.0,280.5 L262.5,280.0 L262.0,279.5 L261.5,279.0 L261.5,278.0 L261.0,277.5 L260.5,277.0 L260.0,276.5 L259.5,276.0 L259.0,275.5 L258.5,275.0 L258.0,274.5 L257.5,274.0 L257.0,273.5 L256.5,273.0 L256.0,272.5 L255.5,272.0 L255.0,271.5 L254.5,271.0 L254.0,270.5 L253.5,270.0 L253.0,269.5 L252.5,269.0 L252.0,268.5 L251.5,268.0 L251.0,267.5 L250.5,267.0 L250.0,266.5 L249.5,266.0 L249.0,265.5 L248.5,265.0 L248.0,264.5 L247.5,264.0 L247.0,263.5 L246.5,263.0 L246.0,262.5 L245.5,262.0 L245.0,261.5 L244.5,261.0 L244.0,260.5 L243.5,260.0 L243.0,259.5 L242.5,259.0 L242.0,258.5 L241.5,258.0 L241.0,257.5 L240.5,257.0 L240.0,256.5 L239.5,256.0 L239.0,255.5 L238.5,255.0 L238.0,254.5 L237.5,254.0 L237.0,253.5 L236.5,253.0 L236.0,252.5 L235.5,252.0 L235.0,251.5 L234.5,251.0 L234.0,250.5 L233.5,250.0 L233.0,249.5 L232.5,249.0 L232.0,248.5 L231.5,248.0 L231.0,247.5 L230.5,247.0 L230.0,246.5 L229.5,246.0 L229.0,245.5 L228.5,245.0 L228.0,244.5 L227.5,244.0 L227.0,243.5 L226.5,243.0 L226.0,242.5 L225.5,242.0 L225.0,241.5 L224.5,241.0 L224.0,240.5 L223.5,240.0 L223.0,239.5 L222.5,239.0 L222.0,238.5 L221.5,238.0 L221.0,237.5 L220.5,237.0 L220.0,236.5 L219.5,236.0 L219.0,235.5 L218.5,235.0 L218.0,234.5 L217.5,234.0 L217.0,233.5 L216.5,233.0 L216.0,232.5 L215.5,232.0 L215.0,231.5 L214.5,231.0 L214.0,230.5 L213.5,230.0 L213.0,229.5 L212.5,229.0 L212.0,228.5 L211.5,228.0 L211.0,227.5 L210.5,227.0 L210.0,226.5 L209.5,226.0 L209.0,225.5 L208.5,225.0 L208.0,224.5 L207.5,224.0 L207.0,223.5 L206.5,223.0 L206.0,222.5 L205.5,222.0 L205.0,221.5 L204.5,221.0 L204.0,220.5 L203.5,220.0 L203.0,219.5 L202.5,219.0 L202.0,218.5 L201.5,218.0 L201.0,217.5 L200.5,217.0 L200.0,216.5 L199.5,216.0 L199.0,215.5 L198.5,215.0 L198.0,214.5 L197.5,214.0 L197.0,213.5 L196.5,213.0 L196.0,212.5 L195.5,212.0 L195.0,211.5 L194.5,211.0 L194.0,210.5 L193.5,210.0 L193.0,209.5 L192.5,209.0 L192.0,208.5 L191.5,208.0 L191.0,207.5 L190.5,207.0 L190.0,206.5 L189.5,206.0 L189.0,205.5 L188.5,205.0 L188.0,204.5 L187.5,204.0 L187.0,203.5 L186.5,203.0 L186.0,202.5 L185.5,202.0 L185.0,201.5 L184.5,201.0 L184.0,200.5 L183.5,201.0 L183.0,201.5 L182.5,202.0 L182.0,202.5 L181.5,203.0 L181.0,203.5 L180.5,204.0 L180.0,204.5 L179.5,205.0 L179.0,205.5 L178.5,206.0 L178.0,206.5 L177.5,207.0 L177.0,207.5 L176.5,208.0 L176.0,208.5 L175.5,209.0 L175.0,209.5 L174.5,210.0 L174.0,210.5 L173.5,211.0 L173.0,211.5 L172.5,212.0 L172.0,212.5 L171.5,213.0 L171.0,213.5 L170.5,214.0 L170.0,214.5 L169.5,215.0 L169.0,215.5 L168.5,216.0 L168.0,216.5 L167.5,217.0 L167.0,217.5 L166.5,218.0 L166.0,218.5 L165.5,219.0 L165.0,219.5 L164.5,220.0 L164.0,220.5 L163.5,221.0 L163.0,221.5 L162.5,222.0 L163.0,222.5 L163.5,223.0 L164.0,223.5 L164.5,224.0 L165.0,224.5 L165.5,225.0 L166.0,225.5 L166.5,226.0 L167.0,226.5 L167.5,227.0 L168.0,227.5 L168.5,228.0 L169.0,228.5 L169.5,229.0 L170.0,229.5 L170.5,230.0 L171.0,230.5 L171.5,231.0 L172.0,231.5 L172.5,232.0 L173.0,232.5 L173.5,233.0 L174.0,233.5 L174.5,234.0 L175.0,234.5 L175.5,235.0 L176.0,235.5 L176.5,236.0 L177.0,236.5 L177.5,237.0 L178.0,237.5 L178.5,238.0 L179.0,238.5 L179.5,239.0 L180.0,239.5 L180.5,240.0 L181.0,240.5 L181.5,241.0 L182.0,241.5 L182.5,242.0 L183.0,242.5 L183.5,243.0 L184.0,243.5 L184.5,244.0 L185.0,244.5 L185.5,245.0 L186.0,245.5 L186.5,246.0 L187.0,246.5 L187.5,247.0 L188.0,247.5 L188.5,248.0 L189.0,248.5 L189.5,249.0 L190.0,249.5 L190.5,250.0 L191.0,250.5 L191.5,251.0 L192.0,251.5 L192.5,252.0 L193.0,252.5 L193.5,253.0 L194.0,253.5 L194.5,254.0 L195.0,254.5 L195.5,255.0 L196.0,255.5 L196.5,256.0 L197.0,256.5 L197.5,257.0 L198.0,257.5 L198.5,258.0 L199.0,258.5 L199.5,259.0 L200.0,259.5 L200.5,260.0 L201.0,260.5 L201.5,261.0 L202.0,261.5 L202.5,262.0 L203.0,262.5 L203.5,263.0 L204.0,263.5 L204.5,264.0 L205.0,264.5 L205.5,265.0 L206.0,265.5 L206.5,266.0 L207.0,266.5 L207.5,267.0 L208.0,267.5 L208.5,268.0 L209.0,268.5 L209.5,269.0 L210.0,269.5 L210.5,270.0 L211.0,270.5 L211.5,271.0 L212.0,271.5 L212.5,272.0 L212.0,272.5 L211.5,273.0 L211.0,273.5 L210.5,274.0 L210.0,274.5 L209.5,275.0 L209.0,275.5 L208.5,276.0 L208.0,276.5 L207.5,277.0 L207.0,277.5 L206.5,278.0 L206.0,278.5 L205.5,279.0 L205.0,279.5 L204.5,280.0 L204.0,280.5 L203.5,281.0 L203.0,281.5 L202.5,282.0 L202.0,282.5 L201.5,283.0 L201.0,283.5 L200.5,284.0 L200.0,284.5 L199.5,285.0 L199.0,285.5 L198.5,286.0 L198.0,286.5 L197.5,287.0 L197.0,287.5 L196.5,288.0 L196.0,288.5 L195.5,289.0 L195.0,289.5 L194.5,290.0 L194.0,290.5 L193.5,291.0 L193.0,291.5 L192.5,292.0 L192.0,292.5 L191.5,293.0 L191.0,293.5 L190.5,294.0 L190.0,294.5 L189.5,295.0 L189.0,295.5 L188.5,296.0 L188.0,296.5 L187.5,297.0 L187.0,297.5 L186.5,298.0 L186.0,298.5 L185.5,299.0 L185.0,299.5 L184.5,300.0 L184.0,300.5 L183.5,301.0 L183.0,301.5 L182.5,302.0 L182.0,302.5 L181.5,303.0 L181.0,303.5 L180.5,304.0 L180.0,304.5 L179.5,305.0 L179.0,305.5 L178.5,306.0 L178.0,306.5 L177.5,307.0 L177.0,307.5 L176.5,308.0 L176.0,308.5 L175.5,309.0 L175.0,309.5 L174.5,310.0 L174.0,310.5 L173.5,311.0 L173.0,311.5 L172.5,311.0 L172.0,310.5 L171.5,310.0 L171.0,309.5 L170.5,309.0 L170.0,308.5 L169.5,308.0 L169.0,307.5 L168.5,307.0 L168.0,306.5 L167.5,306.0 L167.0,305.5 L166.5,305.0 L166.0,304.5 L165.5,304.0 L165.0,303.5 L164.5,303.0 L164.0,302.5 L163.5,302.0 L163.0,301.5 L162.5,301.0 L162.0,300.5 L161.5,300.0 L161.0,299.5 L160.5,299.0 L160.0,298.5 L159.5,298.0 L159.0,297.5 L158.5,297.0 L158.0,296.5 L157.5,296.0 L157.0,295.5 L156.5,295.0 L156.0,294.5 L155.5,294.0 L155.0,293.5 L154.5,293.0 L154.0,292.5 L153.5,292.0 L153.0,291.5 L152.5,291.0 L152.0,290.5 L151.5,290.0 L151.0,289.5 L150.5,289.0 L150.0,288.5 L149.5,288.0 L149.0,287.5 L148.5,287.0 L148.0,286.5 L147.5,286.0 L147.0,285.5 L146.5,285.0 L146.0,284.5 L145.5,284.0 L145.0,283.5 L144.5,283.0 L144.0,282.5 L143.5,282.0 L143.0,281.5 L142.5,281.0 L142.0,280.5 L141.5,280.0 L141.0,279.5 L140.5,279.0 L140.0,278.5 L139.5,278.0 L139.0,277.5 L138.5,277.0 L138.0,276.5 L137.5,276.0 L137.0,275.5 L136.5,275.0 L136.0,274.5 L135.5,274.0 L135.0,273.5 L134.5,273.0 L134.0,272.5 L133.5,272.0 L133.0,271.5 L132.5,271.0 L132.0,270.5 L131.5,270.0 L131.0,269.5 L130.5,269.0 L130.0,268.5 L129.5,268.0 L129.0,267.5 L128.5,267.0 L128.0,266.5 L127.5,266.0 L127.0,265.5 L126.5,265.0 L126.0,264.5 L125.5,264.0 L125.0,263.5 L124.5,263.0 L124.0,262.5 L123.5,262.0 L123.0,261.5 L122.0,261.5 L121.5,262.0 L121.0,262.5 L120.5,263.0 L120.0,263.5 L119.5,264.0 L119.0,264.5 L118.5,265.0 L118.0,265.5 L117.5,266.0 L117.0,266.5 L116.5,267.0 L116.0,267.5 L115.5,268.0 L115.0,268.5 L114.5,269.0 L114.0,269.5 L113.5,270.0 L113.0,270.5 L112.5,271.0 L112.0,271.5 L111.5,272.0 L111.0,272.5 L110.5,273.0 L110.5,274.0 L110.5,275.0 L110.5,276.0 L110.5,277.0 L110.5,278.0 L110.5,279.0 L110.5,280.0 L110.5,281.0 L110.5,282.0 L110.5,283.0 L110.5,284.0 L110.5,285.0 L110.5,286.0 L110.5,287.0 L110.5,288.0 L110.5,289.0 L110.5,290.0 L110.5,291.0 L110.5,292.0 L110.5,293.0 L110.5,294.0 L110.5,295.0 L110.5,296.0 L110.5,297.0 L110.5,298.0 L110.5,299.0 L110.5,300.0 L110.5,301.0 L110.5,302.0 L110.5,303.0 L110.5,304.0 L110.5,305.0 L110.5,306.0 L110.5,307.0 L110.5,308.0 L110.5,309.0 L110.5,310.0 L110.5,311.0 L110.5,312.0 L110.5,313.0 L110.5,314.0 L110.5,315.0 L110.5,316.0 L110.5,317.0 L110.5,318.0 L110.5,319.0 L110.5,320.0 L110.5,321.0 L110.5,322.0 L110.5,323.0 L110.5,324.0 L110.5,325.0 L110.5,326.0 L110.5,327.0 L110.5,328.0 L110.5,329.0 L110.5,330.0 L110.5,331.0 L110.5,332.0 L110.5,333.0 L110.5,334.0 L110.5,335.0 L110.5,336.0 L110.5,337.0 L110.5,338.0 L110.5,339.0 L110.5,340.0 L110.5,341.0 L110.5,342.0 L110.5,343.0 L110.5,344.0 L110.0,344.5 L109.0,344.5 L108.0,344.5 L107.0,344.5 L106.0,344.5 L105.0,344.5 L104.0,344.5 L103.0,344.5 L102.0,344.5 L101.0,344.5 L100.0,344.5 L99.0,344.5 L98.0,344.5 L97.0,344.5 L96.0,344.5 L95.0,344.5 L94.0,344.5 L93.0,344.5 L92.0,344.5 L91.0,344.5 L90.0,344.5 L89.0,344.5 L88.0,344.5 L87.0,344.5 L86.0,344.5 L85.0,344.5 L84.0,344.5 L83.0,344.5 L82.0,344.5 L81.0,344.5 L80.0,344.5 L79.0,344.5 L78.0,344.5 L77.0,344.5 L76.0,344.5 L75.0,344.5 L74.0,344.5 L73.0,344.5 L72.0,344.5 L71.0,344.5 L70.0,344.5 L69.0,344.5 L68.0,344.5 L67.0,344.5 L66.0,344.5 L65.0,344.5 L64.0,344.5 L63.0,344.5 L62.0,344.5 L61.0,344.5 L60.0,344.5 L59.0,344.5 L58.0,344.5 L57.0,344.5 L56.0,344.5 L55.0,344.5 L54.5,344.0 L54.5,343.0 L54.5,342.0 L54.5,341.0 L54.5,340.0 L54.5,339.0 L54.5,338.0 L54.5,337.0 L54.5,336.0 L54.5,335.0 L54.5,334.0 L54.5,333.0 L54.5,332.0 L54.5,331.0 L54.5,330.0 L54.5,329.0 L54.5,328.0 L54.5,327.0 L54.5,326.0 L54.5,325.0 L54.5,324.0 L54.5,323.0 L54.5,322.0 L54.5,321.0 L54.5,320.0 L54.5,319.0 L54.5,318.0 L54.5,317.0 L54.5,316.0 L54.5,315.0 L54.5,314.0 L54.5,313.0 L54.5,312.0 L54.5,311.0 L54.5,310.0 L54.5,309.0 L54.5,308.0 L54.5,307.0 L54.5,306.0 L54.5,305.0 L54.5,304.0 L54.5,303.0 L54.5,302.0 L54.5,301.0 L54.5,300.0 L54.5,299.0 L54.5,298.0 L54.5,297.0 L54.5,296.0 L54.5,295.0 L54.5,294.0 L54.5,293.0 L54.5,292.0 L54.5,291.0 L54.5,290.0 L54.5,289.0 L54.5,288.0 L54.5,287.0 L54.5,286.0 L54.5,285.0 L54.5,284.0 L54.5,283.0 L54.5,282.0 L54.5,281.0 L54.5,280.0 L54.5,279.0 L54.5,278.0 L54.5,277.0 L54.5,276.0 L54.5,275.0 L54.5,274.0 L54.5,273.0 L54.5,272.0 L54.5,271.0 L54.5,270.0 L54.5,269.0 L54.5,268.0 L54.5,267.0 L54.5,266.0 L54.5,265.0 L54.5,264.0 L54.5,263.0 L54.5,262.0 L54.5,261.0 L54.5,260.0 L54.5,259.0 L54.5,258.0 L54.5,257.0 L54.5,256.0 L54.5,255.0 L54.5,254.0 L54.5,253.0 L54.5,252.0 L54.5,251.0 L54.5,250.0 L54.5,249.0 L54.5,248.0 L54.5,247.0 L54.5,246.0 L54.5,245.0 L54.5,244.0 L54.5,243.0 L54.5,242.0 L54.5,241.0 L54.5,240.0 L54.5,239.0 L54.5,238.0 L54.5,237.0 L54.5,236.0 L54.5,235.0 L54.5,234.0 L54.5,233.0 L54.5,232.0 L54.5,231.0 L54.5,230.0 L54.5,229.0 L54.5,228.0 L54.5,227.0 L54.5,226.0 L54.5,225.0 L54.5,224.0 L54.5,223.0 L54.5,222.0 L54.5,221.0 L54.5,220.0 L54.5,219.0 L54.5,218.0 L54.5,217.0 L54.5,216.0 L54.5,215.0 L54.5,214.0 L54.5,213.0 L54.5,212.0 L54.5,211.0 L54.5,210.0 L54.5,209.0 L54.5,208.0 L54.5,207.0 L54.5,206.0 L54.5,205.0 L54.5,204.0 L54.5,203.0 L54.5,202.0 L54.5,201.0 L54.5,200.0 L54.5,199.0 L54.5,198.0 L54.5,197.0 L54.5,196.0 L54.5,195.0 L54.5,194.0 L54.5,193.0 L54.5,192.0 L54.5,191.0 L54.5,190.0 L54.5,189.0 L54.5,188.0 L54.5,187.0 L54.5,186.0 L54.5,185.0 L54.5,184.0 L54.5,183.0 L54.5,182.0 L54.5,181.0 L54.5,180.0 L54.5,179.0 L54.5,178.0 L54.5,177.0 L54.5,176.0 L54.5,175.0 L54.5,174.0 L54.5,173.0 L54.5,172.0 L54.5,171.0 L54.5,170.0 L54.5,169.0 L54.5,168.0 L54.5,167.0 L54.5,166.0 L54.5,165.0 L54.5,164.0 L54.5,163.0 L54.5,162.0 L54.5,161.0 L54.5,160.0 L54.5,159.0 L54.5,158.0 L54.5,157.0 L54.5,156.0 L54.5,155.0 L54.5,154.0 L54.5,153.0 L54.5,152.0 L54.5,151.0 L54.5,150.0 L54.5,149.0 L54.5,148.0 L54.5,147.0 L54.5,146.0 L54.5,145.0 L54.5,144.0 L54.5,143.0 L54.5,142.0 L54.5,141.0 L54.5,140.0 L54.5,139.0 L54.5,138.0 L54.5,137.0 L54.5,136.0 L54.5,135.0 L54.5,134.0 L54.5,133.0 L54.5,132.0 L54.5,131.0 L54.5,130.0 L54.5,129.0 L54.5,128.0 L54.5,127.0 L54.5,126.0 L54.5,125.0 L54.5,124.0 L54.5,123.0 L54.5,122.0 L54.5,121.0 L54.5,120.0 L54.5,119.0 L54.5,118.0 L54.5,117.0 L54.5,116.0 L54.5,115.0 L54.5,114.0 L54.5,113.0 L54.5,112.0 L54.5,111.0 L54.5,110.0 L54.5,109.0 L54.5,108.0 L54.5,107.0 L54.5,106.0 L54.5,105.0 L54.5,104.0 L54.5,103.0 L54.5,102.0 L54.5,101.0 L54.5,100.0 L54.5,99.0 L54.5,98.0 L54.5,97.0 L54.5,96.0 L54.5,95.0 L54.5,94.0 L54.5,93.0 L54.5,92.0 L54.5,91.0 L54.5,90.0 L54.5,89.0 L54.5,88.0 L54.5,87.0 L54.5,86.0 L54.5,85.0 L54.5,84.0 L55.0,83.5 L56.0,83.5 L57.0,83.5 L58.0,83.5 L59.0,83.5 L60.0,83.5 L61.0,83.5 L62.0,83.5 L63.0,83.5 L64.0,83.5 L65.0,83.5 L66.0,83.5 L67.0,83.5 L68.0,83.5 L69.0,83.5 L70.0,83.5 L71.0,83.5 L72.0,83.5 L73.0,83.5 L74.0,83.5 L75.0,83.5 L76.0,83.5 L77.0,83.5 L78.0,83.5 L79.0,83.5 L80.0,83.5 L81.0,83.5 L82.0,83.5 L83.0,83.5 L84.0,83.5 L85.0,83.5 L86.0,83.5 L87.0,83.5 L88.0,83.5 L89.0,83.5 L90.0,83.5 L91.0,83.5 L92.0,83.5 L93.0,83.5 L94.0,83.5 L95.0,83.5 L96.0,83.5 L97.0,83.5 L98.0,83.5 L99.0,83.5 L100.0,83.5 L101.0,83.5 L102.0,83.5 L103.0,83.5 L104.0,83.5 L105.0,83.5 L106.0,83.5 L107.0,83.5 L108.0,83.5 L109.0,83.5 L109.5,84.0 L110.0,84.5 L110.5,85.0 L110.5,86.0 L110.5,87.0 L110.5,88.0 L110.5,89.0 L110.5,90.0 L110.5,91.0 L110.5,92.0 L110.5,93.0 L110.5,94.0 L110.5,95.0 L110.5,96.0 L110.5,97.0 L110.5,98.0 L110.5,99.0 L110.5,100.0 L110.5,101.0 L110.5,102.0 L110.5,103.0 L110.5,104.0 L110.5,105.0 L110.5,106.0 L110.5,107.0 L110.5,108.0 L110.5,109.0 L110.5,110.0 L110.5,111.0 L110.5,112.0 L110.5,113.0 L110.5,114.0 L110.5,115.0 L110.5,116.0 L110.5,117.0 L110.5,118.0 L110.5,119.0 L110.5,120.0 L110.5,121.0 L110.5,122.0 L110.5,123.0 L110.5,124.0 L110.5,125.0 L110.5,126.0 L110.5,127.0 L110.5,128.0 L110.5,129.0 L110.5,130.0 L110.5,131.0 L110.5,132.0 L110.5,133.0 L110.5,134.0 L110.5,135.0 L110.5,136.0 L110.5,137.0 L110.5,138.0 L110.5,139.0 L110.5,140.0 L110.5,141.0 L110.5,142.0 L110.5,143.0 L110.5,144.0 L110.5,145.0 L110.5,146.0 L110.5,147.0 L110.5,148.0 L110.5,149.0 L110.5,150.0 L110.5,151.0 L110.5,152.0 L110.5,153.0 L110.5,154.0 L110.5,155.0 L110.5,156.0 L110.5,157.0 L110.5,158.0 L110.5,159.0 L110.5,160.0 L110.5,161.0 L110.5,162.0 L110.5,163.0 L110.5,164.0 L110.5,165.0 L110.5,166.0 L110.5,167.0 L110.5,168.0 L110.5,169.0 L110.5,170.0 L110.5,171.0 L110.5,172.0 L110.5,173.0 L110.5,174.0 L110.5,175.0 L110.5,176.0 L110.5,177.0 L110.5,178.0 L110.5,179.0 L110.5,180.0 L110.5,181.0 L110.5,182.0 L110.5,183.0 L110.5,184.0 L110.5,185.0 L110.5,186.0 L110.5,187.0 L110.5,188.0 L110.5,189.0 L110.5,190.0 L110.5,191.0 L110.5,192.0 L110.5,193.0 L111.0,193.5 L111.5,193.0 L112.0,192.5 L112.5,192.0 L113.0,191.5 L113.5,191.0 L114.0,190.5 L114.5,190.0 L115.0,189.5 L115.5,189.0 L116.0,188.5 L116.5,188.0 L117.0,187.5 L117.5,187.0 L118.0,186.5 L118.5,186.0 L119.0,185.5 L119.5,185.0 L120.0,184.5 L120.5,184.0 L121.0,183.5 L121.5,183.0 L122.0,182.5 L122.5,182.0 L123.0,181.5 L123.5,181.0 L124.0,180.5 L124.5,180.0 L125.0,179.5 L125.5,179.0 L126.0,178.5 L126.5,178.0 L127.0,177.5 L127.5,177.0 L128.0,176.5 L128.5,176.0 L129.0,175.5 L129.5,175.0 L130.0,174.5 L130.5,174.0 L131.0,173.5 L131.5,173.0 L132.0,172.5 L132.5,172.0 L133.0,171.5 L133.5,171.0 L134.0,170.5 L134.5,170.0 L135.0,169.5 L135.5,169.0 L136.0,168.5 L136.5,168.0 L137.0,167.5 L137.5,167.0 L138.0,166.5 L138.5,166.0 L139.0,165.5 L139.5,165.0 L140.0,164.5 L140.5,164.0 L141.0,163.5 L141.5,163.0 L142.0,162.5 L142.5,162.0 L143.0,161.5 L143.5,161.0 L144.0,160.5 L144.5,160.0 L145.0,159.5 L145.5,159.0 L146.0,158.5 L146.5,158.0 L147.0,157.5 L147.5,157.0 L148.0,156.5 L148.5,156.0 L149.0,155.5 L149.5,155.0 L150.0,154.5 L150.5,154.0 L151.0,153.5 L151.5,153.0 L152.0,152.5 L152.5,152.0 L153.0,151.5 L153.5,151.0 L154.0,150.5 L154.5,150.0 L155.0,149.5 L155.5,149.0 L156.0,148.5 L156.5,148.0 L157.0,147.5 L157.5,147.0 L158.0,146.5 L158.5,146.0 L159.0,145.5 L159.5,145.0 L160.0,144.5 L160.5,144.0 L161.0,143.5 L161.5,143.0 L162.0,142.5 L162.5,142.0 L163.0,141.5 L163.5,141.0 L164.0,140.5 L164.5,140.0 L165.0,139.5 L165.5,139.0 L166.0,138.5 L166.5,138.0 L167.0,137.5 L167.5,137.0 L168.0,136.5 L168.5,136.0 L169.0,135.5 L169.5,135.0 L170.0,134.5 L170.5,134.0 L171.0,133.5 L171.5,133.0 L172.0,132.5 L172.5,132.0 L173.0,131.5 L173.5,131.0 L174.0,130.5 L174.5,130.0 L175.0,129.5 L175.5,129.0 L176.0,128.5 L176.5,128.0 L177.0,127.5 L177.5,127.0 L178.0,126.5 L178.5,126.0 L179.0,125.5 L179.5,125.0 L180.0,124.5 L180.5,124.0 L181.0,123.5 L181.5,123.0 L182.0,122.5 L182.5,122.0 L183.0,121.5 L183.5,121.0 L184.0,120.5 L184.5,120.0 L185.0,119.5 L185.5,119.0 L186.0,118.5 L186.5,118.0 L187.0,117.5 L187.5,117.0 L188.0,116.5 L188.5,116.0 L189.0,115.5 L189.5,115.0 L190.0,114.5 L190.5,114.0 L191.0,113.5 L191.5,113.0 L192.0,112.5 L192.5,112.0 L193.0,111.5 L193.5,111.0 L194.0,110.5 L194.5,110.0 L195.0,109.5 L195.5,109.0 L196.0,108.5 L196.5,108.0 L197.0,107.5 L197.5,107.0 L198.0,106.5 L198.5,106.0 L199.0,105.5 L199.5,105.0 L200.0,104.5 L200.5,104.0 L201.0,103.5 L201.5,103.0 L202.0,102.5 L202.5,102.0 L203.0,101.5 L203.5,101.0 L204.0,100.5 L204.5,100.0 L205.0,99.5 L205.5,99.0 L206.0,98.5 L206.5,98.0 L207.0,97.5 L207.5,97.0 L208.0,96.5 L208.5,96.0 L209.0,95.5 L209.5,95.0 L210.0,94.5 L210.5,94.0 L211.0,93.5 L211.5,93.0 L212.0,92.5 L212.5,92.0 L213.0,91.5 L213.5,91.0 L214.0,90.5 L214.5,90.0 L215.0,89.5 L215.5,89.0 L216.0,88.5 L216.5,88.0 L217.0,87.5 L217.5,87.0 L218.0,86.5 L218.5,86.0 L219.0,85.5 L219.5,85.0 L220.0,84.5 L220.5,84.0 L221.0,83.5 L221.5,83.0 L222.0,82.5 L222.5,82.0 L223.0,81.5 L223.5,81.0 L224.0,80.5 L224.5,80.0 L225.0,79.5 L225.5,79.0 L226.0,78.5 L226.5,78.0 L227.0,77.5 L227.5,77.0 L228.0,76.5 L228.5,76.0 L229.0,75.5 L229.5,75.0 L230.0,74.5 L230.5,74.0 L231.0,73.5 L231.5,73.0 L232.0,72.5 L232.5,72.0 L233.0,71.5 L233.5,71.0 L234.0,70.5 L234.5,70.0 L235.0,69.5 L235.5,69.0 L236.0,68.5 L236.5,68.0 L237.0,67.5 L237.5,67.0 L238.0,66.5 L238.5,66.0 L239.0,65.5 L239.5,65.0 L240.0,64.5 L240.5,64.0 L241.0,63.5 L241.5,63.0 L242.0,62.5 L242.5,62.0 L243.0,61.5 L243.5,61.0 L244.0,60.5 L244.5,60.0 L245.0,59.5 L245.5,59.0 L246.0,58.5 L246.5,58.0 L247.0,57.5 L247.5,57.0 L248.0,56.5 L248.5,56.0 L249.0,55.5 L249.5,56.0 L250.0,56.5 L250.5,57.0 L251.0,57.5 L251.5,58.0 L252.0,58.5 L252.5,59.0 L253.0,59.5 L253.5,60.0 L254.0,60.5 L254.5,61.0 L255.0,61.5 L255.5,62.0 L256.0,62.5 L256.5,63.0 L257.0,63.5 L257.5,64.0 L258.0,64.5 L258.5,65.0 L259.0,65.5 L259.5,66.0 L260.0,66.5 L260.5,67.0 L261.0,67.5 L261.5,68.0 L262.0,68.5 L262.5,69.0 L263.0,69.5 L263.5,70.0 L264.0,70.5 L264.5,71.0 L265.0,71.5 L265.5,72.0 L266.0,72.5 L266.5,73.0 L267.0,73.5 L267.5,74.0 L268.0,74.5 L268.5,75.0 L269.0,75.5 L269.5,76.0 L270.0,76.5 L270.5,77.0 L271.0,77.5 L271.5,78.0 L272.0,78.5 L272.5,79.0 L273.0,79.5 L273.5,80.0 L274.0,80.5 L274.5,81.0 L275.0,81.5 L275.5,82.0 L276.0,82.5 L276.5,83.0 L277.0,83.5 L277.5,84.0 L278.0,84.5 L278.5,85.0 L279.0,85.5 L279.5,86.0 L280.0,86.5 L280.5,87.0 L281.0,87.5 L281.5,88.0 L282.0,88.5 L282.5,89.0 L283.0,89.5 L283.5,90.0 L284.0,90.5 L284.5,91.0 L285.0,91.5 L285.5,92.0 L286.0,92.5 L286.5,93.0 L287.0,93.5 L287.5,94.0 L288.0,94.5 L288.5,95.0 L288.0,95.5 L287.5,96.0 L287.0,96.5 L286.5,97.0 L286.0,97.5 L285.5,98.0 L285.0,98.5 L284.5,99.0 L284.0,99.5 L283.5,100.0 L283.0,100.5 L282.5,101.0 L282.0,101.5 L281.5,102.0 L281.0,102.5 L280.5,103.0 L280.0,103.5 L279.5,104.0 L279.0,104.5 L278.5,105.0 L278.0,105.5 L277.5,106.0 L277.0,106.5 L276.5,107.0 L276.0,107.5 L275.5,108.0 L275.0,108.5 L274.5,109.0 L274.0,109.5 L273.5,110.0 L273.0,110.5 L272.5,111.0 L272.0,111.5 L271.5,112.0 L271.0,112.5 L270.5,113.0 L270.0,113.5 L269.5,114.0 L269.0,114.5 L268.5,115.0 L268.0,115.5 L267.5,116.0 L267.0,116.5 L266.5,117.0 L266.0,117.5 L265.5,118.0 L265.0,118.5 L264.5,119.0 L264.0,119.5 L263.5,120.0 L263.0,120.5 L262.5,121.0 L262.0,121.5 L261.5,122.0 L261.0,122.5 L260.5,123.0 L260.0,123.5 L259.5,124.0 L259.0,124.5 L258.5,125.0 L258.0,125.5 L257.5,126.0 L257.0,126.5 L256.5,127.0 L256.0,127.5 L255.5,128.0 L255.0,128.5 L254.5,129.0 L254.0,129.5 L253.5,130.0 L253.0,130.5 L252.5,131.0 L252.0,131.5 L251.5,132.0 L251.0,132.5 L250.5,133.0 L250.0,133.5 L249.5,134.0 L249.0,134.5 L248.5,135.0 L248.0,135.5 L247.5,136.0 L247.0,136.5 L246.5,137.0 L246.0,137.5 L245.5,138.0 L245.0,138.5 L244.5,139.0 L244.0,139.5 L243.5,140.0 L243.0,140.5 L242.5,141.0 L242.0,141.5 L241.5,142.0 L241.0,142.5 L240.5,143.0 L240.0,143.5 L239.5,144.0 L239.0,144.5 L238.5,145.0 L238.0,145.5 L237.5,146.0 L237.0,146.5 L236.5,147.0 L236.0,147.5 L235.5,148.0 L235.0,148.5 L234.5,149.0 L234.0,149.5 L233.5,150.0 L233.0,150.5 L232.5,151.0 L232.0,151.5 L231.5,152.0 L231.0,152.5 L230.5,153.0 L230.0,153.5 L229.5,154.0 L229.0,154.5 L228.5,155.0 L228.0,155.5 L227.5,156.0 L227.0,156.5 L226.5,157.0 L226.0,157.5 L225.5,158.0 L225.0,158.5 L224.5,159.0 L224.0,159.5 L223.5,160.0 L223.5,161.0 L223.5,162.0 L224.0,162.5 L225.0,162.5 L225.5,163.0 L226.0,163.5 L226.5,164.0 L227.0,164.5 L227.5,165.0 L228.0,165.5 L228.5,166.0 L229.0,166.5 L229.5,167.0 L230.0,167.5 L230.5,168.0 L231.0,168.5 L231.5,169.0 L232.0,169.5 L232.5,170.0 L233.0,170.5 L233.5,171.0 L234.0,171.5 L234.5,172.0 L235.0,172.5 L235.5,173.0 L236.0,173.5 L236.5,174.0 L237.0,174.5 L237.5,175.0 L238.0,175.5 L238.5,176.0 L239.0,176.5 L239.5,177.0 L240.0,177.5 L240.5,178.0 L241.0,178.5 L241.5,179.0 L242.0,179.5 L242.5,180.0 L243.0,180.5 L243.5,181.0 L244.0,181.5 L244.5,182.0 L245.0,182.5 L245.5,183.0 L246.0,183.5 L246.5,184.0 L247.0,184.5 L247.5,185.0 L248.0,185.5 L248.5,186.0 L249.0,186.5 L249.5,187.0 L250.0,187.5 L250.5,188.0 L251.0,188.5 L251.5,189.0 L252.0,189.5 L252.5,190.0 L253.0,190.5 L253.5,191.0 L254.0,191.5 L254.5,192.0 L255.0,192.5 L255.5,193.0 L256.0,193.5 L256.5,194.0 L257.0,194.5 L257.5,195.0 L258.0,195.5 L258.5,196.0 L259.0,196.5 L259.5,197.0 L260.0,197.5 L260.5,198.0 L261.0,198.5 L261.5,199.0 L262.0,199.5 L262.5,200.0 L263.0,200.5 L263.5,201.0 L264.0,201.5 L264.5,202.0 L265.0,202.5 L265.5,203.0 L266.0,203.5 L266.5,204.0 L267.0,204.5 L267.5,205.0 L268.0,205.5 L268.5,206.0 L269.0,206.5 L269.5,207.0 L270.0,207.5 L270.5,208.0 L271.0,208.5 L271.5,209.0 L272.0,209.5 L272.5,210.0 L273.0,210.5 L273.5,211.0 L274.0,211.5 L274.5,212.0 L275.0,212.5 L275.5,213.0 L276.0,213.5 L276.5,214.0 L277.0,214.5 L277.5,215.0 L278.0,215.5 L278.5,216.0 L279.0,216.5 L279.5,217.0 L280.0,217.5 L280.5,218.0 L281.0,218.5 L281.5,219.0 L282.0,219.5 L282.5,220.0 L283.0,220.5 L283.5,221.0 L284.0,221.5 L284.5,222.0 L285.0,222.5 L285.5,223.0 L286.0,223.5 L286.5,224.0 L287.0,224.5 L287.5,225.0 L288.0,225.5 L288.5,226.0 L289.0,226.5 L289.5,227.0 L290.0,227.5 L290.5,228.0 L291.0,228.5 L291.5,229.0 L292.0,229.5 L292.5,230.0 L293.0,230.5 L293.5,231.0 L294.0,231.5 L294.5,232.0 L295.0,232.5 L295.5,233.0 L296.0,233.5 L296.5,234.0 L297.0,234.5 L297.5,235.0 L298.0,235.5 L298.5,236.0 L299.0,236.5 L299.5,237.0 L300.0,237.5 L300.5,238.0 L301.0,238.5 L301.5,239.0 L302.0,239.5 L302.5,240.0 L303.0,240.5 L303.5,241.0 L304.0,241.5 L304.5,242.0 L305.0,242.5 L305.5,243.0 L306.0,243.5 L306.5,244.0 L307.0,244.5 L307.5,245.0 L308.0,245.5 L308.5,246.0 L309.0,246.5 L309.5,247.0 L310.0,247.5 L310.5,248.0 L311.0,248.5 L311.5,249.0 L312.0,249.5 L312.5,250.0 L313.0,250.5 L313.5,251.0 L314.0,251.5 L314.5,252.0 L315.0,252.5 L315.5,253.0 L316.0,253.5 L316.5,254.0 L317.0,254.5 L317.5,255.0 L318.0,255.5 L318.5,256.0 L319.0,256.5 L319.5,257.0 L320.0,257.5 L320.5,258.0 L321.0,258.5 L321.5,259.0 L322.0,259.5 L322.5,260.0 L323.0,260.5 L323.5,261.0 L324.0,261.5 L324.5,262.0 L325.0,262.5 L325.5,263.0 L326.0,263.5 L326.5,264.0 L327.0,264.5 L327.5,265.0 L328.0,265.5 L328.5,266.0 L329.0,266.5 L329.5,267.0 L330.0,267.5 L330.5,268.0 L331.0,268.5 L331.5,269.0 L332.0,269.5 L332.5,270.0 L333.0,270.5 L333.5,271.0 L334.0,271.5 L334.5,272.0 L335.0,272.5 L335.5,273.0 L336.0,273.5 L336.5,274.0 L337.0,274.5 L337.5,275.0 L338.0,275.5 L338.5,276.0 L339.0,276.5 L339.5,277.0 L340.0,277.5 L340.5,278.0 L341.0,278.5 L341.5,279.0 L342.0,279.5 L342.5,280.0 L343.0,280.5 L343.5,281.0 L344.0,281.5 L344.5,282.0 L345.0,282.5 L345.5,283.0 L346.0,283.5 L346.5,284.0 L347.0,284.5 L347.5,285.0 L348.0,285.5 L348.5,286.0 L349.0,286.5 L349.5,287.0 L350.0,287.5 L350.5,288.0 L351.0,288.5 L351.5,289.0 L352.0,289.5 L352.5,290.0 L353.0,290.5 L353.5,291.0 L354.0,291.5 L354.5,292.0 L355.0,292.5 L355.5,293.0 L356.0,293.5 L356.5,294.0 L357.0,294.5 L357.5,295.0 L358.0,295.5 L358.5,296.0 L359.0,296.5 L359.5,297.0 L360.0,297.5 L360.5,298.0 L361.0,298.5 L361.5,299.0 L362.0,299.5 L362.5,300.0 L363.0,300.5 L363.5,301.0 L363.5,302.0 L364.0,302.5 L364.5,303.0 L365.0,303.5 L365.5,304.0 L366.0,304.5 L366.5,305.0 L367.0,305.5 L367.5,306.0 L368.0,306.5 L368.5,307.0 L369.0,307.5 L369.5,308.0 L370.0,308.5 L370.5,309.0 L371.0,309.5 L371.5,310.0 L372.0,310.5 L372.5,311.0 L373.0,311.5 L373.5,312.0 L374.0,312.5 L374.5,313.0 L375.0,313.5 L375.5,314.0 L376.0,314.5 L376.5,315.0 L377.0,315.5 L377.5,316.0 L378.0,316.5 L378.5,317.0 L379.0,317.5 L379.5,318.0 L380.0,318.5 L380.5,319.0 L381.0,319.5 L381.5,320.0 L382.0,320.5 L382.5,321.0 L383.0,321.5 L383.5,322.0 L384.0,322.5 L384.5,323.0 L385.0,323.5 L385.5,324.0 L386.0,324.5 L386.5,325.0 L387.0,325.5 L387.5,326.0 L388.0,326.5 L388.5,327.0 L389.0,327.5 L389.5,328.0 L390.0,328.5 L390.5,329.0 L391.0,329.5 L391.5,330.0 L392.0,330.5 L392.5,331.0 L393.0,331.5 L393.5,332.0 L394.0,332.5 L394.5,333.0 L395.0,333.5 L395.5,334.0 L396.0,334.5 L396.5,335.0 L396.5,336.0 L397.0,336.5 L397.5,337.0 L398.0,337.5 L398.5,338.0 L398.5,339.0 L399.0,339.5 L399.5,340.0 L400.0,340.5 L400.5,341.0 L400.5,342.0 L401.0,342.5 L401.5,343.0 L401.5,344.0 L402.0,344.5 L402.5,345.0 L402.5,346.0 L402.5,347.0 L403.0,347.5 L403.5,348.0 L403.5,349.0 L404.0,349.5 L404.5,350.0 L404.5,351.0 L404.5,352.0 L404.5,353.0 L405.0,353.5 L405.5,354.0 L405.5,355.0 L405.5,356.0 L405.5,357.0 L406.0,357.5 L406.5,358.0 L406.5,359.0 L406.5,360.0 L406.5,361.0 L406.5,362.0 L406.5,363.0 L406.5,364.0 L406.5,365.0 L407.0,365.5 L407.5,366.0 L407.5,367.0 L407.5,368.0 L407.5,369.0 L407.5,370.0 L407.5,371.0 L407.5,372.0 L407.5,373.0 L407.0,373.5 L406.5,374.0 L406.5,375.0 L406.5,376.0 L406.5,377.0 L406.5,378.0 L406.5,379.0 L406.5,380.0 L406.5,381.0 L406.0,381.5 L405.5,382.0 L405.5,383.0 L405.5,384.0 L405.5,385.0 L405.0,385.5 L404.5,386.0 L404.5,387.0 L404.5,388.0 L404.5,389.0 L404.0,389.5 L403.5,390.0 L403.5,391.0 L403.5,392.0 L403.0,392.5 L402.5,393.0 L402.5,394.0 L402.5,395.0 L402.0,395.5 L401.5,396.0 L401.5,397.0 L401.0,397.5 L400.5,398.0 L400.5,399.0 L400.0,399.5 L399.5,400.0 L399.5,401.0 L399.0,401.5 L398.5,402.0 L398.5,403.0 L398.0,403.5 L397.5,404.0 L397.5,405.0 L397.0,405.5 L396.5,406.0 L396.0,406.5 L395.5,407.0 L395.5,408.0 L395.0,408.5 L394.5,409.0 L394.0,409.5 L393.5,410.0 L393.5,411.0 L393.0,411.5 L392.5,412.0 L392.0,412.5 L391.5,413.0 L391.5,414.0 L391.0,414.5 L390.5,415.0 L390.0,415.5 L389.5,416.0 L389.0,416.5 L388.5,417.0 L388.0,417.5 L387.5,418.0 L387.0,418.5 L386.5,419.0 L386.5,420.0 L386.0,420.5 L385.5,421.0 L385.0,421.5 L384.5,422.0 L384.0,422.5 L383.5,423.0 L383.0,423.5 L382.5,424.0 L382.0,424.5 L381.5,425.0 L381.0,425.5 L380.5,426.0 L380.0,426.5 L379.0,426.5 L378.5,427.0 L378.0,427.5 L377.5,428.0 L377.0,428.5 L376.5,429.0 L376.0,429.5 L375.5,430.0 L375.0,430.5 L374.0,430.5 L373.5,431.0 L373.0,431.5 L372.5,432.0 L372.0,432.5 L371.5,433.0 L371.0,433.5 L370.0,433.5 L369.5,434.0 L369.0,434.5 L368.0,434.5 L367.5,435.0 L367.0,435.5 L366.5,436.0 L366.0,436.5 L365.0,436.5 L364.5,437.0 L364.0,437.5 L363.0,437.5 L362.5,438.0 L362.0,438.5 L361.0,438.5 L360.5,439.0 L360.0,439.5 L359.0,439.5 L358.5,440.0 L358.0,440.5 L357.0,440.5 L356.0,440.5 L355.5,441.0 L355.0,441.5 L354.0,441.5 L353.5,442.0 L353.0,442.5 L352.0,442.5 L351.0,442.5 L350.5,443.0 L350.0,443.5 L349.0,443.5 L348.0,443.5 L347.0,443.5 L346.5,444.0 L346.0,444.5 L345.0,444.5 L344.0,444.5 L343.0,444.5 L342.5,445.0 L342.0,445.5 L341.0,445.5 L340.0,445.5 L339.0,445.5 L338.0,445.5 L337.0,445.5 L336.0,445.5 L335.5,446.0 L335.0,446.5" fill="var(--accent)" stroke="none"/></svg>
+      <span class="nav-name">Kunwarjyot Singh Narula</span>
+    </a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a class="nav-link-btn" href="index.html#work">Work</a>
+        <a class="nav-link-btn" href="index.html#about">About</a>
+        <a class="nav-link-btn" href="index.html#experience">Experience</a>
+        <a class="nav-link-btn" href="index.html#contact">Contact</a>
+      </div>
+      <button class="theme-switch on" id="toggle" aria-label="Toggle light and dark theme">
+        <svg class="switch-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="switch-icon moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span class="switch-knob"></span>
+      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-toc-group">
+    <div class="toc-title">On this page</div>
+    <nav class="toc-list">
+      <button class="toc-link" type="button" data-target="overview">Overview</button>
+      <button class="toc-link" type="button" data-target="role">My Role</button>
+      <button class="toc-link" type="button" data-target="problem">The Problem</button>
+      <button class="toc-link" type="button" data-target="approach">The Approach</button>
+      <button class="toc-link sub" type="button" data-target="exploration">Exploration</button>
+      <button class="toc-link sub" type="button" data-target="personas">Early Personas</button>
+      <button class="toc-link sub" type="button" data-target="taskflow">Complete Task Flow</button>
+      <button class="toc-link sub" type="button" data-target="flows">User Flows</button>
+      <button class="toc-link sub" type="button" data-target="lofi">Low-Fidelity Wireframes</button>
+      <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
+      <button class="toc-link" type="button" data-target="impact">Impact</button>
+      <button class="toc-link" type="button" data-target="reflection">Reflection</button>
+    </nav>
+  </div>
+  <div class="mobile-menu-divider"></div>
+  <a class="nav-link-btn mobile" href="index.html#work">Work</a>
+  <a class="nav-link-btn mobile" href="index.html#about">About</a>
+  <a class="nav-link-btn mobile" href="index.html#experience">Experience</a>
+  <a class="nav-link-btn mobile" href="index.html#contact">Contact</a>
+  <div class="mobile-menu-toggle-row">
+    <button class="theme-switch on" id="toggleMobile" aria-label="Toggle light and dark theme">
+      <svg class="switch-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="switch-icon moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span class="switch-knob"></span>
+    </button>
+    <span>Light / dark</span>
+  </div>
+</div>
+
+
+<div class="layout" id="layout">
+  <div class="page">
+    <aside class="toc" aria-label="On this page">
+      <div class="toc-title">On this page</div>
+      <nav class="toc-list">
+      <button class="toc-link" type="button" data-target="overview">Overview</button>
+      <button class="toc-link" type="button" data-target="role">My Role</button>
+      <button class="toc-link" type="button" data-target="problem">The Problem</button>
+      <button class="toc-link" type="button" data-target="approach">The Approach</button>
+      <button class="toc-link sub" type="button" data-target="exploration">Exploration</button>
+      <button class="toc-link sub" type="button" data-target="personas">Early Personas</button>
+      <button class="toc-link sub" type="button" data-target="taskflow">Complete Task Flow</button>
+      <button class="toc-link sub" type="button" data-target="flows">User Flows</button>
+      <button class="toc-link sub" type="button" data-target="lofi">Low-Fidelity Wireframes</button>
+      <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
+      <button class="toc-link" type="button" data-target="impact">Impact</button>
+      <button class="toc-link" type="button" data-target="reflection">Reflection</button>
+      </nav>
+    </aside>
+
+    <main class="page-main">
+      <article class="article">
+        <a class="back-link" href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+          Back to homepage
+        </a>
+        <div class="badge-row">
+          <span class="tag">Mobile · Human Factors · Shipped Product</span>
+          <span class="badge">Siemens · Shipped · 2023–2024</span>
+        </div>
+        <h1 class="title">Controlguide DPM</h1>
+        <div class="subtitle">Designing for railway operators applying speed restrictions in the field, not at a desk</div>
+        <div class="hero-extra">
+          <a class="btn btn-primary" href="https://apps.apple.com/gb/app/controlguide-dpm/id6758207604" target="_blank" rel="noopener">
+            View on the App Store
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://progress.mobility.siemens.com/uk/en/portfolio/rail-infrastructure/mass-transit/controlguide-dpm.html" target="_blank" rel="noopener">
+            Siemens product page
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+          </a>
+        </div>
+        <img class="case-cover" src="assets/project-controlguide.jpg" alt="Controlguide DPM login, SR System, review, and map screens" style="view-transition-name:vt-controlguide">
+
+<h2 id="overview">Overview</h2>
+    <p>Controlguide DPM is an iPad app that railway operators use to apply temporary speed restrictions across a rail network. Unlike dephant and RailXplore Fusion, this project wasn't about ecosystems or dashboards. It was about <strong>getting one task right, every time</strong>, for people who aren't sitting at a desk when they do it.</p>
+
+    <h2 id="role">My Role</h2>
+    <p>I joined Controlguide at an early stage, taking it over from another designer, so much of the initial direction was already in place by the time I stepped in. From there, I owned the interaction design through to a shipped, published app, working alongside a PM, a product owner, an architect, and two fellow designers who supported the domain understanding work. I also went through domain training myself to get properly up to speed on how speed restrictions actually function operationally. The project ran <strong>roughly 7 to 9 months</strong>.</p>
+    <p><strong>Primary Users:</strong> Railway operators working in the field, across six to seven distinct roles (including Describer, Reviewer, State Administrator, Transferer, and Verifier)</p>
+
+    <h2 id="problem">The Problem</h2>
+    <p>Operators impose temporary speed restrictions for all kinds of reasons: maintenance, construction, bad weather, a safety concern that just came up. These aren't decisions someone makes at leisure. They're time-sensitive, and if the interaction goes wrong, the consequences aren't just "bad UX." They're operational.</p>
+    <p>So this project needed to answer a fairly narrow but important question: how do you design an interface that someone can use quickly and correctly while they're <strong>standing outside, in the sun, wearing gloves, mid-task</strong>, with pressure to move fast?</p>
+
+            <figure class="case-figure">
+          <img src="assets/controlguide-esr-notice.png" alt="A real Network Rail notice to train crews, amending an emergency speed restriction, physically signed and issued by fax and phone before this application existed">
+          <figcaption>Before this existed, a restriction like this was raised, signed, and circulated on paper &mdash; by phone, fax, and a physical signature, with no shared source of truth once it left the office.</figcaption>
+        </figure>
+<h2 id="approach">The Approach</h2>
+    <p>One honest limitation worth naming: <strong>we didn't have direct access to end users for this project</strong>, no field visits, no interviews with operators themselves. What we did have was domain training and the team's existing knowledge of the environment operators actually work in, and we used that to ground every interaction decision in real constraints rather than assumptions: large touch targets that work with gloves on, high-contrast states that hold up outdoors, and flows short enough that a distracted, moving user doesn't lose their place halfway through.</p>
+    <p><strong>That's a real gap compared to ideal process</strong>, and I'd have preferred direct access to the people using this daily. But the constraints we designed for were well-documented and consistent enough that I'm confident the decisions were grounded in something real, not guesswork.</p>
+
+    <h2 id="exploration">Exploration</h2>
+    <p>Not every path made it into the shipped product. These are working boards from the process itself &mdash; unresolved questions, dead ends, and the reasoning behind decisions before they were final.</p>
+    <div class="vault">
+      <div class="vault-lock">
+        <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <h3>Working process boards</h3>
+        <p>The written case study needs no password. These are unpolished internal exploration boards, held back separately. Enter the password provided alongside this link to view them.</p>
+        <div class="gate-row">
+          <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+          <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+          <span class="gate-error">That password isn't quite right, try again.</span>
+        </div>
+        <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+      </div>
+      <div class="vault-body">
+        <div class="exploration-grid">
+            <figure class="exploration-board">
+              <img src="assets/exploration-01-sr-lifecycle.png" alt="SR lifecycle exploration, covering single-request and grouped-request paths, save/submit/delete states, and OTP placement">
+              <figcaption>Early exploration of the SR lifecycle: single vs. grouped requests, draft states, and where OTP confirmation sits in the sequence.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/exploration-02-group-sr-creation.png" alt="Group SR creation flow, showing the submit, group-complete, lock, and reject paths">
+              <figcaption>Working through what “complete” means for a group of SRs submitted together, and the branch between locking a group and rejecting it.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/exploration-03-group-sr-notification.png" alt="Group SR notification flow, showing the prompt to add another SR to a group before final submission">
+              <figcaption>A notification pattern to make sure a Describer knows every SR they create is treated as part of a group, with a path to add more before submitting.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/exploration-04-recovery-workflow.png" alt="Recovery workflow keyed to an FMS ID, branching into complete and incomplete group states">
+              <figcaption>A recovery path keyed to an FMS ID, for handling a group that was left incomplete.</figcaption>
+            </figure>
+        </div>
+      </div>
+    </div>
+
+<h2 id="personas">Early Personas</h2>
+    <p>Early in the project, before it was renamed Controlguide DPM, this was known internally as the TSR system, and research was framed around these five personas. The role model shown later, under User Flows, is the one that shipped &mdash; the names differ because the project evolved, not because they describe two different systems.</p>
+    <div class="flow-tabs" role="tablist" aria-label="Persona by role">
+          <button class="flow-tab active" type="button" data-flow="requestor">Requestor</button>
+          <button class="flow-tab" type="button" data-flow="approver">Approver</button>
+          <button class="flow-tab" type="button" data-flow="smt-operator">SMT Operator</button>
+          <button class="flow-tab" type="button" data-flow="smt-operator-reviewer">SMT Operator Reviewer</button>
+          <button class="flow-tab" type="button" data-flow="admin">Admin</button>
+    </div>
+    <div class="flow-panels">
+      <div class="flow-panel active" data-flow="requestor">
+        <div class="persona-card">
+          <div class="persona-header">Requestor</div>
+          <div class="persona-body">
+            <span class="persona-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span>
+            <p class="persona-desc">Inspects the track side and, based on infrastructure, weather conditions, and risk to track workers, creates a TSR request.</p>
+          </div>
+          <div class="persona-attrs">
+            <span class="persona-attr-label">Age</span><span class="persona-attr-value">25–30</span>
+            <span class="persona-attr-label">Occupation</span><span class="persona-attr-value">Maintenance Engineer / Contractor</span>
+            <span class="persona-attr-label">Experience</span><span class="persona-attr-value">5+</span>
+            <span class="persona-attr-label">Location</span><span class="persona-attr-value">UK</span>
+            <span class="persona-attr-label">Skill</span><span class="persona-attr-value">Domain knowledge</span>
+          </div>
+          <div class="persona-wants">
+            <div><h5>What they want to know</h5><ul>
+              <li>The current status of their requested TSR</li>
+            </ul></div>
+            <div><h5>What they want to do</h5><ul>
+              <li>Set data points and request finer-granularity TSRs for the area affected by maintenance activity</li>
+              <li>Submit or delete drafted TSRs</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-panel" data-flow="approver">
+        <div class="persona-card">
+          <div class="persona-header">Approver</div>
+          <div class="persona-body">
+            <span class="persona-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span>
+            <p class="persona-desc">Views and gives initial-level clearance and approval for requested TSRs. Can also create a TSR directly in an emergency.</p>
+          </div>
+          <div class="persona-attrs">
+            <span class="persona-attr-label">Age</span><span class="persona-attr-value">25–30</span>
+            <span class="persona-attr-label">Experience</span><span class="persona-attr-value">8+</span>
+            <span class="persona-attr-label">Location</span><span class="persona-attr-value">UK</span>
+            <span class="persona-attr-label">Skill</span><span class="persona-attr-value">Domain knowledge</span>
+          </div>
+          <div class="persona-wants">
+            <div><h5>What they want to know</h5><ul>
+              <li>How many TSRs are pending approval</li>
+              <li>The current status of their requested TSR</li>
+              <li>How many TSRs are approved</li>
+            </ul></div>
+            <div><h5>What they want to do</h5><ul>
+              <li>Approve or delete a TSR</li>
+              <li>Request a TSR</li>
+              <li>Submit or delete their own drafted TSR</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-panel" data-flow="smt-operator">
+        <div class="persona-card">
+          <div class="persona-header">SMT Operator</div>
+          <div class="persona-body">
+            <span class="persona-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span>
+            <p class="persona-desc">Forwards the TSR for authorization to the SMT Operator Reviewer, creating a handshake between the SMT terminal and Westcad-ML.</p>
+          </div>
+          <div class="persona-attrs">
+            <span class="persona-attr-label">Age</span><span class="persona-attr-value">35–45</span>
+            <span class="persona-attr-label">Experience</span><span class="persona-attr-value">10+</span>
+            <span class="persona-attr-label">Location</span><span class="persona-attr-value">UK</span>
+            <span class="persona-attr-label">Skill</span><span class="persona-attr-value">Domain knowledge</span>
+          </div>
+          <div class="persona-wants">
+            <div><h5>What they want to know</h5><ul>
+              <li>How many TSRs are approved</li>
+              <li>The list of active TSRs</li>
+              <li>TSR description details, for entering manually into Westcad-ML</li>
+            </ul></div>
+            <div><h5>What they want to do</h5><ul>
+              <li>Activate an approved TSR by adding the one-time token (OTP) generated from Westcad-ML</li>
+              <li>Manually enter TSR details in Westcad-ML after OTP authentication</li>
+              <li>Give final activation once the SMT Operator Reviewer has authorized it</li>
+              <li>Change state from active to deactivated, or approved to active (both require a token)</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-panel" data-flow="smt-operator-reviewer">
+        <div class="persona-card">
+          <div class="persona-header">SMT Operator Reviewer</div>
+          <div class="persona-body">
+            <span class="persona-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span>
+            <p class="persona-desc">Authorizes the activation of TSRs the SMT Operator has preactivated.</p>
+          </div>
+          <div class="persona-attrs">
+            <span class="persona-attr-label">Age</span><span class="persona-attr-value">35–45</span>
+            <span class="persona-attr-label">Experience</span><span class="persona-attr-value">10+</span>
+            <span class="persona-attr-label">Location</span><span class="persona-attr-value">UK</span>
+            <span class="persona-attr-label">Skill</span><span class="persona-attr-value">Domain knowledge</span>
+          </div>
+          <div class="persona-wants">
+            <div><h5>What they want to know</h5><ul>
+              <li>How many TSRs are pending authorization</li>
+            </ul></div>
+            <div><h5>What they want to do</h5><ul>
+              <li>Authorize activation of a preactivated TSR</li>
+            </ul></div>
+          </div>
+        <p class="persona-note">Authorizing here isn't the same as activating. Activation still has to be done explicitly by the SMT Operator.</p>
+        </div>
+      </div>
+      <div class="flow-panel" data-flow="admin">
+        <div class="persona-card">
+          <div class="persona-header">Admin</div>
+          <div class="persona-body">
+            <span class="persona-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span>
+            <p class="persona-desc">Handles admin-level operations across both user management and TSR request management.</p>
+          </div>
+          <div class="persona-attrs">
+            <span class="persona-attr-label">Age</span><span class="persona-attr-value">35–40</span>
+            <span class="persona-attr-label">Experience</span><span class="persona-attr-value">12+</span>
+            <span class="persona-attr-label">Location</span><span class="persona-attr-value">UK</span>
+            <span class="persona-attr-label">Skill</span><span class="persona-attr-value">Domain knowledge</span>
+          </div>
+          <div class="persona-wants">
+            <div><h5>What they want to know</h5><ul>
+              <li>How many users exist and what roles they hold</li>
+              <li>TSR details and current status</li>
+            </ul></div>
+            <div><h5>What they want to do</h5><ul>
+              <li>Add, edit, delete, or assign roles to users</li>
+              <li>Change a preactivated TSR's status to approved</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<h2 id="taskflow">Complete Task Flow</h2>
+    <p>Five roles, one continuous path. Before splitting into each role individually, here is how a speed restriction actually moves end to end.</p>
+    <div class="taskflow">
+      <div class="taskflow-track">
+          <div class="taskflow-step">
+            <span class="taskflow-num">1</span>
+            <p class="taskflow-text">Describer designs the SR on the map.</p>
+          </div>
+          <div class="taskflow-connector">
+            
+            <span class="taskflow-arrow">&rarr;</span>
+          </div>
+          <div class="taskflow-step">
+            <span class="taskflow-num">2</span>
+            <p class="taskflow-text">Reviewer checks the location the Describer marked, against the map.</p>
+          </div>
+          <div class="taskflow-connector">
+            
+            <span class="taskflow-arrow">&rarr;</span>
+          </div>
+          <div class="taskflow-step">
+            <span class="taskflow-num">3</span>
+            <p class="taskflow-text">Once reviewed, the SR is prepared by the Describer.</p>
+          </div>
+          <div class="taskflow-connector">
+            
+            <span class="taskflow-arrow">&rarr;</span>
+          </div>
+          <div class="taskflow-step">
+            <span class="taskflow-num">4</span>
+            <p class="taskflow-text">Transferer implements the prepared SR and transfers it to the control system.</p>
+          </div>
+          <div class="taskflow-connector">
+            
+            <span class="taskflow-arrow">&rarr;</span>
+          </div>
+          <div class="taskflow-step">
+            <span class="taskflow-num">5</span>
+            <p class="taskflow-text">Viewer sees only the prepared SR, for removing signboards.</p>
+          </div>
+      </div>
+    </div>
+
+<h2 id="flows">User Flows</h2>
+    <p>Recreated from the working flow diagrams for each of the six roles below. Switch between them to see what changes and what stays the same.</p>
+    <div class="flow-tabs" role="tablist" aria-label="User flow by role">
+          <button class="flow-tab active" type="button" data-flow="describer">Describer</button>
+          <button class="flow-tab" type="button" data-flow="reviewer">Reviewer</button>
+          <button class="flow-tab" type="button" data-flow="transferer">Transferer</button>
+          <button class="flow-tab" type="button" data-flow="viewer">Viewer</button>
+          <button class="flow-tab" type="button" data-flow="state-admin">State Administrator</button>
+    </div>
+    <div class="flow-panels">
+      <div class="flow-panel active" data-flow="describer">
+        <p class="flow-desc">Designs the SR on the map and prepares reviewed SRs. Can also view submitted, rejected, and prepared SRs.</p>
+        <div class="flow-diagram">
+          <div class="flow-node flow-start">Sign in</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-branches">
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Design SR</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select start point</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Add divergence, if any</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select end point</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Clear markers &rarr; loops back to start point</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Create SR</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Add SR details</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-decision"><span class="flow-eyebrow">Decision</span>Save to draft</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-outcomes">
+              <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Submit</div>
+              <div class="flow-node flow-out-neg"><span class="flow-eyebrow">Outcome</span>Delete</div>
+            </div>
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Submitted SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>View details</div>
+
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Reviewed SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select SR from list</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>View SR details</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-outcomes">
+              <div class="flow-node flow-out-neg"><span class="flow-eyebrow">Outcome</span>Reject</div>
+              <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Prepare</div>
+            </div>
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Rejected SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>View details</div>
+
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Prepared SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>View details</div>
+
+
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-panel" data-flow="reviewer">
+        <p class="flow-desc">Reviews the location marked by the Describer on the map. Can also view reviewed and rejected SRs.</p>
+        <div class="flow-diagram">
+          <div class="flow-node flow-start">Sign in</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-branches">
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Submitted SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select SR from list</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>See the SR the Describer marked, on the map and in the SR description</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Verify the location against their own live location</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-outcomes">
+              <div class="flow-node flow-out-neg"><span class="flow-eyebrow">Outcome</span>Reject</div>
+              <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Review</div>
+            </div>
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Reviewed SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>View details</div>
+
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Rejected SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>View details</div>
+
+
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-panel" data-flow="transferer">
+        <p class="flow-desc">Implements the SR. Sees only prepared SRs, and transfers their details to the control system.</p>
+        <div class="flow-diagram">
+          <div class="flow-node flow-start">Sign in</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-branches">
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Prepared SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select SR from list</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Transfer commencement, termination, path location (up to 5), and SR description CRC to the control system</div>
+
+
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-panel" data-flow="viewer">
+        <p class="flow-desc">Views only prepared SRs, for removing signboards. Does not see the Describer's location on the map.</p>
+        <div class="flow-diagram">
+          <div class="flow-node flow-start">Sign in</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-branches">
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Prepared SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select SR from list</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>View prepared SR on the map and its SR details</div>
+
+
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-panel" data-flow="state-admin">
+        <p class="flow-desc">Can move submitted, reviewed, rejected, and prepared SRs to archived, and can view the archived list.</p>
+        <div class="flow-diagram">
+          <div class="flow-node flow-start">Sign in</div>
+          <div class="flow-arrow">&darr;</div>
+          <div class="flow-branches">
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Submitted SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select SR from list</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Change status to archived</div>
+
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Prepared SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select SR from list</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Change status to archived</div>
+
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Reviewed SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select SR from list</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Change status to archived</div>
+
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Rejected SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Select SR from list</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Change status to archived</div>
+
+
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node flow-section">Archived SRs</div>
+          <div class='flow-arrow'>&darr;</div>
+            <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>View archived SRs in list view</div>
+
+
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<h2 id="lofi">Low-Fidelity Wireframes</h2>
+    <p>Before any visual polish, the core interaction &mdash; drawing a restriction on the map, then filling in its details &mdash; went through two passes, worked out per role.</p>
+    <div class="vault">
+      <div class="vault-lock">
+        <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <h3>Wireframes and board overview</h3>
+        <p>The written case study needs no password. These are internal low-fidelity screens, held back separately since they carry real field data (ESR/TSR IDs, coordinates, speeds). Enter the password provided alongside this link to view them.</p>
+        <div class="gate-row">
+          <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+          <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+          <span class="gate-error">That password isn't quite right, try again.</span>
+        </div>
+        <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+      </div>
+      <div class="vault-body">
+        <div class="exploration-grid">
+            <figure class="exploration-board">
+              <img src="assets/lofi-01-create-sr-v1.png" alt="Low-fidelity wireframes, version one, showing the SR System home screen and the initial map-based Create SR flow">
+              <figcaption>First pass at the core loop: the SR System home, then commencement, path, and divergence selection on the map.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/lofi-02-submitted-sr-v1.png" alt="Low-fidelity wireframes, version one, showing a submitted SR on the map with its detail panel">
+              <figcaption>How a submitted SR reads back once it's on the map, including the detail panel underneath it.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/lofi-03-create-sr-v2.png" alt="Low-fidelity wireframes, version two, showing the revised Create SR flow with separate commencement and termination steps and a details form">
+              <figcaption>A second pass on Create SR: commencement and termination are now set separately, with a details form &mdash; ESR/TSR ID, FMS ID, speed, line and mileage &mdash; added after the path is drawn.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/lofi-04-board-overview.png" alt="Overview of the full low-fidelity board, organized by role, showing wireframe coverage across the whole system">
+              <figcaption>The same pass carried across every role &mdash; Describer, Reviewer, Transferer, Viewer, Verifier, and State Administrator &mdash; before any of it moved to high fidelity.</figcaption>
+            </figure>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Controlguide DPM is publicly available on the App Store, so nothing here is
+         password protected. Add public screenshots or recreations of shipped screens
+         below, using this pattern:
+
+    <figure>
+      <img src="assets/controlguide-detail-01.jpg" alt="Description of the screen">
+      <figcaption>Caption describing what the reader is looking at.</figcaption>
+    </figure>
+    -->
+<h2 id="hardcall">The Hard Call</h2>
+    <p>Getting the physical constraints right meant trading away some things a desk-bound interface could afford:</p>
+    <ul>
+      <li><strong>Fewer precise gestures required</strong>, in exchange for larger, simpler touch targets that cost some screen density.</li>
+      <li><strong>High-contrast, limited color states</strong>, in exchange for some of the subtler status distinctions a quieter indoor interface might have used.</li>
+      <li><strong>Short, linear flows</strong>, in exchange for flexibility, an operator moving fast in the field shouldn't need to navigate branching menus mid-task.</li>
+    </ul>
+    <p>None of these were free choices. Each one traded some interface richness for something that mattered more given who'd actually be using it and where.</p>
+
+    <h2 id="impact">Impact</h2>
+    <p>Controlguide <strong>shipped to production and is used by railway operators in the field</strong>, across the six to seven roles the system supports. I don't yet have concrete figures on restriction volume or time saved compared to the manual process it replaced, that's something worth following up on directly with the team before quoting numbers I can't back up.</p>
+
+    <h2 id="reflection">Reflection</h2>
+    <p><strong>Inheriting someone else's direction responsibly is its own skill.</strong> Joining at an early stage meant respecting decisions already made while still being accountable for everything that shipped afterward. That's a different kind of ownership than starting from a blank page.</p>
+    <p><strong>Domain training is a real substitute when direct user access isn't possible, but it's not a full one.</strong> I'd rather be honest that this project didn't include field interviews than pretend it did. The environmental constraints we designed for were real and well-understood, but "real and well-understood" isn't the same as "validated directly with the people doing the job."</p>
+    <p><strong>Human factors stopped being theoretical here.</strong> It's easy to design for an idealized user sitting comfortably in front of a laptop. It's a different problem to design for someone outdoors, under time pressure, whose full attention you don't get to assume. I still think about that constraint on projects that have nothing to do with railways.</p>
+
+        <div class="pager">
+          <div class="pager-grid">
+            <a class="pager-card prev" href="case-study-dephant.html">
+              <div class="pager-dir">Previous project</div>
+              <div class="pager-title">dephant</div>
+              <div class="pager-sub">Siemens &middot; Ongoing</div>
+            </a>
+            <a class="pager-card next" href="case-study-railxplore-fusion.html">
+              <div class="pager-dir">Next project</div>
+              <div class="pager-title">RailXplore Fusion</div>
+              <div class="pager-sub">Siemens &middot; Ongoing</div>
+            </a>
+          </div>
+        </div>
+
+  <footer class="footer">
+    <div class="footer-socials">
+      <a href="https://www.linkedin.com/in/kunwarjyot-singh-8273681b0/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95C21.4 8.75 22 11.1 22 14.2V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.17V21h-4z"/></svg>
+      </a>
+      <a href="mailto:kunwarjyot2510@gmail.com" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+    </div>
+    <div class="footer-note">&copy; 2026 Kunwarjyot Singh Narula</div>
+  </footer>
+
+      </article>
+    </main>
+  </div>
+</div>
+
+
+<script>
+  const STORAGE_KEY = 'unlocked_controlguide_dpm';
+  const PASSWORD = 'siemens-controlguide2026';
+
+  const body = document.getElementById('body');
+  const toggle = document.getElementById('toggle');
+  const toggleMobile = document.getElementById('toggleMobile');
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  let dark = true;
+
+  function toggleTheme() {
+    dark = !dark;
+    body.setAttribute('data-theme', dark ? 'dark' : 'light');
+    toggle.classList.toggle('on', dark);
+    toggleMobile.classList.toggle('on', dark);
+  }
+  toggle.addEventListener('click', toggleTheme);
+  toggleMobile.addEventListener('click', toggleTheme);
+
+  menuBtn.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    menuBtn.classList.toggle('open', isOpen);
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Visuals gate. A page can carry more than one locked section (Exploration,
+  // Low-Fidelity, and so on) — all of them share the same password and the
+  // same unlock state, so entering it once in any of them unlocks the rest
+  // immediately rather than asking again per section.
+  const vaults = Array.from(document.querySelectorAll('.vault'));
+  if (vaults.length) {
+    function unlockAll() { vaults.forEach(v => v.classList.add('unlocked')); }
+    try {
+      if (localStorage.getItem(STORAGE_KEY) === 'true') unlockAll();
+    } catch (e) {}
+
+    vaults.forEach(vault => {
+      const pwInput = vault.querySelector('.gate-input');
+      const gateError = vault.querySelector('.gate-error');
+      const unlockBtn = vault.querySelector('.gate-submit');
+      if (!pwInput || !unlockBtn) return;
+
+      function attempt() {
+        if (pwInput.value.trim() === PASSWORD) {
+          try { localStorage.setItem(STORAGE_KEY, 'true'); } catch (e) {}
+          unlockAll();
+        } else {
+          gateError.classList.add('show');
+          pwInput.value = '';
+          pwInput.focus();
+        }
+      }
+      unlockBtn.addEventListener('click', attempt);
+      pwInput.addEventListener('input', () => gateError.classList.remove('show'));
+      pwInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); attempt(); }
+      });
+    });
+  }
+
+  // Contents: scroll spy
+  const tocLinks = Array.from(document.querySelectorAll('.toc-link'));
+  const watched = tocLinks.map(b => document.getElementById(b.dataset.target)).filter(Boolean);
+
+  // Sub-items nested under a parent (only "approach" has children right
+  // now, but this reads off the actual .sub markup rather than a hardcoded
+  // list, so it keeps working if that ever changes). A sub-item's parent is
+  // whichever non-sub button sits directly above it in the rail.
+  const PARENT_OF = {};
+  (function mapParents() {
+    let lastParent = null;
+    tocLinks.forEach(b => {
+      if (!b.classList.contains('sub')) { lastParent = b.dataset.target; }
+      else if (lastParent) { PARENT_OF[b.dataset.target] = lastParent; }
+    });
+  })();
+
+  if (watched.length && 'IntersectionObserver' in window) {
+    const visible = new Set();
+    function paint() {
+      let current = null;
+      for (const el of watched) { if (visible.has(el.id)) { current = el.id; break; } }
+      if (!current) {
+        let last = watched[0];
+        for (const el of watched) { if (el.getBoundingClientRect().top <= 130) last = el; }
+        current = last.id;
+      }
+      tocLinks.forEach(b => {
+        const t = b.dataset.target;
+        b.classList.toggle('active', t === current);
+        // The parent stays lit for as long as "current" is itself or any
+        // child of it, instead of losing its accent bar the moment you
+        // scroll past its own heading into the first child section.
+        b.classList.toggle('group-active', !b.classList.contains('sub') && PARENT_OF[current] === t);
+      });
+    }
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) visible.add(e.target.id); else visible.delete(e.target.id); });
+      paint();
+    }, { rootMargin: '-92px 0px -60% 0px', threshold: 0 });
+    watched.forEach(el => io.observe(el));
+    window.addEventListener('scroll', paint, { passive: true });
+    paint();
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Eased scrolling: duration scales with distance so short and long jumps
+  // both feel deliberate rather than snapped.
+  function easeInOutCubic(x) {
+    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  }
+  function scrollToY(y) {
+    y = Math.max(0, y);
+    if (reduceMotion) { window.scrollTo(0, y); return; }
+    const start = window.pageYOffset;
+    const dist = y - start;
+    if (Math.abs(dist) < 2) return;
+    const duration = Math.min(1500, Math.max(700, 420 + Math.abs(dist) * 0.5));
+    const t0 = performance.now();
+    function step(now) {
+      const p = Math.min(1, (now - t0) / duration);
+      window.scrollTo(0, start + dist * easeInOutCubic(p));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  tocLinks.forEach(b => {
+    b.addEventListener('click', () => {
+      const target = document.getElementById(b.dataset.target);
+      if (!target) return;
+      if (b.closest('#mobileMenu')) {
+        mobileMenu.classList.remove('open');
+        menuBtn.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }
+      scrollToY(target.getBoundingClientRect().top + window.pageYOffset - 92);
+    });
+  });
+
+  // Scroll reveal
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window) {
+    const all = document.querySelectorAll(
+      '.article > h2, .article > p, .article > ul, .article .restricted, .vault, .case-cover, .pager, .case-figure, .taskflow, .flow-tabs, .flow-panels');
+    const vh = window.innerHeight;
+    const targets = [];
+    all.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) {
+        el.classList.add('reveal', 'in');   // already visible on arrival: no entrance, no flash
+      } else {
+        el.classList.add('reveal');
+        targets.push(el);
+      }
+    });
+    const revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    targets.forEach(el => revealObserver.observe(el));
+  }
+
+  // Tab-switched content (User Flows, Personas): fade the switch, then
+  // cascade the new panel's pieces in top-to-bottom, reusing the same
+  // .reveal/.reveal.in timing as every other entrance on the site rather
+  // than a separate animation. Works for either flow diagrams or persona
+  // cards, whichever this particular panel happens to contain.
+  function cascadeFlow(panel) {
+    if (!panel) return;
+    const items = panel.querySelectorAll(
+      '.flow-node, .flow-outcomes, .persona-header, .persona-body, .persona-attrs, .persona-wants, .persona-note');
+    if (reduce) { items.forEach(el => el.classList.add('reveal', 'in')); return; }
+    items.forEach((el, i) => {
+      el.classList.remove('in');
+      el.classList.add('reveal');
+      void el.offsetWidth;
+      el.style.transitionDelay = (i * 55) + 'ms';
+      requestAnimationFrame(() => el.classList.add('in'));
+    });
+    const total = items.length * 55 + 900;
+    setTimeout(() => items.forEach(el => { el.style.transitionDelay = ''; }), total);
+  }
+  // A page can carry more than one independent tab group (Personas and
+  // User Flows both exist on the same page) — cascade each group's own
+  // initially-active panel, not just the first one found in the document.
+  document.querySelectorAll('.flow-panels').forEach(panels => {
+    cascadeFlow(panels.querySelector('.flow-panel.active'));
+  });
+
+  document.querySelectorAll('.flow-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const key = tab.dataset.flow;
+      const group = tab.closest('.flow-tabs');
+      if (tab.classList.contains('active')) return;
+      group.querySelectorAll('.flow-tab').forEach(b => b.classList.toggle('active', b === tab));
+      const panels = group.nextElementSibling;
+      panels.querySelectorAll('.flow-panel').forEach(p => p.classList.toggle('active', p.dataset.flow === key));
+      cascadeFlow(panels.querySelector('.flow-panel.active'));
+    });
+  });
+
+  // Cursor
+  if (window.matchMedia('(pointer: fine)').matches) {
+    body.classList.add('cursor-on');
+    const dot = document.getElementById('cursorDot');
+    dot.style.display = 'block';
+    window.addEventListener('mousemove', e => { dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px'; });
+    document.querySelectorAll('a, button, input, summary, .pager-card').forEach(el => {
+      el.addEventListener('mouseenter', () => dot.classList.add('active'));
+      el.addEventListener('mouseleave', () => dot.classList.remove('active'));
+    });
+  }
+</script>
+
+</body>
+</html>
