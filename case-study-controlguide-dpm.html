@@ -92,38 +92,18 @@
   .nav-link-btn.mobile { font-size:30px; font-weight:500; color:var(--ink); text-align:left; letter-spacing:-.8px; }
   .mobile-menu-toggle-row { display:flex; align-items:center; gap:12px; margin-top:8px; font-size:14px; color:var(--ink-2); }
 
-  /* VISUALS GATE (inline, not a page takeover) */
+  /* EXPLORATION AND WIREFRAME VISUALS */
   .vault { margin-top:26px; }
-  .vault-lock {
-    border:1px dashed var(--rule); border-radius:16px;
-    padding:32px 30px; background:var(--surface-2);
-  }
-  .vault-icon { width:22px; height:22px; color:var(--ink-3); margin-bottom:14px; display:block; }
-  .vault-lock h3 { font-size:19px; font-weight:500; letter-spacing:-.5px; margin-bottom:10px; }
-  .vault-lock p {
-    font-size:16px; line-height:1.6; color:var(--ink-2);
-    margin:0 0 20px; max-width:56ch; letter-spacing:-.1px;
-  }
-  .gate-row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-  .gate-row input {
-    font-family:inherit; font-size:15px; padding:10px 16px; background:var(--bg);
-    color:var(--ink); border:1px solid var(--rule); border-radius:999px; min-width:210px;
-  }
-  .gate-row input::placeholder { color:var(--ink-3); }
-  .gate-error { font-size:14px; color:var(--accent); width:100%; margin-top:4px; display:none; }
-  .gate-error.show { display:block; }
-  .vault-help { font-size:14.5px; color:var(--ink-3); margin-top:16px; }
-  .vault-help a { color:var(--ink-2); }
-
-  .vault-body { display:none; }
-  .vault.unlocked .vault-body { display:block; }
-  .vault.unlocked .vault-lock { display:none; }
+  .vault-body { display:block; }
   .vault-body figure { margin-top:26px; }
   .vault-body figure img {
     display:block; width:100%; border-radius:14px;
     border:1px solid var(--rule); background:var(--surface);
   }
-  .vault-body figcaption { font-size:14px; color:var(--ink-3); margin-top:12px; letter-spacing:-.1px; }
+  .vault-body figcaption {
+    font-size:14px; color:var(--ink-3); margin-top:12px; letter-spacing:-.1px;
+  }
+
 
   .layout { display:block; }
 
@@ -714,17 +694,6 @@
     <h2 id="exploration">Exploration</h2>
     <p>Not every path made it into the shipped product. These are working boards from the process itself &mdash; unresolved questions, dead ends, and the reasoning behind decisions before they were final.</p>
     <div class="vault">
-      <div class="vault-lock">
-        <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <h3>Working process boards</h3>
-        <p>The written case study needs no password. These are unpolished internal exploration boards, held back separately. Enter the password provided alongside this link to view them.</p>
-        <div class="gate-row">
-          <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
-          <button class="btn btn-primary gate-submit" type="button">Unlock</button>
-          <span class="gate-error">That password isn't quite right, try again.</span>
-        </div>
-        <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
-      </div>
       <div class="vault-body">
         <div class="exploration-grid">
             <figure class="exploration-board">
@@ -1138,17 +1107,6 @@
 <h2 id="lofi">Low-Fidelity Wireframes</h2>
     <p>Before any visual polish, the core interaction &mdash; drawing a restriction on the map, then filling in its details &mdash; went through two passes, worked out per role.</p>
     <div class="vault">
-      <div class="vault-lock">
-        <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <h3>Wireframes and board overview</h3>
-        <p>The written case study needs no password. These are internal low-fidelity screens, held back separately since they carry real field data (ESR/TSR IDs, coordinates, speeds). Enter the password provided alongside this link to view them.</p>
-        <div class="gate-row">
-          <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
-          <button class="btn btn-primary gate-submit" type="button">Unlock</button>
-          <span class="gate-error">That password isn't quite right, try again.</span>
-        </div>
-        <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
-      </div>
       <div class="vault-body">
         <div class="exploration-grid">
             <figure class="exploration-board">
@@ -1232,10 +1190,7 @@
 
 
 <script>
-  const STORAGE_KEY = 'unlocked_controlguide_dpm';
-  const PASSWORD = 'siemens-controlguide2026';
-
-  const body = document.getElementById('body');
+const body = document.getElementById('body');
   const toggle = document.getElementById('toggle');
   const toggleMobile = document.getElementById('toggleMobile');
   const menuBtn = document.getElementById('menuBtn');
@@ -1257,40 +1212,6 @@
     menuBtn.setAttribute('aria-expanded', isOpen);
   });
 
-  // Visuals gate. A page can carry more than one locked section (Exploration,
-  // Low-Fidelity, and so on) — all of them share the same password and the
-  // same unlock state, so entering it once in any of them unlocks the rest
-  // immediately rather than asking again per section.
-  const vaults = Array.from(document.querySelectorAll('.vault'));
-  if (vaults.length) {
-    function unlockAll() { vaults.forEach(v => v.classList.add('unlocked')); }
-    try {
-      if (localStorage.getItem(STORAGE_KEY) === 'true') unlockAll();
-    } catch (e) {}
-
-    vaults.forEach(vault => {
-      const pwInput = vault.querySelector('.gate-input');
-      const gateError = vault.querySelector('.gate-error');
-      const unlockBtn = vault.querySelector('.gate-submit');
-      if (!pwInput || !unlockBtn) return;
-
-      function attempt() {
-        if (pwInput.value.trim() === PASSWORD) {
-          try { localStorage.setItem(STORAGE_KEY, 'true'); } catch (e) {}
-          unlockAll();
-        } else {
-          gateError.classList.add('show');
-          pwInput.value = '';
-          pwInput.focus();
-        }
-      }
-      unlockBtn.addEventListener('click', attempt);
-      pwInput.addEventListener('input', () => gateError.classList.remove('show'));
-      pwInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); attempt(); }
-      });
-    });
-  }
 
   // Contents: scroll spy
   const tocLinks = Array.from(document.querySelectorAll('.toc-link'));
