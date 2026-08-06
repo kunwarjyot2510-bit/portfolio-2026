@@ -715,38 +715,23 @@
 
     <h2 id="exploration">Exploration</h2>
     <p>Not every path made it into the shipped product. These are working boards from the process itself &mdash; unresolved questions, dead ends, and the reasoning behind decisions before they were final.</p>
-    <div class="vault">
-      <div class="vault-lock">
-        <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <h3>Working process boards</h3>
-        <p>The written case study needs no password. These are unpolished internal exploration boards, held back separately. Enter the password provided alongside this link to view them.</p>
-        <div class="gate-row">
-          <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
-          <button class="btn btn-primary gate-submit" type="button">Unlock</button>
-          <span class="gate-error">That password isn't quite right, try again.</span>
-        </div>
-        <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
-      </div>
-      <div class="vault-body">
-        <div class="exploration-grid">
-            <figure class="exploration-board">
-              <img src="assets/exploration-01-sr-lifecycle.png" alt="SR lifecycle exploration, covering single-request and grouped-request paths, save/submit/delete states, and OTP placement">
-              <figcaption>Early exploration of the SR lifecycle: single vs. grouped requests, draft states, and where OTP confirmation sits in the sequence.</figcaption>
-            </figure>
-            <figure class="exploration-board">
-              <img src="assets/exploration-02-group-sr-creation.png" alt="Group SR creation flow, showing the submit, group-complete, lock, and reject paths">
-              <figcaption>Working through what “complete” means for a group of SRs submitted together, and the branch between locking a group and rejecting it.</figcaption>
-            </figure>
-            <figure class="exploration-board">
-              <img src="assets/exploration-03-group-sr-notification.png" alt="Group SR notification flow, showing the prompt to add another SR to a group before final submission">
-              <figcaption>A notification pattern to make sure a Describer knows every SR they create is treated as part of a group, with a path to add more before submitting.</figcaption>
-            </figure>
-            <figure class="exploration-board">
-              <img src="assets/exploration-04-recovery-workflow.png" alt="Recovery workflow keyed to an FMS ID, branching into complete and incomplete group states">
-              <figcaption>A recovery path keyed to an FMS ID, for handling a group that was left incomplete.</figcaption>
-            </figure>
-        </div>
-      </div>
+    <div class="exploration-grid">
+        <figure class="exploration-board">
+          <img src="assets/exploration-01-sr-lifecycle.png" alt="SR lifecycle exploration, covering single-request and grouped-request paths, save/submit/delete states, and OTP placement">
+          <figcaption>Early exploration of the SR lifecycle: single vs. grouped requests, draft states, and where OTP confirmation sits in the sequence.</figcaption>
+        </figure>
+        <figure class="exploration-board">
+          <img src="assets/exploration-02-group-sr-creation.png" alt="Group SR creation flow, showing the submit, group-complete, lock, and reject paths">
+          <figcaption>Working through what “complete” means for a group of SRs submitted together, and the branch between locking a group and rejecting it.</figcaption>
+        </figure>
+        <figure class="exploration-board">
+          <img src="assets/exploration-03-group-sr-notification.png" alt="Group SR notification flow, showing the prompt to add another SR to a group before final submission">
+          <figcaption>A notification pattern to make sure a Describer knows every SR they create is treated as part of a group, with a path to add more before submitting.</figcaption>
+        </figure>
+        <figure class="exploration-board">
+          <img src="assets/exploration-04-recovery-workflow.png" alt="Recovery workflow keyed to an FMS ID, branching into complete and incomplete group states">
+          <figcaption>A recovery path keyed to an FMS ID, for handling a group that was left incomplete.</figcaption>
+        </figure>
     </div>
 
 <h2 id="personas">Early Personas</h2>
@@ -1139,38 +1124,23 @@
 
 <h2 id="lofi">Low-Fidelity Wireframes</h2>
     <p>Before any visual polish, the core interaction &mdash; drawing a restriction on the map, then filling in its details &mdash; went through two passes, worked out per role.</p>
-    <div class="vault">
-      <div class="vault-lock">
-        <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <h3>Wireframes and board overview</h3>
-        <p>The written case study needs no password. These are internal low-fidelity screens, held back separately since they carry real field data (ESR/TSR IDs, coordinates, speeds). Enter the password provided alongside this link to view them.</p>
-        <div class="gate-row">
-          <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
-          <button class="btn btn-primary gate-submit" type="button">Unlock</button>
-          <span class="gate-error">That password isn't quite right, try again.</span>
-        </div>
-        <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
-      </div>
-      <div class="vault-body">
-        <div class="exploration-grid">
-            <figure class="exploration-board">
-              <img src="assets/lofi-01-create-sr-v1.png" alt="Low-fidelity wireframes, version one, showing the SR System home screen and the initial map-based Create SR flow">
-              <figcaption>First pass at the core loop: the SR System home, then commencement, path, and divergence selection on the map.</figcaption>
-            </figure>
-            <figure class="exploration-board">
-              <img src="assets/lofi-02-submitted-sr-v1.png" alt="Low-fidelity wireframes, version one, showing a submitted SR on the map with its detail panel">
-              <figcaption>How a submitted SR reads back once it's on the map, including the detail panel underneath it.</figcaption>
-            </figure>
-            <figure class="exploration-board">
-              <img src="assets/lofi-03-create-sr-v2.png" alt="Low-fidelity wireframes, version two, showing the revised Create SR flow with separate commencement and termination steps and a details form">
-              <figcaption>A second pass on Create SR: commencement and termination are now set separately, with a details form &mdash; ESR/TSR ID, FMS ID, speed, line and mileage &mdash; added after the path is drawn.</figcaption>
-            </figure>
-            <figure class="exploration-board">
-              <img src="assets/lofi-04-board-overview.png" alt="Overview of the full low-fidelity board, organized by role, showing wireframe coverage across the whole system">
-              <figcaption>The same pass carried across every role &mdash; Describer, Reviewer, Transferer, Viewer, Verifier, and State Administrator &mdash; before any of it moved to high fidelity.</figcaption>
-            </figure>
-        </div>
-      </div>
+    <div class="exploration-grid">
+        <figure class="exploration-board">
+          <img src="assets/lofi-01-create-sr-v1.png" alt="Low-fidelity wireframes, version one, showing the SR System home screen and the initial map-based Create SR flow">
+          <figcaption>First pass at the core loop: the SR System home, then commencement, path, and divergence selection on the map.</figcaption>
+        </figure>
+        <figure class="exploration-board">
+          <img src="assets/lofi-02-submitted-sr-v1.png" alt="Low-fidelity wireframes, version one, showing a submitted SR on the map with its detail panel">
+          <figcaption>How a submitted SR reads back once it's on the map, including the detail panel underneath it.</figcaption>
+        </figure>
+        <figure class="exploration-board">
+          <img src="assets/lofi-03-create-sr-v2.png" alt="Low-fidelity wireframes, version two, showing the revised Create SR flow with separate commencement and termination steps and a details form">
+          <figcaption>A second pass on Create SR: commencement and termination are now set separately, with a details form &mdash; ESR/TSR ID, FMS ID, speed, line and mileage &mdash; added after the path is drawn.</figcaption>
+        </figure>
+        <figure class="exploration-board">
+          <img src="assets/lofi-04-board-overview.png" alt="Overview of the full low-fidelity board, organized by role, showing wireframe coverage across the whole system">
+          <figcaption>The same pass carried across every role &mdash; Describer, Reviewer, Transferer, Viewer, Verifier, and State Administrator &mdash; before any of it moved to high fidelity.</figcaption>
+        </figure>
     </div>
 
 
