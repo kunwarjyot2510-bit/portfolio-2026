@@ -311,7 +311,7 @@
      screen together was exactly the clutter being complained about. Capped
      width keeps a single card from stretching to the full article width. */
   .persona-card {
-    max-width: 460px; background: var(--surface); border: 1px solid var(--rule);
+    width: 100%; background: var(--surface); border: 1px solid var(--rule);
     border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
   }
   .persona-header {
@@ -412,23 +412,15 @@
     .taskflow-connector { width: 100%; padding: 6px 0; }
     .taskflow-arrow { display: inline-block; transform: rotate(90deg); }
   }
-  @media (min-width: 1240px) {
-    /* Break out of the 720px article column. The extra 40px on each side is
-       comfortably inside the space the page layout already guarantees at
-       this width — verified against the rail (168px) and gap (44px) the
-       layout reserves, so this never re-introduces horizontal scroll on the
-       page itself. */
-    .taskflow { width: calc(100% + 80px); margin-left: -40px; }
-    .taskflow-track { flex-wrap: nowrap; justify-content: flex-start; }
-    .taskflow-step { width: 128px; padding: 16px 14px; }
-    .taskflow-num { width: 22px; height: 22px; font-size: 11px; }
-    .taskflow-text { font-size: 12.5px !important; }
-    .taskflow-connector { width: 36px; }
-  }
+  /* Task Flow used to break out of the article column above 1240px to fit
+     five steps on one line — but that meant its left edge no longer lined
+     up with the heading and paragraph above it, which stay inside the
+     normal column. It now just wraps within the column at every width,
+     like the flow diagrams already do, so nothing misaligns. */
 
   /* USER FLOWS */
   .flow-tabs {
-    display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 6px;
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0;
   }
   .flow-tab {
     flex-shrink: 0; font-family: inherit; font-size: 14px; font-weight: 500;
@@ -678,7 +670,8 @@
         </a>
         <div class="badge-row">
           <span class="tag">Mobile · Human Factors · Shipped Product</span>
-          <span class="badge">Siemens · Shipped · 2023–2024 · 10 min read</span>
+          <span class="badge">Siemens · Shipped · 2023–2024</span>
+          <span class="badge">10 min read</span>
         </div>
         <h1 class="title">Controlguide DPM</h1>
         <div class="subtitle">Designing for railway operators applying speed restrictions in the field, not at a desk</div>
@@ -710,7 +703,15 @@
           <figcaption>Before this existed, a restriction like this was raised, signed, and circulated on paper &mdash; by phone, fax, and a physical signature, with no shared source of truth once it left the office.</figcaption>
         </figure>
 <h2 id="approach">The Approach</h2>
-    <p>One honest limitation worth naming: <strong>we didn't have direct access to end users for this project</strong>, no field visits, no interviews with operators themselves. What we did have was domain training and the team's existing knowledge of the environment operators actually work in, and we used that to ground every interaction decision in real constraints rather than assumptions: large touch targets that work with gloves on, high-contrast states that hold up outdoors, and flows short enough that a distracted, moving user doesn't lose their place halfway through.</p>
+    <p>We didn't have direct access to end users for this project &mdash; no field visits, no interviews with the operators themselves, and I want to be upfront about that rather than smooth it over. What we did have was domain training and the team's existing knowledge of the environment operators actually work in, and we used that to ground every interaction decision in real constraints rather than assumptions.</p>
+    <p>The design had to answer one question in practice: <strong>how does someone use this quickly and correctly while standing outside in the sun, wearing gloves, mid-task, with pressure to move fast?</strong> A few decisions came directly out of that:</p>
+    <ul>
+      <li><strong>Targets sized for error, not precision.</strong> Buttons and tap zones large enough that a gloved, slightly-off tap still lands correctly, rather than expecting the same accuracy as a bare finger on a phone.</li>
+      <li><strong>Selection over typing.</strong> Choosing from a list or tapping a point on the map wherever possible, instead of free text &mdash; typing accurately with gloves on is genuinely hard.</li>
+      <li><strong>One decision per screen.</strong> An operator interrupted mid-task, which is likely outdoors, can look back at the screen and immediately see where they left off, without reconstructing context.</li>
+      <li><strong>Contrast that survives glare.</strong> High-contrast states chosen specifically for outdoor sunlight, not just for dark-mode consistency.</li>
+      <li><strong>Friction where it matters, not everywhere.</strong> Routine actions stay fast; only the genuinely risky ones, like confirming a restriction, get deliberate extra distance or a confirmation step.</li>
+    </ul>
     <p><strong>That's a real gap compared to ideal process</strong>, and I'd have preferred direct access to the people using this daily. But the constraints we designed for were well-documented and consistent enough that I'm confident the decisions were grounded in something real, not guesswork.</p>
 
     <h2 id="exploration">Exploration</h2>
@@ -1169,19 +1170,20 @@
 <h2 id="hardcall">The Hard Call</h2>
     <p>Getting the physical constraints right meant trading away some things a desk-bound interface could afford:</p>
     <ul>
-      <li><strong>Fewer precise gestures required</strong>, in exchange for larger, simpler touch targets that cost some screen density.</li>
-      <li><strong>High-contrast, limited color states</strong>, in exchange for some of the subtler status distinctions a quieter indoor interface might have used.</li>
-      <li><strong>Short, linear flows</strong>, in exchange for flexibility, an operator moving fast in the field shouldn't need to navigate branching menus mid-task.</li>
+      <li><strong>Fewer precise gestures required</strong>, in exchange for larger, simpler touch targets that cost <strong>screen density</strong>.</li>
+      <li><strong>High-contrast, limited color states</strong>, in exchange for <strong>some of the subtler status distinctions</strong> a quieter indoor interface might have used.</li>
+      <li><strong>Short, linear flows</strong>, in exchange for <strong>flexibility</strong> &mdash; an operator moving fast in the field shouldn't need to navigate branching menus mid-task.</li>
     </ul>
     <p>None of these were free choices. Each one traded some interface richness for something that mattered more given who'd actually be using it and where.</p>
 
     <h2 id="impact">Impact</h2>
-    <p>Controlguide <strong>shipped to production and is used by railway operators in the field</strong>, across the six to seven roles the system supports. I don't yet have concrete figures on restriction volume or time saved compared to the manual process it replaced, that's something worth following up on directly with the team before quoting numbers I can't back up.</p>
+    <p>Controlguide <strong>shipped to production and is used by railway operators in the field</strong>, bringing <strong>six to seven previously separate roles into one application</strong> that replaced a process which used to run on paper forms passed between people by hand. The process is <strong>more transparent now</strong> &mdash; status is visible rather than inferred &mdash; and <strong>faster</strong>, since nothing has to physically travel between the people involved. I don't yet have volume or time-saved figures from the team, and I'd rather wait for real numbers than estimate ones I can't back up.</p>
 
     <h2 id="reflection">Reflection</h2>
-    <p><strong>Inheriting someone else's direction responsibly is its own skill.</strong> Joining at an early stage meant respecting decisions already made while still being accountable for everything that shipped afterward. That's a different kind of ownership than starting from a blank page.</p>
-    <p><strong>Domain training is a real substitute when direct user access isn't possible, but it's not a full one.</strong> I'd rather be honest that this project didn't include field interviews than pretend it did. The environmental constraints we designed for were real and well-understood, but "real and well-understood" isn't the same as "validated directly with the people doing the job."</p>
-    <p><strong>Human factors stopped being theoretical here.</strong> It's easy to design for an idealized user sitting comfortably in front of a laptop. It's a different problem to design for someone outdoors, under time pressure, whose full attention you don't get to assume. I still think about that constraint on projects that have nothing to do with railways.</p>
+    <p><strong>Inheriting someone else's direction is its own skill</strong> &mdash; respecting decisions already made while still owning everything that shipped afterward.</p>
+    <p><strong>Domain training is a real substitute for user access, not a full one.</strong> I'd rather say this project skipped field interviews than imply it didn't.</p>
+    <p><strong>Designing for someone outdoors, under time pressure, with attention you can't assume, is a different problem than designing for someone at a desk.</strong> That's stayed with me on projects that have nothing to do with railways.</p>
+    <p><strong>Requirements didn't stay still, and neither did the people setting them.</strong> The real skill wasn't defending a design &mdash; it was showing, concretely, why one approach served the operator better, until that became the obvious choice rather than my opinion versus theirs.</p>
 
         <div class="pager">
           <div class="pager-grid">
