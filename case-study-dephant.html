@@ -162,13 +162,9 @@
   .toc-link.active { color:var(--ink); }
   .toc-link.active::before { opacity:1; }
   /* Sub-items nested under a parent section (currently: everything The
-     Approach expands into for Controlguide). The parent keeps the full
-     accent bar lit for as long as you're anywhere inside its group — see
-     the "group-active" class, set in the scroll-spy script — rather than
-     losing it the moment you scroll past its own heading into a child
-     section. Repeating that same bar next to whichever child you're
-     actually in would read as two disconnected marks; a small dot in the
-     same gutter says "here, specifically" without competing with it. */
+     Approach expands into for Controlguide). Same accent-bar position as a
+     top-level item, so the active indicator stays on one consistent edge —
+     only the text indents and shrinks to read as a level down. */
   .toc-link.sub { padding-left:28px; font-size:13px; }
   .toc-link.sub::before { display:none; }
   .toc-link.sub::after {
@@ -180,11 +176,6 @@
   .toc-link.group-active::before { opacity:1; }
   .toc-link.group-active { color:var(--ink); }
 
-  /* The contents list as it appears inside the mobile hamburger menu,
-     replacing the old inline "On this page" accordion — that sat awkwardly
-     mid-article and duplicated a second navigation pattern. Same list, same
-     active/group-active/sub logic, just living in the one menu a mobile
-     reader already opens for everything else. */
   .mobile-toc-group { }
   .mobile-toc-group .toc-title { font-size: 12px; letter-spacing: 1.6px; }
   .mobile-toc-group .toc-link {
@@ -292,6 +283,10 @@
      which defeats the point of showing them at all. The frame is where
      visual consistency lives; the image inside stays exactly what it is. */
   .exploration-grid { display: flex; flex-direction: column; gap: 28px; }
+  /* .vault-body figure already carries margin-top:26px as a general rule;
+     inside a flex grid with its own gap, that stacked on top of the gap
+     instead of replacing it, doubling the space between figures. */
+  .exploration-grid figure { margin-top: 0; }
   .exploration-board {
     background: var(--bg); border: 1px solid var(--rule); border-radius: 14px;
     padding: 14px; margin: 0;
@@ -304,62 +299,11 @@
     font-size: 14px; line-height: 1.55; color: var(--ink-3);
     margin-top: 12px; letter-spacing: -.1px;
   }
-
-  /* ROLE-BASED PERSONAS
-     Shown one at a time via the same flow-tabs/flow-panel component User
-     Flows uses below, rather than all five as a grid — five full cards on
-     screen together was exactly the clutter being complained about. Capped
-     width keeps a single card from stretching to the full article width. */
-  .persona-card {
-    max-width: 460px; background: var(--surface); border: 1px solid var(--rule);
-    border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+  .hifi-group-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--ink-3); margin: 30px 0 0; padding-top: 22px; border-top: 1px solid var(--rule);
   }
-  .persona-header {
-    background: var(--surface-2); color: var(--ink); border-bottom: 1px solid var(--rule);
-    padding: 13px 20px; font-size: 15.5px; font-weight: 600; letter-spacing: -.2px;
-  }
-  .persona-body { padding: 18px 20px 4px; display: flex; gap: 14px; align-items: flex-start; }
-  .persona-avatar {
-    width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--accent); flex-shrink: 0;
-  }
-  .persona-avatar svg { width: 22px; height: 22px; }
-  .persona-desc {
-    font-size: 13.5px !important; line-height: 1.55; color: var(--ink-2) !important;
-    margin: 0 !important;
-  }
-  .persona-attrs {
-    display: grid; grid-template-columns: auto 1fr; gap: 5px 14px;
-    padding: 16px 20px; margin: 14px 0 0; border-top: 1px solid var(--rule);
-    font-size: 12.5px;
-  }
-  .persona-attr-label { color: var(--ink-3); }
-  .persona-attr-value { color: var(--ink); font-weight: 500; }
-  .persona-wants {
-    padding: 16px 20px; border-top: 1px solid var(--rule);
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1;
-  }
-  .persona-wants h5 {
-    font-size: 11px; font-weight: 600; letter-spacing: 1.1px;
-    text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px;
-  }
-  .persona-wants ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 7px; }
-  .persona-wants li {
-    font-size: 13px; line-height: 1.5; color: var(--ink-2);
-    position: relative; padding-left: 13px;
-  }
-  .persona-wants li::before {
-    content: ""; position: absolute; left: 0; top: 8px;
-    width: 4px; height: 4px; border-radius: 50%; background: var(--ink-3);
-  }
-  .persona-note {
-    font-size: 11.5px !important; font-style: italic; color: var(--ink-3) !important;
-    padding: 0 20px 16px; margin: 0 !important;
-  }
-  @media (max-width: 720px) {
-    .persona-wants { grid-template-columns: 1fr; }
-  }
+  .hifi-group-label:first-child { margin-top: 0; padding-top: 0; border-top: none; }
 
   /* COMPLETE TASK FLOW
      Default (up to a real laptop width): wraps to as many rows as needed.
@@ -445,6 +389,220 @@
   .flow-panel { display: none; }
   .flow-panel.active { display: block; }
 
+  /* USE-CASE TABS
+     A second, higher-level tab tier sitting above the existing role tabs
+     (.flow-tabs/.flow-tab), used where a section's content genuinely
+     differs by use case (currently: User Flows). Deliberately larger and
+     bolder than the role tabs beneath it, so the hierarchy — pick a use
+     case, then pick a role within it — reads at a glance rather than
+     looking like two rows of the same control. */
+  .usecase-tabs {
+    display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 4px;
+  }
+  .usecase-tab {
+    flex-shrink: 0; font-family: inherit; font-size: 15px; font-weight: 500;
+    letter-spacing: -.1px; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 999px; padding: 11px 22px;
+    cursor: pointer; transition: color .18s ease, background .18s ease, border-color .18s ease;
+    white-space: nowrap;
+  }
+  .usecase-tab:hover { color: var(--ink); background: var(--surface-2); }
+  .usecase-tab.active {
+    color: var(--btn-ink); background: var(--btn-bg); border-color: var(--btn-bg);
+  }
+  .usecase-panel { display: none; }
+  .usecase-panel.active { display: block; }
+  .usecase-panel .flow-tabs { margin-top: 24px; }
+  .usecase-panel .restricted { margin-top: 20px; }
+
+  /* ROLE SWITCHER — arrows flanking a fully custom dropdown, one row.
+     A native <select>'s open list is styled by the OS, not by us, so on a
+     dark page it pops up light regardless of theme; this is a hand-built
+     listbox instead, so every state actually matches the site. */
+  .role-switcher { display: flex; align-items: center; gap: 10px; margin: 24px 0 4px; }
+
+  .role-nav-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    background: var(--surface); border: 1px solid var(--rule); color: var(--ink-2);
+    cursor: pointer; transition: background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .role-nav-btn:hover { background: var(--surface-2); color: var(--ink); }
+  .role-nav-btn svg { width: 16px; height: 16px; }
+
+  /* LOW-FIDELITY WIREFRAME RECREATIONS
+     Deliberately greyscale — no accent color, no polish. The point of a
+     wireframe is that it isn't finished yet; dressing these up in the
+     site's usual palette would misrepresent what stage the work was at. */
+  .wf-screen {
+    background: var(--bg); border: 1px solid var(--rule); border-radius: 12px;
+    overflow: hidden; font-family: inherit;
+  }
+  .wf-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; border-bottom: 1px solid var(--rule); background: var(--surface);
+  }
+  .wf-topbar-title { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -.2px; }
+  .wf-topbar-icons { display: flex; gap: 9px; }
+  .wf-icon-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--ink-3); opacity: .4; }
+  .wf-body { display: flex; min-height: 300px; }
+  .wf-sidebar { width: 40px; flex-shrink: 0; border-right: 1px solid var(--rule); }
+  .wf-sidebar-item {
+    height: 40px; border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: center; color: var(--ink-3);
+  }
+  .wf-sidebar-item.active { background: var(--surface-2); color: var(--ink-2); }
+  .wf-sidebar-item svg { width: 16px; height: 16px; }
+  .wf-content { flex: 1; padding: 18px 20px; min-width: 0; }
+  .wf-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .wf-heading { font-size: 13.5px; font-weight: 700; color: var(--ink-2); }
+  .wf-btn-ghost-wf {
+    font-size: 10.5px; font-weight: 600; color: var(--ink-2);
+    border: 1px solid var(--rule); border-radius: 6px; padding: 5px 10px;
+  }
+  .wf-card { background: var(--surface-2); border-radius: 8px; padding: 16px 18px; margin-bottom: 14px; }
+  .wf-label { font-size: 10.5px; font-weight: 700; color: var(--ink-2); margin-bottom: 6px; }
+  .wf-slider { position: relative; height: 2px; background: var(--rule); margin: 10px 4px 18px; }
+  .wf-slider-dot {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 11px; height: 11px; border-radius: 50%; background: var(--ink-3);
+  }
+  .wf-slider-dot.filled { background: var(--ink-2); }
+  .wf-link-text { font-size: 10.5px; font-weight: 600; color: var(--ink-2); text-align: right; }
+  .wf-cols { display: flex; gap: 10px; }
+  .wf-col { flex: 1; min-width: 0; }
+  .wf-table-head { display: flex; gap: 14px; font-size: 10px; font-weight: 700; color: var(--ink-2); padding-bottom: 6px; }
+  .wf-table-row { display: flex; gap: 14px; font-size: 10px; color: var(--ink-3); padding: 5px 0; border-top: 1px solid var(--rule); }
+  .wf-table-row span:first-child { width: 44px; flex-shrink: 0; }
+  .wf-block { background: var(--surface-2); border-radius: 8px; flex: 1; min-height: 100px; }
+
+  .wf-stepper {
+    display: flex; align-items: center; gap: 6px; background: var(--surface-2);
+    border-radius: 8px; padding: 16px 18px 14px; margin-bottom: 16px;
+  }
+  .wf-step-pill {
+    flex-shrink: 0; font-size: 9px; font-weight: 700; color: var(--ink-3);
+    border: 1px solid var(--rule); border-radius: 999px; padding: 4px 8px;
+  }
+  .wf-step-track { flex: 1; display: flex; align-items: center; gap: 4px; min-width: 0; }
+  .wf-step-line { flex: 1; height: 2px; background: var(--rule); }
+  .wf-step-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-3); flex-shrink: 0; }
+  .wf-step-dot.done { background: var(--ink-2); }
+  .wf-step-labels { display: flex; justify-content: space-between; margin-top: -2px; }
+  .wf-step-label { font-size: 9px; font-weight: 700; color: var(--ink-3); text-align: center; }
+
+  .wf-input {
+    background: var(--bg); border: 1px solid var(--rule); border-radius: 6px;
+    padding: 9px 11px; font-size: 11px; font-weight: 600; color: var(--ink-2);
+    margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .wf-input-row { display: flex; gap: 8px; }
+  .wf-input-row .wf-input { flex: 1; }
+
+  .wf-summary-card {
+    border: 1px solid var(--rule); border-radius: 8px; padding: 13px 16px; margin-bottom: 10px;
+  }
+  .wf-summary-item { font-size: 10.5px; font-weight: 700; color: var(--ink-2); padding: 3px 0; }
+  .wf-remarks { border: 1px solid var(--rule); border-radius: 8px; min-height: 70px; margin-bottom: 10px; }
+  .wf-confirm { display: flex; align-items: center; gap: 8px; justify-content: flex-end; font-size: 10.5px; font-weight: 700; color: var(--ink-2); }
+  .wf-checkbox { width: 13px; height: 13px; border: 1.5px solid var(--ink-3); border-radius: 3px; }
+
+  /* Additional wireframe pieces for Risk Assessment's split list/detail
+     screens and its alternate full-page stepped form — a different IA
+     shape than BOM's, so a few new primitives, same greyscale system. */
+  .wf-breadcrumb { font-size: 10px; color: var(--ink-3); margin-bottom: 10px; }
+  .wf-split { display: flex; gap: 16px; align-items: flex-start; }
+  .wf-split-left { flex: 0 0 44%; min-width: 0; }
+  .wf-split-right { flex: 1; min-width: 0; }
+  .wf-pill {
+    display: inline-block; font-size: 9px; font-weight: 700; padding: 3px 9px;
+    border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-2);
+  }
+  .wf-tabs-wf { display: flex; gap: 18px; border-bottom: 1px solid var(--rule); margin-bottom: 14px; }
+  .wf-tab-wf { font-size: 11px; font-weight: 700; color: var(--ink-3); padding-bottom: 8px; }
+  .wf-tab-wf.active { color: var(--ink); border-bottom: 2px solid var(--ink-2); margin-bottom: -1px; }
+  .wf-accordion {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface-2); border-radius: 6px; padding: 10px 12px;
+    font-size: 10.5px; font-weight: 700; color: var(--ink); margin-top: 12px;
+  }
+  .wf-toggle {
+    display: inline-flex; align-items: center; width: 26px; height: 15px;
+    border-radius: 999px; background: var(--surface-2); border: 1px solid var(--rule);
+    padding: 2px; flex-shrink: 0;
+  }
+  .wf-toggle-knob { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-2); }
+  .wf-toggle.on { justify-content: flex-end; }
+  .wf-toggle.on .wf-toggle-knob { background: var(--ink); }
+  .wf-step-counter { display: flex; align-items: center; gap: 10px; }
+  .wf-circle-btn {
+    width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: center; color: var(--ink-3); flex-shrink: 0;
+  }
+  .wf-circle-btn svg { width: 12px; height: 12px; }
+  .wf-step-count-text { font-size: 10.5px; font-weight: 700; color: var(--ink-2); }
+  .wf-section-head {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+  }
+  .wf-section-head-left { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--ink); }
+  .wf-check-circle {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--ink-3);
+    display: flex; align-items: center; justify-content: center; color: var(--bg); flex-shrink: 0;
+  }
+  .wf-check-circle svg { width: 9px; height: 9px; }
+  .wf-btn-pill-wf {
+    display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700;
+    color: #fff; background: var(--ink-2); border-radius: 999px; padding: 6px 12px;
+  }
+
+  @media (max-width: 640px) {
+    .wf-cols, .wf-input-row { flex-direction: column; }
+    .wf-step-labels .wf-step-label { display: none; }
+    .wf-split { flex-direction: column; }
+  }
+
+  .role-dropdown { position: relative; }
+  .role-dropdown-trigger {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    min-width: 190px; font-family: inherit; font-size: 14.5px; font-weight: 500;
+    color: var(--ink); background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 9px 14px; cursor: pointer;
+    transition: border-color .18s ease, background .18s ease;
+  }
+  .role-dropdown-trigger:hover { background: var(--surface-2); }
+  .role-dropdown-trigger:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .role-dropdown.open .role-dropdown-trigger { border-color: var(--accent); }
+  .role-dropdown-chevron {
+    width: 15px; height: 15px; color: var(--ink-3); flex-shrink: 0;
+    transition: transform .2s ease;
+  }
+  .role-dropdown.open .role-dropdown-chevron { transform: rotate(180deg); }
+
+  .role-dropdown-menu {
+    position: absolute; top: calc(100% + 6px); left: 0; min-width: 100%;
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 6px; margin: 0; list-style: none; z-index: 30;
+    max-height: 280px; overflow-y: auto;
+    box-shadow: 0 16px 36px rgba(0,0,0,.4);
+    opacity: 0; transform: translateY(-6px); pointer-events: none;
+    transition: opacity .16s ease, transform .16s ease;
+  }
+  .role-dropdown.open .role-dropdown-menu { opacity: 1; transform: none; pointer-events: auto; }
+
+  .role-dropdown-option {
+    display: flex; align-items: center; justify-content: space-between; gap: 18px;
+    font-size: 14px; color: var(--ink-2); padding: 9px 12px; border-radius: 8px;
+    cursor: pointer; white-space: nowrap; transition: background .15s ease, color .15s ease;
+  }
+  .role-dropdown-option:hover, .role-dropdown-option.focused { background: var(--surface-2); color: var(--ink); }
+  .role-dropdown-option.active { color: var(--ink); font-weight: 600; }
+  .role-dropdown-check { width: 14px; height: 14px; color: var(--accent); opacity: 0; flex-shrink: 0; }
+  .role-dropdown-option.active .role-dropdown-check { opacity: 1; }
+
+  @media (max-width: 480px) {
+    .role-dropdown-trigger { min-width: 150px; }
+  }
+
   .flow-desc { font-size: 16px !important; color: var(--ink-2); margin-top: 14px !important; }
 
   .flow-diagram {
@@ -513,6 +671,24 @@
   @media (max-width: 720px) {
     .flow-diagram { padding: 24px 16px; }
   }
+
+
+  /* DEPHANT INFORMATION ARCHITECTURE + BOM FLOW RECREATIONS */
+  /* The before/after tab switcher reuses .flow-tabs/.flow-tab/.flow-panel
+     directly (see markup below) rather than a separate component, so it
+     gets the same fade + top-to-bottom cascade as every other tab group on
+     the site instead of an instant, unanimated swap. */
+
+  .ia-compare { margin-top:28px; display:grid; grid-template-columns:1fr; gap:24px; }
+  .ia-card { margin:0; padding:14px; border:1px solid var(--rule); border-radius:16px; background:var(--surface); }
+  .ia-card img { display:block; width:100%; border-radius:10px; background:#fff; }
+  .ia-card figcaption { margin-top:12px; font-size:14px; line-height:1.55; color:var(--ink-3); }
+
+  /* bom-overview/bom-role/flow-stage/flow-row/role-* were BOM's original,
+     custom flow vocabulary. Removed now that Complete Task Flow and User
+     Flows both render with the same taskflow-*/flow-node/flow-branches
+     components Controlguide DPM uses, so every case study shares one
+     diagram language instead of each inventing its own. */
 
   /* PAGER */
   .pager { margin-top:104px; border-top:1px solid var(--rule); padding-top:44px; }
@@ -618,15 +794,20 @@
   <div class="mobile-toc-group">
     <div class="toc-title">On this page</div>
     <nav class="toc-list">
-      <button class="toc-link" type="button" data-target="overview">Overview</button>
-      <button class="toc-link" type="button" data-target="role">My Role</button>
-      <button class="toc-link" type="button" data-target="restricted">Restricted Access</button>
-      <button class="toc-link" type="button" data-target="problem">The Problem</button>
-      <button class="toc-link" type="button" data-target="approach">The Approach</button>
-      <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
-      <button class="toc-link" type="button" data-target="scaling">Scaling</button>
-      <button class="toc-link" type="button" data-target="impact">Impact</button>
-      <button class="toc-link" type="button" data-target="reflection">Reflection</button>
+        <button class="toc-link" type="button" data-target="overview">Overview</button>
+        <button class="toc-link" type="button" data-target="role">My Role</button>
+        <button class="toc-link" type="button" data-target="problem">The Problem</button>
+        <button class="toc-link" type="button" data-target="approach">The Approach</button>
+        <button class="toc-link sub" type="button" data-target="exploration">Exploration</button>
+        <button class="toc-link sub" type="button" data-target="personas">Early Personas</button>
+        <button class="toc-link sub" type="button" data-target="ia">Information Architecture</button>
+        <button class="toc-link sub" type="button" data-target="taskflow">Complete Task Flow</button>
+        <button class="toc-link sub" type="button" data-target="flows">User Flows</button>
+        <button class="toc-link sub" type="button" data-target="lofi">Low-Fidelity Wireframes</button>
+        <button class="toc-link sub" type="button" data-target="hifi">High-Fidelity Screens</button>
+        <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
+        <button class="toc-link" type="button" data-target="impact">Impact</button>
+        <button class="toc-link" type="button" data-target="reflection">Reflection</button>
     </nav>
   </div>
   <div class="mobile-menu-divider"></div>
@@ -650,15 +831,20 @@
     <aside class="toc" aria-label="On this page">
       <div class="toc-title">On this page</div>
       <nav class="toc-list">
-      <button class="toc-link" type="button" data-target="overview">Overview</button>
-      <button class="toc-link" type="button" data-target="role">My Role</button>
-      <button class="toc-link" type="button" data-target="restricted">Restricted Access</button>
-      <button class="toc-link" type="button" data-target="problem">The Problem</button>
-      <button class="toc-link" type="button" data-target="approach">The Approach</button>
-      <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
-      <button class="toc-link" type="button" data-target="scaling">Scaling</button>
-      <button class="toc-link" type="button" data-target="impact">Impact</button>
-      <button class="toc-link" type="button" data-target="reflection">Reflection</button>
+        <button class="toc-link" type="button" data-target="overview">Overview</button>
+        <button class="toc-link" type="button" data-target="role">My Role</button>
+        <button class="toc-link" type="button" data-target="problem">The Problem</button>
+        <button class="toc-link" type="button" data-target="approach">The Approach</button>
+        <button class="toc-link sub" type="button" data-target="exploration">Exploration</button>
+        <button class="toc-link sub" type="button" data-target="personas">Early Personas</button>
+        <button class="toc-link sub" type="button" data-target="ia">Information Architecture</button>
+        <button class="toc-link sub" type="button" data-target="taskflow">Complete Task Flow</button>
+        <button class="toc-link sub" type="button" data-target="flows">User Flows</button>
+        <button class="toc-link sub" type="button" data-target="lofi">Low-Fidelity Wireframes</button>
+        <button class="toc-link sub" type="button" data-target="hifi">High-Fidelity Screens</button>
+        <button class="toc-link" type="button" data-target="hardcall">The Hard Call</button>
+        <button class="toc-link" type="button" data-target="impact">Impact</button>
+        <button class="toc-link" type="button" data-target="reflection">Reflection</button>
       </nav>
     </aside>
 
@@ -668,73 +854,924 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
           Back to homepage
         </a>
+
         <div class="badge-row">
-          <span class="tag">Enterprise · Design Leadership · 0→1</span>
+          <span class="tag">Enterprise · Product Ecosystem · Continuous Delivery</span>
           <span class="badge">Siemens · Ongoing · 2025–Present</span>
         </div>
         <h1 class="title">dephant</h1>
-        <div class="subtitle">Redesigning how a global engineering organization manages product lifecycle information</div>
-        
-        <img class="case-cover" src="assets/project-dephant.jpg" alt="dephant CMT hub and Last Time Buy request screens" style="view-transition-name:vt-dephant">
+        <div class="subtitle">Turning fragmented product-lifecycle processes into one connected enterprise platform</div>
+        <img class="case-cover" src="assets/project-dephant.jpg" alt="dephant product lifecycle management screens" style="view-transition-name:vt-dephant">
 
-<h2 id="overview">Overview</h2>
-    <p>dephant is an internal enterprise product lifecycle management (PLM) platform. It's not really one feature or one dashboard, it's the workspace where a lot of different people end up needing to collaborate over the life of a product, from sourcing a component all the way through to deciding when to buy the last batch before it's discontinued.</p>
+        <h2 id="overview">Overview</h2>
+        <p>dephant is an internal product-lifecycle management platform that brings component, material, procurement, risk, compliance, and supply-chain workflows into one web application. It gives teams a shared source of truth while reducing the need to move between disconnected tools, spreadsheets, and email threads.</p>
+        <p>The platform began around <strong>Bill of Materials (BOM)</strong> and gradually expanded to support Risk Assessment, the Cyber Resilience Act, Last Time Buy, and the Procurement Engineering Workbook.</p>
 
-    <h2 id="role">My Role</h2>
-    <p>dephant started narrow: <strong>a single use case around Bill of Materials (BOM)</strong>. I was the UX designer on that first scope. As it proved out, the project expanded, use case by use case, until it reached the five it covers today, with more planned. dephant is still active and ongoing; I've been on it for <strong>roughly a year and a half</strong>.</p>
-    <p><strong>Primary Users:</strong> Component Engineers · Procurement Engineers · Product Managers · Financial Controllers, across a growing set of use cases with their own specific stakeholders</p>
-    <ul>
-      <li><strong>Took dephant from a single use case to five</strong>, designing the information architecture that let each new use case join the platform without breaking what already existed.</li>
-      <li><strong>Ran a persona workshop for each use case</strong>, five in total so far, plus one ecosystem-wide prioritization workshop to align priorities across all of them together.</li>
-      <li><strong>Pushed for differentiated data visibility by role</strong>, and made the deliberate call to ship without it when technical constraints made it infeasible in time, a real trade-off, not a quiet compromise.</li>
-      <li><strong>Defined what features should exist and how the dev team should prioritize them</strong>, operating closer to a Product Owner than a traditional UX role at points, deciding not just how something should work, but what should get built next.</li>
-    </ul>
+        <h2 id="role">My Role</h2>
+        <p>I joined an existing BOM application with significant usability issues. I began by conducting a heuristic evaluation and improving the existing experience. As more use cases were added, my role expanded from redesigning one module to shaping how multiple workflows, users, and stakeholders could work together as one product ecosystem.</p>
+        <p><strong>Primary users:</strong> Component Engineers, Electrical Engineers, Procurement Engineers, Product Owners, Project Managers, Cost Value Engineers, and other role-specific stakeholders across the five use cases.</p>
+        <ul>
+          <li><strong>Improved the existing BOM experience</strong> through heuristic evaluation, interaction redesign, and continuous feedback after release.</li>
+          <li><strong>Mapped overlapping users and workflows</strong> so that related use cases could share information without becoming five disconnected applications.</li>
+          <li><strong>Translated spreadsheet-heavy processes</strong> into structured product workflows while preserving the flexibility users relied on.</li>
+          <li><strong>Defined information architecture and reusable patterns</strong> that could scale as Risk Assessment, CRA, LTB, and PE Workbook were added.</li>
+          <li><strong>Aligned PMs, domain experts, users, and developers</strong> throughout design, delivery, feedback, and enhancement cycles.</li>
+        </ul>
 
-    <h2 id="restricted">Restricted Access</h2>
-    <div class="restricted">Details here are shared in a form that protects confidential Siemens material. Real data, internal documentation, and specific process artifacts aren't included. What follows describes the actual thinking and decisions, without exposing anything proprietary.</div>
-    <div class="vault">
-      <div class="vault-lock">
-        <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <h3>Screens and process artifacts</h3>
-        <p>The written case study above is complete and needs no password. Interface work and system diagrams are held back separately. Enter the password provided alongside this link to view them.</p>
-        <div class="gate-row">
-          <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
-          <button class="btn btn-primary gate-submit" type="button">Unlock</button>
-          <span class="gate-error">That password isn't quite right, try again.</span>
+        <h2 id="problem">The Problem</h2>
+        <p>Before dephant, teams relied on a mixture of internal systems, Excel files, and email. Users compared multiple spreadsheets, maintained their own versions, re-entered information, communicated pricing through email, and tracked approvals across separate conversations.</p>
+        <p>The result was duplicated data, unclear ownership, limited transparency, and frequent version conflicts. For workflows such as Last Time Buy, these gaps also affected supply-chain decisions around components and materials approaching discontinuation.</p>
+        <p>The challenge was not simply to digitise an Excel sheet. It was to create enough structure for consistency and traceability without removing the flexibility that made spreadsheets useful in the first place.</p>
+
+        <h2 id="approach">The Approach</h2>
+        <p>I worked use case by use case rather than attempting to redesign the entire ecosystem at once. BOM was improved and released first, followed by Risk Assessment and CRA. Each release generated feedback and enhancement requests that informed the next iteration. LTB is currently being developed, with PE Workbook following next.</p>
+        <p>This incremental approach allowed the platform to evolve through real usage while the shared architecture, navigation, data relationships, and reusable patterns were refined alongside it.</p>
+
+        <h2 id="exploration">Exploration</h2>
+        <p>Early work focused on understanding the existing product, the tools and spreadsheets surrounding it, and where each stakeholder entered or depended on the process. These working artifacts capture the alignment and synthesis behind the final workflows rather than polished interface outcomes.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Working process boards</h3>
+            <p>The written case study needs no password. Internal workshop and process artifacts are held back separately. Enter the password provided alongside this link to view them.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            <div class="exploration-grid">
+              <figure class="exploration-board">
+                <img src="assets/dephant-user-groups-workshop.png" alt="Workshop board used to identify and prioritise user groups for the BOM application">
+                <figcaption>Identifying possible user groups and collaboratively prioritising the most important and frequent users of the BOM workflow.</figcaption>
+              </figure>
+              <figure class="exploration-board">
+                <img src="assets/dephant-jtbd-requestor.png" alt="Jobs-to-be-done and pain-point analysis for the procurement engineer requestor role">
+                <figcaption>Synthesising jobs-to-be-done, workflow stages, dependencies, and pain points before translating them into product requirements.</figcaption>
+              </figure>
+            </div>
+          </div>
         </div>
-        <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
-      </div>
-      <div class="vault-body">
-        <!-- Replace with your Figma recreations and system diagrams. Add as many figures as you need. -->
-        <figure>
-          <img src="assets/dephant-detail-01.jpg" alt="">
-          <figcaption>Caption describing what the reader is looking at.</figcaption>
-        </figure>
-      </div>
-    </div>
 
+        <h2 id="personas">Early Personas</h2>
+        <p>I facilitated a persona workshop to move the team from assumptions to a shared understanding of the people behind the workflow. We first listed the possible user groups, prioritised the primary roles together, and then organised their responsibilities, environments, technology proficiency, jobs-to-be-done, and pain points.</p>
+        <p>The research highlighted recurring needs such as visible request status, clearer explanations, reduced dependency on individual colleagues, and better links between BOM review results and design information.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Persona workshop outputs</h3>
+            <p>The written summary is public. Final persona artifacts contain internal workflow detail and are available through the protected section.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            <div class="usecase-tabs" role="tablist" aria-label="Personas by use case">
+              <button class="usecase-tab active" type="button" data-usecase="personas-bom">BOM</button>
+              <button class="usecase-tab" type="button" data-usecase="personas-ra">Risk Assessment</button>
+              <button class="usecase-tab" type="button" data-usecase="personas-ltb">LTB</button>
+              <button class="usecase-tab" type="button" data-usecase="personas-cra">CRA</button>
+              <button class="usecase-tab" type="button" data-usecase="personas-pe">PE Workbook</button>
+            </div>
+            <div class="usecase-panels">
+            <div class="usecase-panel active" data-usecase="personas-bom">
+            <div class="exploration-grid">
+              <figure class="exploration-board">
+                <img src="assets/dephant-persona-loretta-requestor.png" alt="Loretta Durkin, procurement engineer persona in the requestor role, with her goals and pain points">
+                <figcaption>The requestor persona &mdash; gathering and reviewing project information, uploading requests, and tracking status.</figcaption>
+              </figure>
+              <figure class="exploration-board">
+                <img src="assets/dephant-persona-loretta-reviewer.png" alt="Loretta Durkin, procurement engineer persona in the reviewer role, with her goals and pain points">
+                <figcaption>The reviewer persona &mdash; checking requests for completeness, cross-referencing other systems, and returning feedback without reopening the request.</figcaption>
+              </figure>
+              <figure class="exploration-board">
+                <img src="assets/dephant-persona-mike.png" alt="Detailed procurement engineer persona showing goals and pain points">
+                <figcaption>One of the final procurement engineer personas, used to keep status visibility, review context, and links to design information visible in later workflow decisions.</figcaption>
+              </figure>
+            </div>
+            </div>
 
-    <h2 id="problem">The Problem</h2>
-    <p>Before dephant, this information lived across <strong>more than 10 different systems</strong>. People kept their own spreadsheets as a workaround, which meant multiple versions of the same information floating around, and near-constant version conflicts. Procurement, engineering, and finance all needed to work off the same information, but none of them were actually looking at the same thing.</p>
-    <p>This wasn't just annoying internally, these are the components that determine how products actually get built, so any delay or mistake in managing them eventually shows up in manufacturing timelines and, further down the line, customer delivery.</p>
+            <div class="usecase-panel" data-usecase="personas-ra">
+              <div class="restricted">Persona research for Risk Assessment follows the same workshop format, once synthesised for portfolio use.</div>
+            </div>
+            <div class="usecase-panel" data-usecase="personas-ltb">
+              <div class="restricted">LTB's persona workshop is complete &mdash; artifacts follow once the seven per-role flows are recreated.</div>
+            </div>
+            <div class="usecase-panel" data-usecase="personas-cra">
+              <div class="restricted">CRA is early in the process. Persona work will be added here as it matures.</div>
+            </div>
+            <div class="usecase-panel" data-usecase="personas-pe">
+              <div class="restricted">PE Workbook follows LTB in the roadmap.</div>
+            </div>
+            </div>
+          </div>
+        </div>
 
-    <h2 id="approach">The Approach</h2>
-    <p>The genuinely hard part wasn't designing screens, it was <strong>translating how people actually worked in Excel into something that could exist as a real application</strong>. Spreadsheets are forgiving in ways applications aren't: people improvise structure, bend columns to new purposes, and route around problems informally. None of that translates cleanly. I went through a lot of brainstorming and false starts before landing on the structure the application uses today, and honestly, some of that was just difficult in a way that doesn't compress into a single clean turning point. It took repeated passes to get right.</p>
+        <h2 id="ia">Information Architecture</h2>
+        <p>The original structure grew around BOM as a separate destination, while profile, membership, documentation, and review functions were distributed across different branches. As Risk Assessment was introduced, I reorganised the architecture around a shared home and reusable platform-level areas.</p>
+        <p>The revised structure made BOM Review and Risk Assessment visible as parallel use cases while keeping profile and membership functions consistent across the wider ecosystem.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Information architecture</h3>
+            <p>The comparison contains internal product structure and is included behind the protected-access pattern used across this case study.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            
+            <div class="flow-tabs" role="tablist" aria-label="Information architecture comparison">
+              <button class="flow-tab active" type="button" data-flow="ia-before" aria-selected="true">Old architecture</button>
+              <button class="flow-tab" type="button" data-flow="ia-after" aria-selected="false">New architecture</button>
+            </div>
 
-    <h2 id="hardcall">The Hard Call</h2>
-    <p>One decision I pushed on: different roles should see different data. A procurement engineer doesn't need the same view as a financial controller, and showing everyone everything felt like the wrong default.</p>
-    <p>We ran into real technical constraints that made granular, role-based visibility infeasible within the timeline. The call we made was to <strong>ship with all users seeing all data</strong>, rather than delay for a permissions system that wasn't ready. I still think the instinct was right. <strong>The cost was real too</strong>: some information ended up visible to people who, ideally, wouldn't need to see all of it.</p>
+            <div class="flow-panels">
+              <div class="flow-panel active" data-flow="ia-before">
+                <figure class="ia-card">
+                  <img src="assets/dephant-ia-before.png" alt="Original dephant information architecture centred on BOM">
+                  <figcaption><strong>Before:</strong> BOM, profile, memberships, documentation, and review functions were distributed across separate branches.</figcaption>
+                </figure>
+              </div>
 
-    <h2 id="scaling">Scaling</h2>
-    <p>dephant now covers five use cases, up from the single BOM workflow it started as, with more planned. Each new use case got its own persona workshop, five so far, and all five were brought together under one ecosystem-wide prioritization workshop so the platform's priorities reflected the whole system, not just whichever use case was loudest at the time. There's a main product manager for dephant overall, and a separate PM for each individual use case, which made the prioritization workshop genuinely necessary, not just a formality.</p>
+              <div class="flow-panel" data-flow="ia-after">
+                <figure class="ia-card">
+                  <img src="assets/dephant-ia-after.png" alt="Revised dephant information architecture with BOM Review and Risk Assessment">
+                  <figcaption><strong>After:</strong> A shared home supports parallel use cases, while common profile and membership functions remain platform-level.</figcaption>
+                </figure>
+              </div>
+            </div>
 
-    <h2 id="impact">Impact</h2>
-    <p>dephant established a shared source of truth for information that used to live across more than 10 disconnected systems. It's <strong>grown from a single use case to five</strong> without needing a redesign each time, which is the clearest evidence that the underlying information architecture was built to actually hold up under growth, not just handle what existed on day one.</p>
+          </div>
+        </div>
 
-    <h2 id="reflection">Reflection</h2>
-    <p><strong>Some problems don't resolve into one clean pivot.</strong> I went looking for a single "and then we changed direction" moment on the Excel-to-application translation, and honestly, it wasn't like that. It took many passes. Not every hard problem has a tidy turning point, and I've stopped expecting one.</p>
-    <p><strong>A trade-off you'd make again is still a trade-off.</strong> Shipping with uniform visibility instead of role-based permissions was the right call given the constraints, but I don't pretend it was free. Naming the actual cost is more honest than describing it as a clean win.</p>
-    <p><strong>Growth needs its own alignment mechanism.</strong> Once dephant had five use cases and five separate PMs, informal alignment stopped being enough. The ecosystem-wide prioritization workshop wasn't in the original plan, it became necessary because the project outgrew what one-on-one conversations could hold together.</p>
+        <h2 id="taskflow">Complete Task Flow</h2>
+        <p>Three roles, one continuous request. Before splitting into each role individually, here is how a BOM review actually moves end to end.</p>
+        <div class="taskflow">
+          <div class="taskflow-track">
+            <div class="taskflow-step">
+              <span class="taskflow-num">1</span>
+              <p class="taskflow-text">Procurement Engineer gathers project information and creates a BOM review request.</p>
+            </div>
+            <div class="taskflow-connector">
+              <span class="taskflow-arrow">&rarr;</span>
+            </div>
+            <div class="taskflow-step">
+              <span class="taskflow-num">2</span>
+              <p class="taskflow-text">Component Engineer receives the request and checks it for completeness.</p>
+            </div>
+            <div class="taskflow-connector">
+              <span class="taskflow-arrow">&rarr;</span>
+            </div>
+            <div class="taskflow-step">
+              <span class="taskflow-num">3</span>
+              <p class="taskflow-text">Component Engineer performs the BOM review and uploads it.</p>
+            </div>
+            <div class="taskflow-connector">
+              <span class="taskflow-arrow">&rarr;</span>
+            </div>
+            <div class="taskflow-step">
+              <span class="taskflow-num">4</span>
+              <p class="taskflow-text">Engineering Role reviews the outcome and clarifies any open questions.</p>
+            </div>
+            <div class="taskflow-connector">
+              <span class="taskflow-arrow">&rarr;</span>
+            </div>
+            <div class="taskflow-step">
+              <span class="taskflow-num">5</span>
+              <p class="taskflow-text">Engineering Role incorporates the result into the design.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="flows">User Flows</h2>
+        <p>Recreated the same way across every use case: research and detailed process work happened for each one, shown here through the use cases with flows ready to walk through, with the rest following as they're recreated.</p>
+
+        <div class="usecase-tabs" role="tablist" aria-label="User flows by use case">
+          <button class="usecase-tab active" type="button" data-usecase="uf-bom">BOM</button>
+          <button class="usecase-tab" type="button" data-usecase="uf-ra">Risk Assessment</button>
+          <button class="usecase-tab" type="button" data-usecase="uf-ltb">LTB</button>
+          <button class="usecase-tab" type="button" data-usecase="uf-cra">CRA</button>
+          <button class="usecase-tab" type="button" data-usecase="uf-pe">PE Workbook</button>
+        </div>
+        <div class="usecase-panels">
+
+          <div class="usecase-panel active" data-usecase="uf-bom">
+            <div class="role-switcher">
+              <button class="role-nav-btn" type="button" data-dir="-1" aria-label="Previous role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+              <div class="role-dropdown">
+                <button class="role-dropdown-trigger" type="button" id="role-trigger-uf-bom" aria-haspopup="listbox" aria-expanded="false" aria-label="BOM user flow by role">
+                  <span class="role-dropdown-current">Requestor</span>
+                  <svg class="role-dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <ul class="role-dropdown-menu" role="listbox" aria-labelledby="role-trigger-uf-bom">
+                  <li class="role-dropdown-option active" role="option" data-flow="requester" aria-selected="true">
+                    <span>Requestor</span>
+                    <svg class="role-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </li>
+                  <li class="role-dropdown-option" role="option" data-flow="reviewer" aria-selected="false">
+                    <span>Reviewer</span>
+                    <svg class="role-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </li>
+                  <li class="role-dropdown-option" role="option" data-flow="combined" aria-selected="false">
+                    <span>Combined flow</span>
+                    <svg class="role-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </li>
+                </ul>
+              </div>
+              <button class="role-nav-btn" type="button" data-dir="1" aria-label="Next role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+            </div>
+            <div class="flow-panels">
+              <div class="flow-panel active" data-flow="requester">
+                <p class="flow-desc">The procurement engineer either follows up on a request that already exists, or gathers project information and creates a new one.</p>
+                <div class="flow-diagram">
+                  <div class="flow-node flow-start">Landing page</div>
+                  <div class="flow-arrow">&darr;</div>
+                  <div class="flow-branches">
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">Existing request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Check the status of an existing BOM review request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-outcomes">
+                        <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>View status and follow up</div>
+                        <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Update details or reopen</div>
+                      </div>
+                    </div>
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">New request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Gather project information</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Fill request details</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Submit request</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-panel" data-flow="reviewer">
+                <p class="flow-desc">The component engineer checks whether the request is complete and achievable before performing and uploading the BOM review.</p>
+                <div class="flow-diagram">
+                  <div class="flow-node flow-start">Landing page</div>
+                  <div class="flow-arrow">&darr;</div>
+                  <div class="flow-branches">
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">Review request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Check whether it's a new or existing request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Review for completeness and timeline</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-decision"><span class="flow-eyebrow">Decision</span>Complete and achievable?</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-outcomes">
+                        <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Perform the review and upload it</div>
+                        <div class="flow-node flow-out-neg"><span class="flow-eyebrow">Outcome</span>Send back to requestor to resolve gaps</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-panel" data-flow="combined">
+                <p class="flow-desc">The combined view shows the full handoff between procurement, component engineering, and the engineering role that uses the review outcome.</p>
+                <div class="flow-diagram">
+                  <div class="flow-node flow-start">BOM review request</div>
+                  <div class="flow-arrow">&darr;</div>
+                  <div class="flow-branches">
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">End-to-end handoff</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Procurement Engineer creates or re-requests a BOM review</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Component Engineer checks it for completeness</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Component Engineer performs and uploads the review</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-outcomes">
+                        <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Engineering Role incorporates the review into the design</div>
+                        <div class="flow-node flow-out-neg"><span class="flow-eyebrow">Outcome</span>Procurement Engineer reopens or updates the request</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="usecase-panel" data-usecase="uf-ra">
+            <div class="role-switcher">
+              <button class="role-nav-btn" type="button" data-dir="-1" aria-label="Previous role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+              <div class="role-dropdown">
+                <button class="role-dropdown-trigger" type="button" id="role-trigger-uf-ra" aria-haspopup="listbox" aria-expanded="false" aria-label="Risk Assessment user flow by role">
+                  <span class="role-dropdown-current">Requestor</span>
+                  <svg class="role-dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <ul class="role-dropdown-menu" role="listbox" aria-labelledby="role-trigger-uf-ra">
+                  <li class="role-dropdown-option active" role="option" data-flow="ra-requestor" aria-selected="true">
+                    <span>Requestor</span>
+                    <svg class="role-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </li>
+                  <li class="role-dropdown-option" role="option" data-flow="ra-procurement" aria-selected="false">
+                    <span>Strategic Procurement</span>
+                    <svg class="role-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </li>
+                  <li class="role-dropdown-option" role="option" data-flow="ra-reviewers" aria-selected="false">
+                    <span>Reviewers</span>
+                    <svg class="role-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </li>
+                  <li class="role-dropdown-option" role="option" data-flow="ra-magnitude" aria-selected="false">
+                    <span>Magnitude Assignee</span>
+                    <svg class="role-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </li>
+                </ul>
+              </div>
+              <button class="role-nav-btn" type="button" data-dir="1" aria-label="Next role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+            </div>
+            <div class="flow-panels">
+              <div class="flow-panel active" data-flow="ra-requestor">
+                <p class="flow-desc">The requestor either follows up on an assessment that already exists, or creates a new one and submits it for review.</p>
+                <div class="flow-diagram">
+                  <div class="flow-node flow-start">Landing page</div>
+                  <div class="flow-arrow">&darr;</div>
+                  <div class="flow-branches">
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">Existing request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Check the status of an existing risk assessment request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-outcomes">
+                        <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Update details or reopen</div>
+                      </div>
+                    </div>
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">New request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Fill in request details</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Submit request</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-panel" data-flow="ra-procurement">
+                <p class="flow-desc">Strategic Procurement is the first checkpoint: reviewing what the requestor submitted, or pulling up an assessment that already exists, before it moves to sign-off.</p>
+                <div class="flow-diagram">
+                  <div class="flow-node flow-start">Landing page</div>
+                  <div class="flow-arrow">&darr;</div>
+                  <div class="flow-branches">
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">New request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Receive the new risk assessment request</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-decision"><span class="flow-eyebrow">Decision</span>Is the data the applicant filled in correct?</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-outcomes">
+                        <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Forward for review and signature</div>
+                        <div class="flow-node flow-out-neg"><span class="flow-eyebrow">Outcome</span>Send back to requestor</div>
+                      </div>
+                    </div>
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">Existing assessment</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Review the existing assessment</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-panel" data-flow="ra-reviewers">
+                <p class="flow-desc">Three roles review and sign independently at this stage &mdash; Product Development Manager, Component Engineer, and Project Leader (Production). Each follows the same step, producing their own signature before the assessment can proceed.</p>
+                <div class="flow-diagram">
+                  <div class="flow-node flow-start">Landing page</div>
+                  <div class="flow-arrow">&darr;</div>
+                  <div class="flow-branches">
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">Review and sign</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Review the data filled in by the applicant</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-outcomes">
+                        <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Apply digital signature</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-panel" data-flow="ra-magnitude">
+                <p class="flow-desc">The Magnitude Assignee is the final step: turning the reviewed data into a probability and consequence rating using the risk matrix.</p>
+                <div class="flow-diagram">
+                  <div class="flow-node flow-start">Landing page</div>
+                  <div class="flow-arrow">&darr;</div>
+                  <div class="flow-branches">
+                    <div class="flow-branch">
+                      <div class="flow-node flow-section">Assign magnitude</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-action"><span class="flow-eyebrow">Step</span>Review data and assignments</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-node flow-decision"><span class="flow-eyebrow">Decision</span>Decide probability and consequence using the risk matrix</div>
+                      <div class="flow-arrow">&darr;</div>
+                      <div class="flow-outcomes">
+                        <div class="flow-node flow-out-pos"><span class="flow-eyebrow">Outcome</span>Confirm magnitude with digital signature</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="usecase-panel" data-usecase="uf-ltb">
+            <div class="restricted">Persona research for LTB is complete. The seven per-role flows &mdash; Component Engineer, Operational Product Manager, R&amp;D Product Manager, Operational Purchasing, Strategic Procurement, SQM, and Factory Planner/Controller &mdash; are being recreated next.</div>
+          </div>
+
+          <div class="usecase-panel" data-usecase="uf-cra">
+            <div class="restricted">CRA is early in the process. Flows will be added here as the use case matures.</div>
+          </div>
+
+          <div class="usecase-panel" data-usecase="uf-pe">
+            <div class="restricted">PE Workbook follows LTB in the roadmap. Flows will be added here once that work begins.</div>
+          </div>
+
+        </div>
+
+        <h2 id="lofi">Low-Fidelity Wireframes</h2>
+        <p>Low-fidelity design was used to test how spreadsheet-heavy tasks could become structured workflows before visual design was applied. Particular attention went to tables, status visibility, request changes, review context, and the handoffs between engineering and procurement roles.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Wireframes and interface iterations</h3>
+            <p>Internal wireframes and product screens will sit here behind the same protected-access pattern used across the portfolio.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            <div class="usecase-tabs" role="tablist" aria-label="Low-fidelity wireframes by use case">
+              <button class="usecase-tab active" type="button" data-usecase="lofi-bom">BOM</button>
+              <button class="usecase-tab" type="button" data-usecase="lofi-ra">Risk Assessment</button>
+              <button class="usecase-tab" type="button" data-usecase="lofi-ltb">LTB</button>
+              <button class="usecase-tab" type="button" data-usecase="lofi-cra">CRA</button>
+              <button class="usecase-tab" type="button" data-usecase="lofi-pe">PE Workbook</button>
+            </div>
+            <div class="usecase-panels">
+            <div class="usecase-panel active" data-usecase="lofi-bom">
+            <figure class="exploration-board">
+              <div class="wf-screen">
+                <div class="wf-topbar">
+                  <span class="wf-topbar-title">CMT hub</span>
+                  <div class="wf-topbar-icons">
+                    <span class="wf-icon-dot"></span><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span>
+                  </div>
+                </div>
+                <div class="wf-body">
+                  <div class="wf-sidebar">
+                    <div class="wf-sidebar-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></div>
+                    <div class="wf-sidebar-item"></div>
+                    <div class="wf-sidebar-item"></div>
+                    <div class="wf-sidebar-item"></div>
+                  </div>
+                  <div class="wf-content">
+                    <div class="wf-row">
+                      <span class="wf-heading">Lorem ipsum</span>
+                      <span class="wf-btn-ghost-wf">New request</span>
+                    </div>
+                    <div class="wf-card">
+                      <div class="wf-label">Days left?</div>
+                      <div class="wf-slider">
+                        <span class="wf-slider-dot filled" style="left:0%"></span>
+                        <span class="wf-slider-dot" style="left:33%"></span>
+                        <span class="wf-slider-dot" style="left:66%"></span>
+                        <span class="wf-slider-dot" style="left:100%"></span>
+                      </div>
+                      <div class="wf-label">Comments?</div>
+                      <div class="wf-link-text">View details</div>
+                    </div>
+                    <div class="wf-cols">
+                      <div class="wf-col">
+                        <div class="wf-label">Previous requests</div>
+                        <div class="wf-table-head"><span>Request id</span><span>Completion date</span></div>
+                        <div class="wf-table-row"><span>1234567</span><span>12/05/25</span></div>
+                        <div class="wf-table-row"><span>1234567</span><span>12/05/25</span></div>
+                        <div class="wf-table-row"><span>1234567</span><span>12/05/25</span></div>
+                        <div class="wf-table-row"><span>1234567</span><span>12/05/25</span></div>
+                      </div>
+                      <div class="wf-block"></div>
+                      <div class="wf-block"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <figcaption>The CMT hub landing screen &mdash; days-left status, request comments, and a history of previous requests before starting a new one.</figcaption>
+            </figure>
+
+            <figure class="exploration-board">
+              <div class="wf-screen">
+                <div class="wf-topbar">
+                  <span class="wf-topbar-title">CMT hub</span>
+                  <div class="wf-topbar-icons">
+                    <span class="wf-icon-dot"></span><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span>
+                  </div>
+                </div>
+                <div class="wf-body">
+                  <div class="wf-sidebar">
+                    <div class="wf-sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></div>
+                    <div class="wf-sidebar-item active"></div>
+                    <div class="wf-sidebar-item"></div>
+                    <div class="wf-sidebar-item"></div>
+                  </div>
+                  <div class="wf-content">
+                    <div class="wf-row"><span class="wf-heading">BOM request</span></div>
+                    <div class="wf-stepper">
+                      <span class="wf-step-pill">Cancel</span>
+                      <span class="wf-step-pill">Back</span>
+                      <div class="wf-step-track">
+                        <span class="wf-step-dot done"></span><span class="wf-step-line"></span>
+                        <span class="wf-step-dot"></span><span class="wf-step-line"></span>
+                        <span class="wf-step-dot"></span><span class="wf-step-line"></span>
+                        <span class="wf-step-dot"></span>
+                      </div>
+                      <span class="wf-step-pill">Next</span>
+                    </div>
+                    <div class="wf-step-labels" style="margin: -12px 0 16px 66px;">
+                      <span class="wf-step-label">General&nbsp;information</span>
+                      <span class="wf-step-label">BOM&nbsp;data</span>
+                      <span class="wf-step-label">Specification</span>
+                      <span class="wf-step-label">Summary</span>
+                    </div>
+                    <div class="wf-label" style="font-size:12px; margin-bottom:10px;">General information</div>
+                    <div class="wf-card">
+                      <div class="wf-input"><span>Title</span></div>
+                      <div class="wf-input"><span>User</span><span>&darr;</span></div>
+                      <div class="wf-input-row">
+                        <div class="wf-input"><span>Project number</span></div>
+                        <div class="wf-input"><span>Due date</span><span>&darr;</span></div>
+                      </div>
+                      <div class="wf-input"><span>Reason</span><span>&darr;</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Step one of the BOM request &mdash; general information, ahead of the BOM data and specification steps that follow.</figcaption>
+            </figure>
+
+            <figure class="exploration-board">
+              <div class="wf-screen">
+                <div class="wf-topbar">
+                  <span class="wf-topbar-title">CMT hub</span>
+                  <div class="wf-topbar-icons">
+                    <span class="wf-icon-dot"></span><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span>
+                  </div>
+                </div>
+                <div class="wf-body">
+                  <div class="wf-sidebar">
+                    <div class="wf-sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></div>
+                    <div class="wf-sidebar-item"></div>
+                    <div class="wf-sidebar-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+                    <div class="wf-sidebar-item"></div>
+                  </div>
+                  <div class="wf-content">
+                    <div class="wf-row"><span class="wf-heading">BOM request</span></div>
+                    <div class="wf-stepper">
+                      <span class="wf-step-pill">Cancel</span>
+                      <span class="wf-step-pill">Back</span>
+                      <div class="wf-step-track">
+                        <span class="wf-step-dot done"></span><span class="wf-step-line"></span>
+                        <span class="wf-step-dot done"></span><span class="wf-step-line"></span>
+                        <span class="wf-step-dot"></span><span class="wf-step-line"></span>
+                        <span class="wf-step-dot"></span>
+                      </div>
+                      <span class="wf-step-pill">Next</span>
+                    </div>
+                    <div class="wf-step-labels" style="margin: -12px 0 16px 66px;">
+                      <span class="wf-step-label">General&nbsp;information</span>
+                      <span class="wf-step-label">BOM&nbsp;data</span>
+                      <span class="wf-step-label">Specification</span>
+                      <span class="wf-step-label">Summary</span>
+                    </div>
+                    <div class="wf-label" style="font-size:12px; margin-bottom:10px;">Summary</div>
+                    <div class="wf-cols" style="align-items:flex-start;">
+                      <div class="wf-col">
+                        <div class="wf-summary-card">
+                          <div class="wf-summary-item">Title</div>
+                          <div class="wf-summary-item">Requestor</div>
+                          <div class="wf-summary-item">Project number</div>
+                          <div class="wf-summary-item">Reason</div>
+                        </div>
+                        <div class="wf-summary-card">
+                          <div class="wf-summary-item">BOM Source</div>
+                          <div class="wf-summary-item">BOM data</div>
+                          <div class="wf-summary-item">BOM is correct?</div>
+                        </div>
+                      </div>
+                      <div class="wf-col">
+                        <div class="wf-summary-card">
+                          <div class="wf-summary-item">Portfolio</div>
+                          <div class="wf-summary-item">Due date</div>
+                          <div class="wf-summary-item">Scope</div>
+                          <div class="wf-summary-item">R &amp; D location</div>
+                          <div class="wf-summary-item">Manufacturing location</div>
+                          <div class="wf-summary-item">Production years</div>
+                          <div class="wf-summary-item">Quantity per year</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="wf-summary-card"><div class="wf-summary-item">Remarks</div><div class="wf-remarks"></div></div>
+                    <div class="wf-confirm"><span class="wf-checkbox"></span>Confirmation</div>
+                  </div>
+                </div>
+              </div>
+              <figcaption>The final review step &mdash; everything entered across the request, grouped for a last check before submission.</figcaption>
+            </figure>
+
+            <figure class="exploration-board">
+              <img src="assets/dephant-lofi-04-flow-overview.png" alt="The full connected low-fidelity flow with design notes, showing two approaches compared side by side">
+              <figcaption>The connected flow, with design notes on key decisions. Two approaches were compared here &mdash; the second, with a request list and per-request status tracking, is the one that carried through to the status-tracker hub shown later in High-Fidelity.</figcaption>
+            </figure>
+            </div>
+
+            <div class="usecase-panel" data-usecase="lofi-ra">
+              <p class="hifi-group-label" style="margin-top:0; padding-top:0; border-top:none;">Two approaches compared</p>
+              <figure class="exploration-board">
+                <div class="wf-screen">
+                  <div class="wf-topbar">
+                    <span class="wf-topbar-title">dephant</span>
+                    <div class="wf-topbar-icons"><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span></div>
+                  </div>
+                  <div class="wf-body">
+                    <div class="wf-sidebar">
+                      <div class="wf-sidebar-item active"></div>
+                      <div class="wf-sidebar-item"></div>
+                    </div>
+                    <div class="wf-content">
+                      <div class="wf-breadcrumb">CMT hub &nbsp;&gt;&nbsp; Previous requests</div>
+                      <div class="wf-row"><span class="wf-heading">Risk assessment requests</span></div>
+                      <div class="wf-split">
+                        <div class="wf-split-left">
+                          <div class="wf-label">List</div>
+                          <div class="wf-table-head"><span>Project&nbsp;details</span><span>Due&nbsp;date</span><span>Status</span></div>
+                          <div class="wf-table-row"><span>Title 1</span><span>30/07/25</span><span class="wf-pill">New</span></div>
+                          <div class="wf-table-row"><span>Title 2</span><span>30/07/25</span><span class="wf-pill">Done</span></div>
+                        </div>
+                        <div class="wf-split-right">
+                          <div class="wf-tabs-wf">
+                            <span class="wf-tab-wf active">Information</span>
+                            <span class="wf-tab-wf">Comments</span>
+                          </div>
+                          <div class="wf-cols">
+                            <div class="wf-col"><div class="wf-label">Status</div><div class="wf-input"><span>Procurement</span></div></div>
+                            <div class="wf-col"><div class="wf-label">Priority</div><div class="wf-input"><span>Low</span></div></div>
+                          </div>
+                          <div class="wf-accordion"><span>Accordion Headline</span><span>&darr;</span></div>
+                          <div class="wf-accordion"><span>Accordion Headline</span><span>&darr;</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <figcaption>List and detail side by side, with part information tucked into a collapsed accordion &mdash; approach one.</figcaption>
+              </figure>
+
+              <figure class="exploration-board">
+                <div class="wf-screen">
+                  <div class="wf-topbar">
+                    <span class="wf-topbar-title">dephant</span>
+                    <div class="wf-topbar-icons"><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span></div>
+                  </div>
+                  <div class="wf-body">
+                    <div class="wf-sidebar">
+                      <div class="wf-sidebar-item active"></div>
+                      <div class="wf-sidebar-item"></div>
+                    </div>
+                    <div class="wf-content">
+                      <div class="wf-breadcrumb">CMT hub &nbsp;&gt;&nbsp; Previous requests</div>
+                      <div class="wf-row"><span class="wf-heading">Risk assessment requests</span></div>
+                      <div class="wf-split">
+                        <div class="wf-split-left">
+                          <div class="wf-label">List</div>
+                          <div class="wf-table-head"><span>Project&nbsp;details</span><span>Due&nbsp;date</span><span>Status</span></div>
+                          <div class="wf-table-row"><span>Title 1</span><span>30/07/25</span><span class="wf-pill">New</span></div>
+                          <div class="wf-table-row"><span>Title 2</span><span>30/07/25</span><span class="wf-pill">Done</span></div>
+                        </div>
+                        <div class="wf-split-right">
+                          <div class="wf-tabs-wf">
+                            <span class="wf-tab-wf active">Information</span>
+                            <span class="wf-tab-wf">Comments (1)</span>
+                          </div>
+                          <div class="wf-cols">
+                            <div class="wf-col"><div class="wf-label">Status</div><div class="wf-input"><span>Procurement</span></div></div>
+                            <div class="wf-col"><div class="wf-label">Priority</div><div class="wf-input"><span>Low</span></div></div>
+                          </div>
+                          <div class="wf-accordion"><span>Part information</span><span>&darr;</span></div>
+                          <div class="wf-input"><span>Title</span></div>
+                          <div class="wf-input-row">
+                            <div class="wf-input"><span>Part (description)</span></div>
+                            <div class="wf-input"><span>Package-type</span></div>
+                          </div>
+                          <div class="wf-input-row">
+                            <div class="wf-input"><span>Technical data</span></div>
+                            <div class="wf-input"><span>Risk root cause</span></div>
+                          </div>
+                          <div class="wf-input-row">
+                            <div class="wf-input"><span>Manufacturer</span></div>
+                            <div class="wf-input"><span>Manufacturer part number</span></div>
+                          </div>
+                          <div class="wf-input-row">
+                            <div class="wf-input"><span>Used in project</span></div>
+                            <div class="wf-input"><span>Project number</span></div>
+                          </div>
+                          <div class="wf-input-row">
+                            <div class="wf-input"><span>Production start date</span></div>
+                            <div class="wf-input"><span>Production end date</span></div>
+                          </div>
+                          <div class="wf-input" style="align-items:flex-start; min-height:36px;"><span>Justification for request</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <figcaption>The same screen with the accordion expanded &mdash; the part-level detail a risk assessment actually needs.</figcaption>
+              </figure>
+
+              <figure class="exploration-board">
+                <div class="wf-screen">
+                  <div class="wf-topbar">
+                    <span class="wf-topbar-title">dephant</span>
+                    <div class="wf-topbar-icons"><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span><span class="wf-icon-dot"></span></div>
+                  </div>
+                  <div class="wf-body">
+                    <div class="wf-sidebar">
+                      <div class="wf-sidebar-item active"></div>
+                      <div class="wf-sidebar-item"></div>
+                    </div>
+                    <div class="wf-content">
+                      <div class="wf-row"><span class="wf-heading">Risk assessment / Title 1</span></div>
+                      <div class="wf-card" style="display:flex; align-items:center; justify-content:space-between;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <span class="wf-toggle on"><span class="wf-toggle-knob"></span></span>
+                          <span class="wf-label" style="margin:0;">Show required steps only</span>
+                        </div>
+                        <div class="wf-step-counter">
+                          <span class="wf-circle-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></span>
+                          <span class="wf-step-count-text">1/6</span>
+                          <span class="wf-circle-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span>
+                        </div>
+                      </div>
+                      <div class="wf-card">
+                        <div class="wf-section-head">
+                          <div class="wf-section-head-left">
+                            <span class="wf-check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+                            Information
+                          </div>
+                          <span class="wf-btn-pill-wf">&darr; Button</span>
+                        </div>
+                        <div class="wf-input"><span>Title</span></div>
+                        <div class="wf-input-row">
+                          <div class="wf-input"><span>Part (description)</span></div>
+                          <div class="wf-input"><span>Package-type</span></div>
+                        </div>
+                        <div class="wf-input-row">
+                          <div class="wf-input"><span>Technical data</span></div>
+                          <div class="wf-input"><span>Risk root cause</span></div>
+                        </div>
+                        <div class="wf-input-row">
+                          <div class="wf-input"><span>Manufacturer</span></div>
+                          <div class="wf-input"><span>Manufacturer part number</span></div>
+                        </div>
+                        <div class="wf-input-row">
+                          <div class="wf-input"><span>Used in project</span></div>
+                          <div class="wf-input"><span>Project number</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <figcaption>Approach two &mdash; the same fields as a full-page, step-by-step form, with a toggle to show only what's required and a step counter to track progress across six sections.</figcaption>
+              </figure>
+            </div>
+
+            <div class="usecase-panel" data-usecase="lofi-ltb">
+              <div class="restricted">Low-fidelity work for LTB follows once the seven per-role flows are recreated.</div>
+            </div>
+            <div class="usecase-panel" data-usecase="lofi-cra">
+              <div class="restricted">CRA is early in the process. Low-fidelity work will be added here as it matures.</div>
+            </div>
+            <div class="usecase-panel" data-usecase="lofi-pe">
+              <div class="restricted">PE Workbook follows LTB in the roadmap.</div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="hifi">High-Fidelity Screens</h2>
+        <p>Same pattern as User Flows and Low-Fidelity &mdash; shown per use case, with the ones that have real screens ready to view.</p>
+        <div class="vault">
+          <div class="vault-lock">
+            <svg class="vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <h3>Live product screens</h3>
+            <p>The written case study needs no password. These are real interface screens from dephant, held back separately. Enter the password provided alongside this link to view them.</p>
+            <div class="gate-row">
+              <input type="password" class="gate-input" placeholder="Password" autocomplete="off" aria-label="Password">
+              <button class="btn btn-primary gate-submit" type="button">Unlock</button>
+              <span class="gate-error">That password isn't quite right, try again.</span>
+            </div>
+            <p class="vault-help">Don't have it? Email <a href="mailto:kunwarjyot2510@gmail.com">kunwarjyot2510@gmail.com</a> and I'll send it over.</p>
+          </div>
+          <div class="vault-body">
+            <div class="usecase-tabs" role="tablist" aria-label="High-fidelity screens by use case">
+              <button class="usecase-tab active" type="button" data-usecase="hifi-bom">BOM</button>
+              <button class="usecase-tab" type="button" data-usecase="hifi-ra">Risk Assessment</button>
+              <button class="usecase-tab" type="button" data-usecase="hifi-ltb">LTB</button>
+              <button class="usecase-tab" type="button" data-usecase="hifi-cra">CRA</button>
+              <button class="usecase-tab" type="button" data-usecase="hifi-pe">PE Workbook</button>
+            </div>
+            <div class="usecase-panels">
+            <div class="usecase-panel active" data-usecase="hifi-bom">
+            <p class="hifi-group-label" style="margin-top:0; padding-top:0; border-top:none;">Iterations</p>
+            <figure class="exploration-board">
+              <img src="assets/dephant-hifi-01-specs-early.png" alt="An early pass at the Specifications step, showing Title, Project number, Co-owners, Scope, Due date, and Reason">
+              <figcaption>An early pass at Specifications &mdash; six general fields, before the BOM-specific detail was added.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/dephant-hifi-02-summary-later.png" alt="A later version of the same step, now including R&D location, manufacturing location, production years, portfolio, BOM source, and BOM data alongside a confirmation checkbox and submit button">
+              <figcaption>The same step, later &mdash; now carrying the full BOM-specific field set, plus the confirmation and submit action.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/dephant-hifi-03-hub-cards.png" alt="The CMT hub landing screen with request-type summary cards and a tabbed table of previous requests">
+              <figcaption>The hub landing screen from the same pass &mdash; summary cards per request type, with a tabbed table underneath.</figcaption>
+            </figure>
+
+            <p class="hifi-group-label">Closer to the live application</p>
+            <figure class="exploration-board">
+              <img src="assets/dephant-hifi-04-hub-status.png" alt="A refined hub screen combining a request status tracker with a compact preview card and the request form">
+              <figcaption>A refined hub &mdash; status tracking and a request preview sit above the form itself, rather than as separate screens.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/dephant-hifi-05-requests-table.png" alt="A full BOM review requests table with search, filters, and columns for title, requestor, scope, portfolio, due date, priority, status, and created date">
+              <figcaption>The full requests table &mdash; searchable and filterable, with status and priority visible without opening a request.</figcaption>
+            </figure>
+            <figure class="exploration-board">
+              <img src="assets/dephant-hifi-06-request-detail.png" alt="A single request detail view with a request list on the left and a tabbed panel on the right showing Request, Attachment, Comments, Changelog, and Result">
+              <figcaption>A single request, opened &mdash; the list stays visible alongside the detail, with tabs for attachments, comments, and change history.</figcaption>
+            </figure>
+            </div>
+
+            <div class="usecase-panel" data-usecase="hifi-ra">
+              <figure class="exploration-board">
+                <img src="assets/dephant-hifi-ra-03-requests-list.png" alt="The Risk assessment requests list, with Title, Component Part identifier, Created at, Due Date, and Process columns">
+                <figcaption>The requests list &mdash; each row shows which process stage it's currently at.</figcaption>
+              </figure>
+              <figure class="exploration-board">
+                <img src="assets/dephant-hifi-ra-02-part-info-form.png" alt="The Risk assessment request creation flow, on the Part information step of a four-step stepper: Part information, Specifications, Assign reviewers, Summary">
+                <figcaption>Creating a request &mdash; Part information is the first of four steps, before Specifications, Assign reviewers, and Summary.</figcaption>
+              </figure>
+              <figure class="exploration-board">
+                <img src="assets/dephant-hifi-ra-01-review-stages.png" alt="A request open at stage 2 of 7, showing completed Information and Strategic procurement sections with detailed fields, and five collapsed sections still to come">
+                <figcaption>A request in review, stage 2 of 7 &mdash; each role's section expands with its own fields as the request reaches them.</figcaption>
+              </figure>
+            </div>
+
+            <div class="usecase-panel" data-usecase="hifi-ltb">
+              <div class="restricted">High-fidelity screens for LTB follow once the seven per-role flows are recreated.</div>
+            </div>
+            <div class="usecase-panel" data-usecase="hifi-cra">
+              <div class="restricted">CRA is early in the process. High-fidelity screens will be added here as it matures.</div>
+            </div>
+            <div class="usecase-panel" data-usecase="hifi-pe">
+              <div class="restricted">PE Workbook follows LTB in the roadmap.</div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="hardcall">The Hard Call</h2>
+        <p>The central trade-off was between <strong>spreadsheet flexibility and product consistency</strong>. Excel allowed users to add columns, duplicate information, type free-form notes, and create personal workarounds. A structured application could improve traceability and reduce errors, but it could not preserve every informal behaviour.</p>
+        <p>The design therefore had to decide which flexibility supported real work and which flexibility created ambiguity. The aim was not to reproduce Excel inside a browser, but to keep the actions users genuinely depended on while introducing clearer ownership, statuses, validations, and shared information.</p>
+
+        <h2 id="impact">Impact</h2>
+        <p>dephant is deployed and actively used. It has reduced dependence on disconnected tools and spreadsheets, improved transparency between stakeholders, and created a more reliable source of truth with fewer duplicate records and version conflicts.</p>
+        <p>The platform has grown from one BOM use case to five connected areas without requiring a separate product for each one. Feedback and enhancement requests have continued after every release, and those improvements have been incorporated into subsequent iterations.</p>
+
+        <h2 id="reflection">Reflection</h2>
+        <p><strong>Improving an existing product can grow into ecosystem design.</strong> I joined to address usability issues in one BOM application. The work eventually required thinking across users, data, workflows, PMs, and releases rather than treating each screen or use case independently.</p>
+        <p><strong>Replacing spreadsheets means replacing both their problems and their freedom.</strong> Structure improves consistency, transparency, and traceability, but it also removes some user-created flexibility. Good enterprise design requires understanding which parts of that freedom are essential before standardising the process.</p>
+        <p><strong>Release is part of the research process.</strong> Shipping use cases sequentially, listening to users, and incorporating enhancement requests made the product stronger than attempting to define the entire ecosystem upfront.</p>
 
         <div class="pager">
           <div class="pager-grid">
@@ -751,23 +1788,21 @@
           </div>
         </div>
 
-  <footer class="footer">
-    <div class="footer-socials">
-      <a href="https://www.linkedin.com/in/kunwarjyot-singh-8273681b0/" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95C21.4 8.75 22 11.1 22 14.2V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.17V21h-4z"/></svg>
-      </a>
-      <a href="mailto:kunwarjyot2510@gmail.com" aria-label="Email">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-      </a>
-    </div>
-    <div class="footer-note">&copy; 2026 Kunwarjyot Singh Narula</div>
-  </footer>
-
+        <footer class="footer">
+          <div class="footer-socials">
+            <a href="https://www.linkedin.com/in/kunwarjyot-singh-8273681b0/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95C21.4 8.75 22 11.1 22 14.2V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.17V21h-4z"/></svg>
+            </a>
+            <a href="mailto:kunwarjyot2510@gmail.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            </a>
+          </div>
+          <div class="footer-note">&copy; 2026 Kunwarjyot Singh Narula</div>
+        </footer>
       </article>
     </main>
   </div>
 </div>
-
 
 <script>
   const STORAGE_KEY = 'unlocked_dephant';
@@ -902,11 +1937,8 @@
     b.addEventListener('click', () => {
       const target = document.getElementById(b.dataset.target);
       if (!target) return;
-      if (b.closest('#mobileMenu')) {
-        mobileMenu.classList.remove('open');
-        menuBtn.classList.remove('open');
-        menuBtn.setAttribute('aria-expanded', 'false');
-      }
+      const d = b.closest('details');
+      if (d) d.open = false;
       scrollToY(target.getBoundingClientRect().top + window.pageYOffset - 92);
     });
   });
@@ -915,7 +1947,7 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduce && 'IntersectionObserver' in window) {
     const all = document.querySelectorAll(
-      '.article > h2, .article > p, .article > ul, .article .restricted, .vault, .case-cover, .pager, .case-figure, .taskflow, .flow-tabs, .flow-panels');
+      '.article > h2, .article > p, .article > ul, .article .restricted, .vault, .case-cover, .pager, .case-figure, .personas, .taskflow, .flow-tabs, .flow-panels');
     const vh = window.innerHeight;
     const targets = [];
     all.forEach(el => {
@@ -935,15 +1967,12 @@
     targets.forEach(el => revealObserver.observe(el));
   }
 
-  // Tab-switched content (User Flows, Personas): fade the switch, then
-  // cascade the new panel's pieces in top-to-bottom, reusing the same
-  // .reveal/.reveal.in timing as every other entrance on the site rather
-  // than a separate animation. Works for either flow diagrams or persona
-  // cards, whichever this particular panel happens to contain.
+  // User flow tabs: fade the switch, then cascade the new panel's nodes in
+  // top-to-bottom (branch by branch), reusing the same .reveal/.reveal.in
+  // timing as every other entrance on the site, not a separate animation.
   function cascadeFlow(panel) {
     if (!panel) return;
-    const items = panel.querySelectorAll(
-      '.flow-node, .flow-outcomes, .persona-header, .persona-body, .persona-attrs, .persona-wants, .persona-note');
+    const items = panel.querySelectorAll('.flow-node, .flow-outcomes');
     if (reduce) { items.forEach(el => el.classList.add('reveal', 'in')); return; }
     items.forEach((el, i) => {
       el.classList.remove('in');
@@ -955,9 +1984,10 @@
     const total = items.length * 55 + 900;
     setTimeout(() => items.forEach(el => { el.style.transitionDelay = ''; }), total);
   }
-  // A page can carry more than one independent tab group (Personas and
-  // User Flows both exist on the same page) — cascade each group's own
-  // initially-active panel, not just the first one found in the document.
+  // A page can carry more than one independent tab group (Information
+  // Architecture and User Flows both exist on this page) — cascade each
+  // group's own initially-active panel, not just the first one found in
+  // the whole document.
   document.querySelectorAll('.flow-panels').forEach(panels => {
     cascadeFlow(panels.querySelector('.flow-panel.active'));
   });
@@ -974,6 +2004,140 @@
     });
   });
 
+  // Role switcher: arrows + a custom dropdown, replacing both the pill-row
+  // tabs and the native <select> (whose open list is styled by the OS, not
+  // by this page, so it looked wrong against a dark theme regardless of
+  // what the closed control looked like). Each usecase-panel with a
+  // .role-dropdown gets its own independent switcher; only the currently
+  // visible one auto-advances.
+  document.querySelectorAll('.usecase-panel').forEach(panel => {
+    const dropdown = panel.querySelector('.role-dropdown');
+    if (!dropdown) return;
+
+    const trigger = dropdown.querySelector('.role-dropdown-trigger');
+    const currentLabel = dropdown.querySelector('.role-dropdown-current');
+    const menu = dropdown.querySelector('.role-dropdown-menu');
+    const options = Array.from(dropdown.querySelectorAll('.role-dropdown-option'));
+    const flowPanels = panel.querySelector('.flow-panels');
+    const prevBtn = panel.querySelector('.role-nav-btn[data-dir="-1"]');
+    const nextBtn = panel.querySelector('.role-nav-btn[data-dir="1"]');
+    const keys = options.map(o => o.dataset.flow);
+    let userStopped = false;
+    let timer = null;
+    let focusedIndex = 0;
+
+    function currentKey() {
+      const active = options.find(o => o.classList.contains('active'));
+      return active ? active.dataset.flow : keys[0];
+    }
+
+    function show(key) {
+      options.forEach(o => {
+        const on = o.dataset.flow === key;
+        o.classList.toggle('active', on);
+        o.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      currentLabel.textContent = options.find(o => o.dataset.flow === key).querySelector('span').textContent;
+      flowPanels.querySelectorAll('.flow-panel').forEach(p => p.classList.toggle('active', p.dataset.flow === key));
+      cascadeFlow(flowPanels.querySelector('.flow-panel.active'));
+    }
+
+    function step(dir) {
+      const idx = (keys.indexOf(currentKey()) + dir + keys.length) % keys.length;
+      show(keys[idx]);
+    }
+
+    function highlightFocused() {
+      options.forEach((o, i) => o.classList.toggle('focused', i === focusedIndex));
+    }
+
+    function openMenu() {
+      dropdown.classList.add('open');
+      trigger.setAttribute('aria-expanded', 'true');
+      focusedIndex = keys.indexOf(currentKey());
+      highlightFocused();
+      document.addEventListener('click', onDocClick);
+      document.addEventListener('keydown', onKeydown);
+    }
+    function closeMenu() {
+      dropdown.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', onDocClick);
+      document.removeEventListener('keydown', onKeydown);
+    }
+    function onDocClick(e) { if (!dropdown.contains(e.target)) closeMenu(); }
+    function onKeydown(e) {
+      if (e.key === 'Escape') { closeMenu(); trigger.focus(); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); focusedIndex = Math.min(focusedIndex + 1, options.length - 1); highlightFocused(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusedIndex = Math.max(focusedIndex - 1, 0); highlightFocused(); }
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onManualInteraction(); show(keys[focusedIndex]); closeMenu(); trigger.focus(); }
+    }
+
+    trigger.addEventListener('click', () => { dropdown.classList.contains('open') ? closeMenu() : openMenu(); });
+    options.forEach(opt => {
+      opt.addEventListener('click', () => { onManualInteraction(); show(opt.dataset.flow); closeMenu(); });
+    });
+
+    function stopAuto() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+    function startAuto() {
+      if (reduce || userStopped) return;
+      stopAuto();
+      timer = setInterval(() => step(1), 8000);
+    }
+    function onManualInteraction() {
+      userStopped = true;
+      stopAuto();
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { onManualInteraction(); step(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { onManualInteraction(); step(1); });
+
+    // Hovering or focusing pauses without permanently stopping — only an
+    // actual click, keyboard selection, or arrow-step counts as "the
+    // reader has taken over."
+    panel.addEventListener('mouseenter', stopAuto);
+    panel.addEventListener('mouseleave', () => { if (!userStopped) startAuto(); });
+    trigger.addEventListener('focus', stopAuto);
+    dropdown.addEventListener('focusout', (e) => {
+      if (!dropdown.contains(e.relatedTarget) && !userStopped) startAuto();
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopAuto();
+      else if (!userStopped && panel.classList.contains('active')) startAuto();
+    });
+
+    // Exposed so the use-case tab handler can start/stop the switcher that
+    // belongs to whichever panel just became visible or hidden.
+    panel._roleAuto = { start: startAuto, stop: stopAuto };
+
+    if (panel.classList.contains('active')) startAuto();
+  });
+
+  // Use-case tabs (a tier above the role tabs — e.g. BOM vs Risk Assessment
+  // within User Flows). Scoped to direct children only, since .flow-tab
+  // and .flow-panel already exist nested inside each use-case panel and
+  // must not be touched by this handler.
+  document.querySelectorAll('.usecase-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const key = tab.dataset.usecase;
+      const group = tab.closest('.usecase-tabs');
+      if (tab.classList.contains('active')) return;
+      group.querySelectorAll(':scope > .usecase-tab').forEach(b => b.classList.toggle('active', b === tab));
+      const panels = group.nextElementSibling;
+      panels.querySelectorAll(':scope > .usecase-panel').forEach(p => {
+        const isNowActive = p.dataset.usecase === key;
+        p.classList.toggle('active', isNowActive);
+        if (p._roleAuto) { isNowActive ? p._roleAuto.start() : p._roleAuto.stop(); }
+      });
+      const shown = panels.querySelector(':scope > .usecase-panel.active');
+      if (shown) {
+        shown.querySelectorAll('.flow-panels').forEach(fp => cascadeFlow(fp.querySelector('.flow-panel.active')));
+      }
+    });
+  });
+
   // Cursor
   if (window.matchMedia('(pointer: fine)').matches) {
     body.classList.add('cursor-on');
@@ -985,6 +2149,7 @@
       el.addEventListener('mouseleave', () => dot.classList.remove('active'));
     });
   }
+
 </script>
 
 </body>
